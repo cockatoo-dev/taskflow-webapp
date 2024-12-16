@@ -7,5 +7,14 @@ export default defineNuxtConfig({
     preset: "cloudflare-pages"
   },
 
-  modules: ["nitro-cloudflare-dev"]
+  modules: [
+    "nitro-cloudflare-dev",
+    "@nuxtjs/google-fonts",
+    "@nuxt/ui"
+  ],
+  googleFonts: {
+    families: {
+      "Open Sans": [400, 700]
+    }
+  }
 })
