@@ -1,0 +1,9 @@
+<template>
+  <UButton
+    to="/"
+    variant="link"
+    label="Back"
+    icon="i-heroicons-arrow-left-16-solid"
+    class="font-bold"
+  />
+</template>
