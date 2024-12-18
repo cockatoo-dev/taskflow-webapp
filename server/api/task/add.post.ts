@@ -1,38 +1,36 @@
-import { dbErrorHandler, useDB } from "~/server/db/db"
+import { z } from "zod"
+import { useDB } from "~/server/db/db"
+
+const bodySchema = z.object({
+  boardId: z.string(),
+  title: z.string(),
+  description: z.string()
+})
 
 export default defineEventHandler(async (e) => {
-  const id = crypto.randomUUID()
-  const body = await readBody(e)
-  const db = useDB(e)
+  const bodyParse = await readValidatedBody(e, (b) => bodySchema.safeParse(b))
+  const bodyData = checkParseResult(bodyParse)
 
-  if (body.title == undefined || body.description == undefined) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Invalid request format"
-    })
-  }
-
-  if (body.title == '') {
+  if (bodyData.title == '') {
     throw createError({
       statusCode: 400,
       statusMessage: "Please enter a task title."
     })
-  } else if (body.title.length > 25) {
+  } else if (bodyData.title.length > 25) {
     throw createError({
       statusCode: 400,
       statusMessage: "Task title is too long."
     })
-  } else if (body.description.length > 2500) {
+  } else if (bodyData.description.length > 2500) {
     throw createError({
       statusCode: 400,
       statusMessage: "Task description is too long."
     })
   }
+  
+  const db = useDB(e)
+  const taskId = crypto.randomUUID()
 
-  try {
-    await db.addTask(id, body.title as string, body.description as string)
-    return { id }
-  } catch (err) {
-    dbErrorHandler(err)
-  }
+  await db.addTask(bodyData.boardId, taskId, bodyData.title, bodyData.description)
+  return { taskId }
 })

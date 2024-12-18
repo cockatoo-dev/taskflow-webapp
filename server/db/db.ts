@@ -1,6 +1,6 @@
-import { and, eq, or, asc } from 'drizzle-orm'
-import { drizzle, DrizzleD1Database } from 'drizzle-orm/d1'
-import { H3Error, type EventHandlerRequest, type H3Event } from "h3"
+import { and, eq, or, asc, exists, lt, sql, gt } from 'drizzle-orm'
+import { drizzle, type DrizzleD1Database } from 'drizzle-orm/d1'
+import type { H3Event } from "h3"
 import { deps, tasks } from './schema'
 
 export class db {
@@ -9,10 +9,13 @@ export class db {
     this._db = drizzle(e.context.cloudflare.env.CF_DB)
   }
 
-  public isTaskExists = async (id: string) => {
-    const dbData = await this._db.select({ tasks: tasks.id })
+  public isTaskExists = async (boardId: string, taskId: string) => {
+    const dbData = await this._db.select({ tasks: tasks.taskId })
     .from(tasks)
-    .where(eq(tasks.id, id))
+    .where(and(
+      eq(tasks.boardId, boardId),
+      eq(tasks.taskId, taskId)
+    ))
 
     return dbData.length > 0
   }
@@ -28,42 +31,58 @@ export class db {
     return dbData.length > 0
   }
   
-  public getTask = async (id: string) => {
+  public getTask = async (boardId: string, taskId: string) => {
     return (await this._db.select()
     .from(tasks)
-    .where(eq(tasks.id, id)))
-  }
-
-  public getTaskPair = async (first: string, second: string) => {
-    return (await this._db.select()
-    .from(tasks)
-    .where(or(
-      eq(tasks.id, first),
-      eq(tasks.id, second)
+    .where(and(
+      eq(tasks.boardId, boardId),
+      eq(tasks.taskId, taskId)
     )))
   }
 
-  public getTasks = async () => {
+  public getTaskPair = async (boardId: string, first: string, second: string) => {
+    const dbData = await this._db.select()
+    .from(tasks)
+    .where(and(
+      eq(tasks.boardId, boardId),
+      or(
+        eq(tasks.taskId, first),
+        eq(tasks.taskId, second)
+      )
+    ))
+    if (dbData.length < 2) {
+      return []
+    } else if (dbData[0].taskId === first) {
+      return [dbData[0], dbData[1]]
+    } else {
+      return [dbData[1], dbData[0]]
+    }
+  }
+
+  public getBoardTasks = async (boardId: string) => {
     return await this._db.select()
     .from(tasks)
+    .where(eq(tasks.boardId, boardId))
     .orderBy(asc(tasks.title))
   }
 
-  public getTasksInfo = async () => {
+  public getBoardTasksInfo = async (boardId: string) => {
     return await this._db.select({
-      id: tasks.id,
+      id: tasks.taskId,
       title: tasks.title,
       isComplete: tasks.isComplete,
       numDeps: tasks.numDeps
     })
     .from(tasks)
+    .where(eq(tasks.boardId, boardId))
     .orderBy(asc(tasks.title))
   }
 
-  public addTask = async (id: string, title: string, description: string) => {
+  public addTask = async (boardId: string, taskId: string, title: string, description: string) => {
     await this._db.insert(tasks)
     .values({ 
-      id,
+      boardId,
+      taskId,
       title,
       description,
       numDeps: 0,
@@ -71,93 +90,124 @@ export class db {
     })
   }
 
-  public editTask = async (id: string, title: string, description: string) => {
+  public editTask = async (taskId: string, title: string, description: string) => {
     await this._db.update(tasks)
     .set({ title, description })
-    .where(eq(tasks.id, id))
+    .where(eq(tasks.taskId, taskId))
   }
 
-  public setTaskComplete = async (id: string, value: boolean) => {
-    await this._db.transaction(async (t) => {
-      await t.update(tasks)
-      .set({ isComplete: value })
-      .where(eq(tasks.id, id))
+  public setTaskComplete = async (taskId: string, isComplete: boolean) => {
+    await this._db.update(tasks)
+    .set({ isComplete: isComplete })
+    .where(eq(tasks.taskId, taskId))
 
-      const depsInfo = await t.select({
-        id: tasks.id,
-        title: tasks.title,
-        numDeps: tasks.numDeps,
-        isComplete: tasks.isComplete,
+    
+    // const depsInfoOld = await this._db.select({
+    //   id: tasks.taskId,
+    //   numDeps: tasks.numDeps
+    // })
+    // .from(deps)
+    // .where(eq(deps.dest, taskId))
+    // .innerJoin(tasks, eq(deps.source, tasks.taskId))
+
+    const depsInfo = this._db.$with('completeDepsInfo').as(
+      this._db.select({
+        taskId: tasks.taskId,
+        numDeps: tasks.numDeps
       })
       .from(deps)
-      .where(eq(deps.dest, id))
-      .innerJoin(tasks, eq(deps.source, tasks.id))
+      .where(eq(deps.dest, taskId))
+      .innerJoin(tasks, eq(deps.source, tasks.taskId))
+    )
 
-      for (const i of depsInfo) {
-        if (value) {
-          if (i.numDeps < 1) {
-            await t.update(tasks)
-            .set({ numDeps: 0 })
-            .where(eq(tasks.id, i.id))
-          } else {
-            await t.update(tasks)
-            .set({ numDeps: i.numDeps - 1 })
-            .where(eq(tasks.id, i.id))
-          }
-        } else {
-          if (i.numDeps < 1) {
-            await t.update(tasks)
-            .set({ numDeps: 1 })
-            .where(eq(tasks.id, i.id))
-          } else {
-            await t.update(tasks)
-            .set({ numDeps: i.numDeps + 1 })
-            .where(eq(tasks.id, i.id))
-          }
-        }
-      }
-    })
-    
+    if (isComplete) {
+      await this._db.update(tasks)
+      .set({numDeps: 0})
+      .where(and(
+        exists(depsInfo),
+        lt(tasks.numDeps, 1)
+      ))
+      await this._db.update(tasks)
+      .set({numDeps: sql`${tasks.numDeps} - 1`})
+      .where(and(
+        exists(depsInfo),
+        gt(tasks.numDeps, 0)
+      ))
+    } else {
+      await this._db.update(tasks)
+      .set({numDeps: 1})
+      .where(and(
+        exists(depsInfo),
+        lt(tasks.numDeps, 1)
+      ))
+      await this._db.update(tasks)
+      .set({numDeps: sql`${tasks.numDeps} + 1`})
+      .where(and(
+        exists(depsInfo),
+        gt(tasks.numDeps, 0)
+      ))
+    }
   }
 
-  public setTaskNumDeps = async (id: string, value: number) => {
+  public setTaskNumDeps = async (taskId: string, value: number) => {
     await this._db.update(tasks)
     .set({ numDeps: value })
-    .where(eq(tasks.id, id))
+    .where(eq(tasks.taskId, taskId))
   }
 
-  public deleteTask = async (id: string) => {
-    await this._db.transaction(async (t) => {
-      const depsInfo = await t.select({
-        id: tasks.id,
+  public deleteTask = async (taskId: string) => {
+    // const depsInfoOld = await this._db.select({
+    //   id: tasks.taskId,
+    //   num: tasks.numDeps
+    // })
+    // .from(deps)
+    // .where(eq(deps.dest, taskId))
+    // .innerJoin(tasks, eq(deps.source, tasks.taskId))
+
+    const depsInfo = this._db.$with('deleteDepsInfo').as(
+      this._db.select({
+        id: tasks.taskId,
         num: tasks.numDeps
       })
       .from(deps)
-      .where(eq(deps.dest, id))
-      .innerJoin(tasks, eq(deps.source, tasks.id))
+      .where(eq(deps.dest, taskId))
+      .innerJoin(tasks, eq(deps.source, tasks.taskId))
+    )
 
-      for (const i of depsInfo) {
-        let newNum: number
-        if (i.num < 1) {
-          newNum = 0
-        } else {
-          newNum = i.num - 1
-        }
+    await this._db.update(tasks)
+    .set({numDeps: 0})
+    .where(and(
+      exists(depsInfo),
+      lt(tasks.numDeps, 1)
+    ))
+    await this._db.update(tasks)
+    .set({numDeps: sql`${tasks.numDeps} - 1`})
+    .where(and(
+      exists(depsInfo),
+      gt(tasks.numDeps, 0)
+    ))
 
-        await t.update(tasks)
-        .set({ numDeps: newNum })
-        .where(eq(tasks.id, i.id))
-      }
-      
-      await t.delete(deps)
-      .where(or(
-        eq(deps.source, id),
-        eq(deps.dest, id)
-      ))
+    // for (const i of depsInfoOld) {
+    //   let newNum: number
+    //   if (i.num < 1) {
+    //     newNum = 0
+    //   } else {
+    //     newNum = i.num - 1
+    //   }
 
-      await t.delete(tasks)
-      .where(eq(tasks.id, id))
-    })
+    //   await this._db.update(tasks)
+    //   .set({ numDeps: newNum })
+    //   .where(eq(tasks.taskId, i.id))
+    // }
+    
+    await this._db.delete(deps)
+    .where(or(
+      eq(deps.source, taskId),
+      eq(deps.dest, taskId)
+    ))
+
+    await this._db.delete(tasks)
+    .where(eq(tasks.taskId, taskId))
   }
 
   public getDeps = async () => {
@@ -167,7 +217,7 @@ export class db {
 
   public getDestDepsInfo = async (dest: string) => {
     return await this._db.select({
-      id: tasks.id,
+      taskId: tasks.taskId,
       title: tasks.title,
       numDeps: tasks.numDeps,
       isComplete: tasks.isComplete,
@@ -175,12 +225,12 @@ export class db {
     .from(deps)
     .orderBy(asc(tasks.title))
     .where(eq(deps.dest, dest))
-    .innerJoin(tasks, eq(deps.source, tasks.id))
+    .innerJoin(tasks, eq(deps.source, tasks.taskId))
   }
 
   public getSourceDepsInfo = async (source: string) => {
     return await this._db.select({
-      id: tasks.id,
+      taskId: tasks.taskId,
       title: tasks.title,
       numDeps: tasks.numDeps,
       isComplete: tasks.isComplete,
@@ -188,7 +238,7 @@ export class db {
     .from(deps)
     .orderBy(asc(tasks.title))
     .where(eq(deps.source, source))
-    .innerJoin(tasks, eq(deps.dest, tasks.id))
+    .innerJoin(tasks, eq(deps.dest, tasks.taskId))
   }
 
   public addDeps = async (source: string, dest: string, newDepsNum: number) => {
@@ -198,7 +248,7 @@ export class db {
 
       await t.update(tasks)
       .set({ numDeps: newDepsNum })
-      .where(eq(tasks.id, source))
+      .where(eq(tasks.taskId, source))
     })
     
   }
@@ -213,7 +263,7 @@ export class db {
 
       await t.update(tasks)
       .set({ numDeps: newDepsNum })
-      .where(eq(tasks.id, source))
+      .where(eq(tasks.taskId, source))
     })
   }
 }
@@ -227,21 +277,21 @@ export const useDB = (e: H3Event) => {
   return dbInstance
 }
 
-export const dbErrorHandler = (err: any) => {
-  if (err instanceof H3Error) {
-    throw err
-  }
+// export const dbErrorHandler = (err: any) => {
+//   if (err instanceof H3Error) {
+//     throw err
+//   }
   
-  if (err instanceof Error) {
-    console.log(err)
-    throw createError({
-      statusCode: 500,
-      statusMessage: `Database error:\n${err.message}`
-    })
-  } else {
-    throw createError({
-      statusCode: 500,
-      statusMessage: "Database error"
-    })
-  }
-}
+//   if (err instanceof Error) {
+//     console.log(err)
+//     throw createError({
+//       statusCode: 500,
+//       statusMessage: `Database error:\n${err.message}`
+//     })
+//   } else {
+//     throw createError({
+//       statusCode: 500,
+//       statusMessage: "Database error"
+//     })
+//   }
+// }

@@ -1,28 +1,37 @@
-import { dbErrorHandler, useDB } from "~/server/db/db"
+import { z } from "zod"
+import { useDB } from "~/server/db/db"
+
+const bodySchema = z.object({
+  boardId: z.string(),
+  taskId: z.string(),
+  title: z.string(),
+  description: z.string()
+})
 
 export default defineEventHandler(async (e) => {
-  const body = await readBody(e)
-  const db = useDB(e)
+  const boydParse = await readValidatedBody(e, (b) => bodySchema.safeParse(b))
+  const bodyData = checkParseResult(boydParse)
 
-  const id = body.id
-
-  if (!id || !body.title || !body.description) {
+  if (bodyData.title == '') {
     throw createError({
       statusCode: 400,
-      statusMessage: "Invalid request format"
+      statusMessage: "Please enter a task title."
+    })
+  } else if (bodyData.title.length > 25) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Task title is too long."
+    })
+  } else if (bodyData.description.length > 2500) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Task description is too long."
     })
   }
 
-  try {
-    if (!(await db.isTaskExists(id))) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: "Invalid task ID"
-      })
-    }
-    await db.editTask(id, body.title, body.description)
-    return {}
-  } catch (err) {
-    dbErrorHandler(err)
-  }
+  const db = useDB(e)
+  await checkTaskExists(db, bodyData.boardId, bodyData.taskId)
+
+  await db.editTask(bodyData.taskId, bodyData.title, bodyData.description)
 })
+

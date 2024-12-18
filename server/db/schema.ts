@@ -1,7 +1,16 @@
 import { integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
+// export const users = sqliteTable('users', {
+  
+// })
+
+// export const rooms = sqliteTable('rooms', {
+
+// })
+
 export const tasks = sqliteTable('tasks', {
-  id: text('id').primaryKey(),
+  taskId: text('taskId').primaryKey(),
+  boardId: text('boardId').notNull(),
   title: text('title').notNull(),
   description: text('description').notNull(),
   numDeps: integer('numDeps').notNull(),
@@ -9,10 +18,10 @@ export const tasks = sqliteTable('tasks', {
 })
 
 export const deps = sqliteTable('deps', {
-  source: text('source').references(() => tasks.id).notNull(),
-  dest: text('dest').references(() => tasks.id).notNull()
+  source: text('source').references(() => tasks.taskId).notNull(),
+  dest: text('dest').references(() => tasks.taskId).notNull()
 }, (t) => {
-  return {
-    pk: primaryKey({ columns: [t.source, t.dest]})
-  }
+  return [
+    primaryKey({ columns: [t.source, t.dest]})
+  ]
 })

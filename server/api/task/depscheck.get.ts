@@ -1,27 +1,27 @@
-import { dbErrorHandler, useDB } from "~/server/db/db"
+import { z } from "zod"
+import { useDB } from "~/server/db/db"
+
+const querySchema = z.object({
+  boardId: z.string(),
+  taskId: z.string()
+})
 
 export default defineEventHandler(async (e) => {
-  const id = getQuery(e).id as string
-  if (!id) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Invalid task ID"
-    })
-  }
+  const queryParse = await getValidatedQuery(e, (q) => querySchema.safeParse(q))
+  const queryData = checkParseResult(queryParse)
 
   const db = useDB(e)
-  try {
-    const deps = await db.getSourceDepsInfo(id)
-    let num = 0
-    for (const i of deps) {
-      if (!i.isComplete) {
-        num += 1
-      }
-    }
+  await checkTaskExists(db, queryData.boardId, queryData.taskId)
 
-    await db.setTaskNumDeps(id, num)
-    return { numDeps: num }
-  } catch (err) {
-    dbErrorHandler(err)
+  const deps = await db.getSourceDepsInfo(queryData.taskId)
+  let num = 0
+  for (const i of deps) {
+    if (!i.isComplete) {
+      num += 1
+    }
   }
+
+  await db.setTaskNumDeps(queryData.taskId, num)
+  return { numDeps: num }
 })
+

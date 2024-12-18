@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  let refreshInterval: any
+  let refreshInterval: ReturnType<typeof setInterval>
   let addDepsLastUpdate = 0
   const route = useRoute()
   const { data, refresh } = useFetch("/api/task/info", {

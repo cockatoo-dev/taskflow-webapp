@@ -1,28 +1,18 @@
-import { dbErrorHandler, useDB } from "~/server/db/db"
+import { z } from "zod"
+import { useDB } from "~/server/db/db"
+
+const bodySchema = z.object({
+  boardId: z.string(),
+  taskId: z.string(),
+  value: z.boolean()
+})
 
 export default defineEventHandler(async (e) => {
-  const body = await readBody(e)
+  const bodyParse = await readValidatedBody(e, (b) => bodySchema.safeParse(b))
+  const bodyData = checkParseResult(bodyParse)
+
   const db = useDB(e)
+  await checkTaskExists(db, bodyData.boardId, bodyData.taskId)
 
-  const id = body.id
-
-  if (!id || body.value == undefined) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Invalid request format"
-    })
-  }
-
-  try {
-    if (!(await db.isTaskExists(id))) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: "Invalid task ID"
-      })
-    }
-    await db.setTaskComplete(id, body.value)
-    return {}
-  } catch (err) {
-    dbErrorHandler(err)
-  }
+  await db.setTaskComplete(bodyData.taskId, bodyData.value)
 })
