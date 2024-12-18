@@ -11,7 +11,8 @@ export default defineNuxtConfig({
     "nitro-cloudflare-dev",
     "@nuxtjs/google-fonts",
     "@nuxt/ui",
-    "@nuxt/eslint"
+    "@nuxt/eslint",
+    "@vueuse/nuxt"
   ],
   googleFonts: {
     families: {

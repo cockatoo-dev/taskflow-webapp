@@ -4,11 +4,15 @@
   const route = useRoute()
   const { data, refresh } = useFetch("/api/task/info", {
     params: {
-      id: route.params.id
+      boardId: route.params.boardId,
+      taskId: route.query.taskId
     },
     method: 'get'
   })
   const addDepsFetch = useFetch("/api/tasksInfo", {
+    params: {
+      boardId: route.params.boardId
+    },
     immediate: false
   })
 
@@ -36,14 +40,15 @@
       }
     }
 
-    if (data.value.task.numDeps != num) {
+    if (data.value.task.numDeps !== num) {
       // console.log(`numdeps check failed: expected: ${num}, actual: ${data.value.task.numDeps}`)
       // errorMessage.value = `numdeps check failed: expected: ${num}, actual: ${data.value.task.numDeps}`
       // showError.value = true
       await $fetch('/api/task/depscheck', {
         method: 'get',
         params: {
-          id: data.value.task.id
+          boardId: route.params.boardId,
+          taskId: data.value.task.taskId
         }
       })
       refresh()
@@ -52,7 +57,7 @@
 
   const depsExists = (id: string) => {
     for (const i of data.value?.deps || []) {
-      if (i.id == id) {
+      if (i.taskId === id) {
         return true
       }
     }
@@ -79,7 +84,7 @@
     for (const i of addDepsFetch.data.value.tasksInfo) {
       if (
           !depsExists(i.id) &&
-          i.id != route.params.id &&
+          i.id != route.query.taskId &&
           i.title.toLowerCase().includes(addDepsSearch.value.toLowerCase())
         ) {
         result.push(i)
@@ -105,7 +110,8 @@
     await $fetch('/api/task/complete', {
       method: 'post',
       body: {
-        id: route.params.id,
+        boardId: route.params.boardId,
+        taskId: route.query.taskId,
         value: value
       }
     })
@@ -123,10 +129,11 @@
       await $fetch('/api/task/delete', {
         method: 'delete',
         body: {
-          id: route.params.id
+          boardId: route.params.boardId,
+          taskId: route.query.taskId
         }
       })
-      navigateTo('/')
+      navigateTo(`/${route.params.boardId}`)
     } catch (err) {
       if (err instanceof Error) {
         errorMessage.value = err.message
@@ -168,7 +175,8 @@
     await $fetch('/api/task/edit', {
       method: 'put',
       body: {
-        id: route.params.id,
+        boardId: route.params.boardId,
+        taskId: route.query.taskId,
         title: editTitle.value,
         description: editDescription.value
       }
@@ -207,7 +215,8 @@
     await $fetch('/api/deps/add', {
       method: 'post',
       body: {
-        source: data.value.task.id,
+        boardId: route.params.boardId,
+        source: data.value.task.taskId,
         dest: id,
       }
     })
@@ -225,7 +234,8 @@
     await $fetch('/api/deps/remove', {
       method: 'delete',
       body: {
-        source: route.params.id,
+        boardId: route.params.boardId,
+        source: route.query.taskId,
         dest: id
       }
     })
@@ -258,7 +268,7 @@
         <UCard
           v-if="data.task.isComplete"
           :ui="{ body: { padding: 'p-2 sm:p-2' } }"
-          class="bg-green-500 dark:bg-green-400 text-white dark:text-black text-sm"
+          class="bg-green-600 dark:bg-green-400 text-slate-200 dark:text-slate-800 text-sm"
         >
           <div class="inline-flex leading-5">
             <UIcon
@@ -274,7 +284,7 @@
         <UCard
           v-else-if="data.task.numDeps <= 0"
           :ui="{ body: { padding: 'p-2 sm:p-2' } }"
-          class="bg-blue-500 dark:bg-blue-400 text-white dark:text-black text-sm"
+          class="bg-blue-600 dark:bg-blue-400 text-slate-200 dark:text-slate-800 text-sm"
         >
           <div class="inline-flex leading-5">
             <UIcon
@@ -290,7 +300,7 @@
         <UCard
           v-else
           :ui="{ body: { padding: 'p-2 sm:p-2' } }"
-          class="bg-red-500 dark:bg-red-400 text-white dark:text-black text-sm"
+          class="bg-red-600 dark:bg-red-400 text-slate-200 dark:text-slate-800 text-sm"
         >
           <div class="inline-flex leading-5">
             <UIcon
@@ -312,7 +322,7 @@
           <div>
             <label
               for="edit-title"
-              class="block pt-2 text-black dark:text-white font-bold"
+              class="block pt-2 text-slate-800 dark:text-slate-200 font-bold"
             >
               Title (required)
             </label>
@@ -325,8 +335,8 @@
               class="font-bold"
             />
             <p
-              class=" h-4 text-right text-xs text-black dark:text-white"
-              :class="editTitle.length > 25 ? 'text-red-700 dark:text-red-300' : ''"
+              class=" h-4 text-right text-xs motion-safe:transition-colors"
+              :class="editTitle.length > 25 ? 'text-red-700 dark:text-red-300' : 'text-slate-800 dark:text-slate-200'"
             >
               {{ editTitle.length }}/25
             </p>
@@ -335,7 +345,7 @@
           <div>
             <label
               for="edit-description"
-              class="block pt-2 text-black dark:text-white font-bold"
+              class="block pt-2 text-slate-800 dark:text-slate-200 font-bold"
             >
               Description
             </label>
@@ -348,7 +358,7 @@
             />
             <p
               class=" h-4 text-right text-xs"
-              :class="editDescription.length > 2500 ? 'text-red-700 dark:text-red-300' : ''"
+              :class="editDescription.length > 2500 ? 'text-red-700 dark:text-red-300' : 'text-slate-800 dark:text-slate-200'"
             >
               <span v-if="editDescription.length >= 2250">{{ editDescription.length }}/2500</span>
             </p>
@@ -463,11 +473,11 @@
               <div v-if="displayDepsList.length > 0">
                 <div
                   v-for="item of displayDepsList"
-                  :key="item.id"
+                  :key="item.taskId"
                   class="pt-1 grid grid-cols-[1fr_auto]"
                 >
                   <DepsListItem
-                    :id="item.id"
+                    :id="item.taskId"
                     :title="item.title"
                     :is-complete="item.isComplete"
                     :num-deps="item.numDeps"
@@ -479,7 +489,7 @@
                       label="Remove"
                       class="font-bold"
                       :disabled="removeDepsDisable"
-                      @click="() => removeDeps(item.id)"
+                      @click="() => removeDeps(item.taskId)"
                     />
                   </div>
                 </div>

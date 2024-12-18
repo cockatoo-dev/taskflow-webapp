@@ -9,13 +9,13 @@
 
   const bgClass = computed(() => {
     if (props.selected == props.id) {
-      return "bg-teal-500 dark:bg-teal-400"
+      return "bg-teal-600 dark:bg-teal-400"
     } else if (props.isComplete) {
-      return "bg-green-500 dark:bg-green-400 hover:bg-green-600 dark:hover:bg-green-300"
+      return "bg-green-600 dark:bg-green-400 hover:bg-green-700 dark:hover:bg-green-300"
     } else if (props.numDeps <= 0) {
-      return "bg-blue-500 dark:bg-blue-400 hover:bg-blue-600 dark:hover:bg-blue-300"
+      return "bg-blue-600 dark:bg-blue-400 hover:bg-blue-700 dark:hover:bg-blue-300"
     } else {
-      return "bg-red-500 dark:bg-red-400 hover:bg-red-600 dark:hover:bg-red-300"
+      return "bg-red-600 dark:bg-red-400 hover:bg-red-700 dark:hover:bg-red-300"
     }
   })
 
@@ -32,7 +32,7 @@
 
 <template>
   <UCard
-    class="w-full text-sm text-white dark:text-black inline-flex leading-8 line-clamp-1 overflow-ellipsis"
+    class="w-full text-sm text-slate-200 dark:text-slate-800 inline-flex leading-8 line-clamp-1 overflow-ellipsis motion-safe:transition-colors"
     :class="bgClass"
     :ui="{
       body: { padding: 'px-1 py-0 sm:px-1 sm:py-0' }

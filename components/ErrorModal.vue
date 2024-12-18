@@ -10,7 +10,7 @@
   <UModal v-model="isOpen">
     <UCard :ui="{ body: { padding: 'p-4 sm:p-4' } }">
       <div class="grid grid-cols-[1fr_auto]">
-        <h3 class="text-xl font-bold text-red-500 dark:text-red-400">
+        <h3 class="text-xl font-bold text-red-600 dark:text-red-400">
           Error
         </h3>
         <div>
@@ -22,7 +22,7 @@
           />
         </div>
       </div>
-      <p class="text-sm text-black dark:text-white">
+      <p class="text-sm text-slate-800 dark:text-slate-200">
         {{ $props.message }}
       </p>
     </UCard>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
   const props = defineProps<{
+    boardId: string,
     taskId: string,
     title: string,
     description: string,
@@ -9,11 +10,11 @@
   
   const bgClass = computed(() => {
     if (props.isComplete) {
-      return "bg-green-500 dark:bg-green-400 hover:bg-green-600 dark:hover:bg-green-500"
+      return "bg-green-600 dark:bg-green-400 hover:bg-green-700 dark:hover:bg-green-300"
     } else if (props.numDeps <= 0) {
-      return "bg-blue-500 dark:bg-blue-400 hover:bg-blue-600 dark:hover:bg-blue-500"
+      return "bg-blue-600 dark:bg-blue-400 hover:bg-blue-700 dark:hover:bg-blue-300"
     } else {
-      return "bg-red-500 dark:bg-red-400 hover:bg-red-600 dark:hover:bg-red-500"
+      return "bg-red-600 dark:bg-red-400 hover:bg-red-700 dark:hover:bg-red-300"
     }
   })
 
@@ -41,10 +42,10 @@
 </script>
 
 <template>
-  <NuxtLink :to="`/task/${$props.taskId}`">
+  <NuxtLink :to="`/${boardId}/task?taskId=${taskId}`">
     <UCard
       :ui="{ body: { padding: 'p-2 sm:p-2 lg:p-4' } }"
-      class="text-white dark:text-black text-sm"
+      class="text-slate-200 dark:text-slate-800 text-sm"
       :class="bgClass"
     >
       <div class="inline-flex leading-5">

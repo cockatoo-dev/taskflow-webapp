@@ -8,11 +8,11 @@
 
   const bgClass = computed(() => {
     if (props.isComplete) {
-      return "bg-green-500 dark:bg-green-400"
+      return "bg-green-600 dark:bg-green-400"
     } else if (props.numDeps <= 0) {
-      return "bg-blue-500 dark:bg-blue-400"
+      return "bg-blue-600 dark:bg-blue-400"
     } else {
-      return "bg-red-500 dark:bg-red-400"
+      return "bg-red-600 dark:bg-red-400"
     }
   })
 
@@ -29,7 +29,7 @@
 
 <template>
   <UCard
-    class="w-full text-sm text-white dark:text-black inline-flex leading-8 line-clamp-1 overflow-ellipsis"
+    class="w-full text-sm text-slate-200 dark:text-slate-800 inline-flex leading-8 line-clamp-1 overflow-ellipsis"
     :class="bgClass"
     :ui="{ body: { padding: 'px-1 py-0 sm:px-1 sm:py-0' } }"
   >
