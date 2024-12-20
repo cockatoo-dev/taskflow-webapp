@@ -1,7 +1,7 @@
 import { and, eq, or, asc, exists, lt, sql, gt } from 'drizzle-orm'
 import { drizzle, type DrizzleD1Database } from 'drizzle-orm/d1'
 import type { H3Event } from "h3"
-import { deps, tasks } from './schema'
+import { deps, tasks, boards } from './schema'
 
 export class db {
   private _db: DrizzleD1Database
@@ -9,8 +9,60 @@ export class db {
     this._db = drizzle(e.context.cloudflare.env.CF_DB)
   }
 
+  public isBoardExists = async (boardId: string) => {
+    const dbData = await this._db.select({ boardId: boards.boardId })
+    .from(boards)
+    .where(eq(boards.boardId, boardId))
+
+    return dbData.length > 0
+  }
+
+  public getBoard = async (boardId: string) => {
+    return (await this._db.select()
+    .from(boards)
+    .where(eq(boards.boardId, boardId)))
+  }
+
+  public addBoard = async (
+    boardId: string, 
+    ownerId: string, 
+    title: string, 
+    publicPerms: number
+  ) => {
+    await this._db.insert(boards).values({
+      boardId,
+      ownerId,
+      title,
+      publicPerms
+    })
+  }
+
+  public editBoard = async (
+    boardId: string, 
+    ownerId: string,
+    title: string,
+    publicPerms: number
+  ) => {
+    await this._db.update(boards).set({
+      title,
+      publicPerms
+    })
+    .where(and(
+      eq(boards.boardId, boardId),
+      eq(boards.ownerId, ownerId)
+    ))
+  }
+
+  public deleteBoard = async (boardId: string, ownerId: string) => {
+    await this._db.delete(boards)
+    .where(and(
+      eq(boards.boardId, boardId),
+      eq(boards.ownerId, ownerId)
+    ))
+  }
+  
   public isTaskExists = async (boardId: string, taskId: string) => {
-    const dbData = await this._db.select({ tasks: tasks.taskId })
+    const dbData = await this._db.select({ taskId: tasks.taskId })
     .from(tasks)
     .where(and(
       eq(tasks.boardId, boardId),
@@ -277,21 +329,3 @@ export const useDB = (e: H3Event) => {
   return dbInstance
 }
 
-// export const dbErrorHandler = (err: any) => {
-//   if (err instanceof H3Error) {
-//     throw err
-//   }
-  
-//   if (err instanceof Error) {
-//     console.log(err)
-//     throw createError({
-//       statusCode: 500,
-//       statusMessage: `Database error:\n${err.message}`
-//     })
-//   } else {
-//     throw createError({
-//       statusCode: 500,
-//       statusMessage: "Database error"
-//     })
-//   }
-// }
