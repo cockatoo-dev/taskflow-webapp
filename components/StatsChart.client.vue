@@ -10,7 +10,18 @@
     ready: number,
     notReady: number
   }>()
-  const isDark = useDark()
+  const isDark = useMediaQuery('(prefers-color-scheme: dark)')
+  const noAnimate = useMediaQuery('(prefers-reduced-motion)')
+
+  // https://tailwindcss.com/docs/customizing-colors
+  const RED_400 = '#f87171'
+  const RED_600 = '#dc2626'
+  const GREEN_400 = '#4ade80'
+  const GREEN_600 = '#16a34a'
+  const BLUE_400 = '#60a5fa'
+  const BLUE_600 = '#2563eb'
+  const SLATE_200 = '#e2e8f0'
+  const SLATE_800 = '#1e293b'
 
   ChartJS.register(
     ArcElement,
@@ -26,19 +37,24 @@ const statsChartData = computed(() => {
         props.notReady
       ],
       backgroundColor: [
-        isDark.value ? '#4ade80' : '#16a34a',
-        isDark.value ? '#60a5fa' : '#2563eb',
-        isDark.value ? '#f87171' : '#dc2626'
+        isDark.value ? GREEN_400 : GREEN_600,
+        isDark.value ? BLUE_400 : BLUE_600,
+        isDark.value ? RED_400 : RED_600
       ],
       borderWidth: 1,
-      borderColor: isDark.value ? '#000000' : '#ffffff'
+      borderColor: isDark.value ? SLATE_800 : SLATE_200
     }]
   }
 })
-const chartOptions = ref({
-  responsive: true,
-  maintainAspectRatio: false,
-});
+
+const chartOptions = computed(() => {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {animateRotate: !noAnimate.value}
+  }
+})
+
 </script>
 
 <template>
@@ -46,6 +62,7 @@ const chartOptions = ref({
     <Doughnut
       :data="statsChartData"
       :options="chartOptions"
+      aria-label="A doughnut chart comparing the number of tasks completed, the number of tasks ready to be complted, and the number of tasks not ready to be completed."
     />
   </div>
   <div
