@@ -67,7 +67,7 @@ const chartOptions = computed(() => {
   </div>
   <div
     v-if="$props.complete > 0 || $props.ready > 0 || $props.notReady > 0"
-    class="w-64 mx-auto text-2xl font-bold text-slate-800 dark:text-slate-200"
+    class="w-64 mx-auto text-2xl font-bold"
   >
     <p>
       <span class="text-green-600 dark:text-green-400">{{ $props.complete }}</span> {{ $props.complete == 1 ? 'task' : 'tasks' }} completed

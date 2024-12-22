@@ -9,6 +9,8 @@
     ogDescription: 'Helping keep your team coordinated to meet your goals!'
   })
 
+  const showCreate = ref(false)
+
   // let refreshInterval: ReturnType<typeof setTimeout>
   // const { data, refresh } = useFetch("/api/tasks")
   // const searchValue = ref('')
@@ -67,7 +69,14 @@
 </script>
 
 <template>
-  <main class=" w-full min-w-80 h-[calc(100vh-4rem)] sm:grid sm:grid-cols-[50%_50%] lg:grid-cols-[67%_33%] 2xl:grid-cols-[75%_25%]">
-    Taskflow homepage
-  </main>
+  <div>
+    <NavBar />
+    <CreateBoardModal v-model="showCreate" />
+    <StdContainer>
+      <main class="w-full lg:w-[1280px] mx-auto">
+        Taskflow homepage
+        <UButton @click="() => showCreate = true">Show modal</UButton> 
+      </main>
+    </StdContainer>
+  </div>
 </template>

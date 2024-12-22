@@ -71,7 +71,7 @@
   <main class=" w-full min-w-80 h-[calc(100vh-4rem)] sm:grid sm:grid-cols-[50%_50%] lg:grid-cols-[67%_33%] 2xl:grid-cols-[75%_25%]">
     <div class="w-full h-full">
       <div class=" h-10 p-1 grid grid-cols-[1fr_auto]">
-        <h2 class="pl-2 leading-8 font-bold text-2xl text-slate-800 dark:text-slate-200">
+        <h2 class="pl-2 leading-8 font-bold text-2xl">
           Current Tasks
         </h2>
         <UButton 
@@ -113,10 +113,10 @@
         v-else
         class=" pt-8"
       >
-        <h3 class=" font-bold text-3xl text-center text-slate-800 dark:text-slate-200">
+        <h3 class=" font-bold text-3xl text-center">
           No tasks!
         </h3>
-        <p class="text-center text-slate-800 dark:text-slate-200">
+        <p class="text-center">
           Click "Add Task" above to create a task.
         </p>
       </div>
@@ -125,7 +125,7 @@
       <div class="p-1 lg:p-2">
         <div v-if="stats.percent < 100">
           <p
-            class=" text-center text-3xl text-slate-800 dark:text-slate-200 font-bold"
+            class=" text-center text-3xl font-bold"
           >
             We're <span class="text-blue-600 dark:text-blue-400">{{ stats.percent }}%</span> of the way there!
           </p>

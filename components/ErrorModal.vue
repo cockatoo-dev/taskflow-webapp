@@ -22,7 +22,7 @@
           />
         </div>
       </div>
-      <p class="text-sm text-slate-800 dark:text-slate-200">
+      <p class="text-sm">
         {{ $props.message }}
       </p>
     </UCard>

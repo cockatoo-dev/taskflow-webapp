@@ -13,6 +13,7 @@
     params: {
       boardId: route.params.boardId
     },
+    method: 'get',
     immediate: false
   })
 
@@ -127,7 +128,7 @@
   const deleteTask = async () => {
     try {
       await $fetch('/api/task/delete', {
-        method: 'delete',
+        method: 'post',
         body: {
           boardId: route.params.boardId,
           taskId: route.query.taskId
@@ -173,7 +174,7 @@
     }
 
     await $fetch('/api/task/edit', {
-      method: 'put',
+      method: 'post',
       body: {
         boardId: route.params.boardId,
         taskId: route.query.taskId,
@@ -232,7 +233,7 @@
   const removeDeps = async (id: string) => {
     removeDepsDisable.value = true
     await $fetch('/api/deps/remove', {
-      method: 'delete',
+      method: 'post',
       body: {
         boardId: route.params.boardId,
         source: route.query.taskId,
@@ -322,7 +323,7 @@
           <div>
             <label
               for="edit-title"
-              class="block pt-2 text-slate-800 dark:text-slate-200 font-bold"
+              class="block pt-2 font-bold"
             >
               Title (required)
             </label>
@@ -336,7 +337,7 @@
             />
             <p
               class=" h-4 text-right text-xs motion-safe:transition-colors"
-              :class="editTitle.length > 25 ? 'text-red-700 dark:text-red-300' : 'text-slate-800 dark:text-slate-200'"
+              :class="editTitle.length > 25 ? 'text-red-700 dark:text-red-300' : ''"
             >
               {{ editTitle.length }}/25
             </p>
@@ -345,7 +346,7 @@
           <div>
             <label
               for="edit-description"
-              class="block pt-2 text-slate-800 dark:text-slate-200 font-bold"
+              class="block pt-2  font-bold"
             >
               Description
             </label>
@@ -358,7 +359,7 @@
             />
             <p
               class=" h-4 text-right text-xs"
-              :class="editDescription.length > 2500 ? 'text-red-700 dark:text-red-300' : 'text-slate-800 dark:text-slate-200'"
+              :class="editDescription.length > 2500 ? 'text-red-700 dark:text-red-300' : ''"
             >
               <span v-if="editDescription.length >= 2250">{{ editDescription.length }}/2500</span>
             </p>
@@ -403,12 +404,12 @@
         </form>
       </div>
       <div v-else>
-        <h2 class=" text-3xl text-black dark:text-white font-bold pb-2">
+        <h2 class=" text-3xl font-bold pb-2">
           {{ data.task.title }}
         </h2>
         <MultiLineP
           :text="data.task.description"
-          class="pb-2 text-sm text-black dark:text-white"
+          line-class="pb-2 text-sm"
         />
 
         <div class="block sm:hidden pt-2 text-center">
@@ -460,12 +461,12 @@
           />
         </div>
 
-        <h3 class="text-xl font-bold text-black dark:text-white pt-4">
+        <h3 class="text-xl font-bold pt-4">
           Task Dependencies
         </h3>
         <div class="w-full md:grid md:grid-cols-2">
           <div class="md:pr-1">
-            <h4 class=" text-black dark:text-white font-bold pb-1">
+            <h4 class="font-bold pb-1">
               Current Dependencies
             </h4>
 
@@ -495,14 +496,14 @@
                 </div>
               </div>
               <div v-else>
-                <p class=" pt-20 text-sm leading-8 text-center text-gray-700 dark:text-gray-300">
+                <p class=" pt-20 text-sm leading-8 text-center">
                   This task does not have any dependencies.
                 </p>
               </div>
             </div>
           </div>
           <div class="md:pl-1">
-            <h4 class=" text-black dark:text-white font-bold pb-1">
+            <h4 class=" font-bold pb-1">
               Add a Dependency
             </h4>
             <UInput 
@@ -539,12 +540,12 @@
                 </div>
               </div>
               <div v-else-if="addDepsShow">
-                <p class="pt-14 text-sm text-center text-gray-700 dark:text-gray-300">
+                <p class="pt-14 text-sm text-center">
                   Loading tasks...
                 </p>
               </div>
               <div v-else>
-                <p class="pt-14 text-sm text-center text-gray-700 dark:text-gray-300">
+                <p class="pt-14 text-sm text-center">
                   Use the search bar above to search for a task.
                 </p>
               </div>
@@ -564,7 +565,7 @@
       </div>
     </div>
     <div v-else>
-      <p class="text-center font-bold text-2xl text-black dark:text-white pt-8">
+      <p class="text-center font-bold text-2xl pt-8">
         Loading...
       </p>
     </div>

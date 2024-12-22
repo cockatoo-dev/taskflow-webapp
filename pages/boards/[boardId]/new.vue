@@ -53,14 +53,14 @@
 <template>
   <StdContainer>
     <BackLink />
-    <h2 class=" py-4 text-slate-800 dark:text-slate-200 text-4xl font-bold">
+    <h2 class=" py-4 text-4xl font-bold">
       New Task
     </h2>
     <form>
       <div>
         <label
           for="new-title"
-          class="block pt-2 text-slate-800 dark:text-slate-200 font-bold"
+          class="block pt-2 font-bold"
         >
           Title (required)
         </label>
@@ -74,7 +74,7 @@
         />
         <p
           class=" h-4 text-right text-xs"
-          :class="title.length > 25 ? 'text-red-700 dark:text-red-300' : 'text-slate-800 dark:text-slate-200'"
+          :class="title.length > 25 ? 'text-red-700 dark:text-red-300' : ''"
         >
           {{ title.length }}/25
         </p>
@@ -83,7 +83,7 @@
       <div>
         <label
           for="new-description"
-          class="block pt-2 text-slate-800 dark:text-slate-200 font-bold"
+          class="block pt-2 font-bold"
         >
           Description
         </label>
@@ -96,7 +96,7 @@
         />
         <p
           class=" h-4 text-right text-xs"
-          :class="description.length > 2500 ? 'text-red-700 dark:text-red-300' : 'text-slate-800 dark:text-slate-200'"
+          :class="description.length > 2500 ? 'text-red-700 dark:text-red-300' : ''"
         >
           <span v-if="description.length >= 2250">{{ description.length }}/2500</span>
         </p>
@@ -117,7 +117,7 @@
         :message="errorMessage"
       />
     </form>
-    <p class="pt-4 text-sm text-slate-800 dark:text-slate-200">
+    <p class="pt-4 text-sm ">
       Dependencies for this task can be added after the task is created.
     </p>
   </StdContainer>

@@ -14,5 +14,5 @@ export default {
     "./plugins/**/*.{js,ts}",
     "./nuxt.config.{js,ts}",
     "./app.vue",
-  ],
+  ]
 }
