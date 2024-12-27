@@ -45,7 +45,7 @@
   <NuxtLink :to="`/${boardId}/task?taskId=${taskId}`">
     <UCard
       :ui="{ body: { padding: 'p-2 sm:p-2 lg:p-4' } }"
-      class="text-slate-200 dark:text-slate-800 text-sm"
+      class="text-slate-200 dark:text-slate-800"
       :class="bgClass"
     >
       <div class="inline-flex leading-5">
@@ -54,7 +54,7 @@
           class="h-5 w-5 mr-2 mb-1"
         />
         <span
-          class="font-bold tracking-wider"
+          class="text-xs font-bold tracking-wider"
         >
           {{ stateText }}
         </span>
