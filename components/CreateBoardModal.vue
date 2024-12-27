@@ -5,14 +5,16 @@
 
   const boardName = ref("")
   const publicPerms = ref(1)
-  const formError = ref("")
+  const errorMessage = ref("")
+  const disableSubmit = ref(false)
 
   const submitForm = async () => {
     if (boardName.value.length > 40) {
-      formError.value = "Board name is too long (maximum 25 characters)."
+      errorMessage.value = "Board name is too long (maximum 40 characters)."
     }
 
     try {
+      disableSubmit.value = true
       const { boardId } = await $fetch("/api/board/create", {
         method: 'post',
         body: {
@@ -23,10 +25,12 @@
       await navigateTo(`/board/${boardId}`)
     } catch (e) {
       if (e instanceof FetchError) {
-        formError.value = e.message
+        disableSubmit.value = false
+        errorMessage.value = e.message
+      } else {
+        throw e
       }
     }
-    
   }
 </script>
 
@@ -61,6 +65,7 @@
           </div>
           <div>
             <UButton 
+              type="button"
               label="Cancel"
               color="red"
               variant="ghost"
@@ -71,7 +76,7 @@
           </div>
         </div>
       </form>
-      {{ formError }}
+      <FormError :message="errorMessage" />
     </div>
   </LargeModal>
 </template>
