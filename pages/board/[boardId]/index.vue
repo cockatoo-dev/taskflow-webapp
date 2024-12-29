@@ -83,6 +83,7 @@
             label="Add Task"
             icon="i-heroicons-plus-16-solid"
             class="font-bold"
+            :ui="BUTTON_UI_OBJECT"
             @click="() => {showAddTask = true}"
           />
         </div>
@@ -93,6 +94,7 @@
             variant="outline"
             icon="i-heroicons-magnifying-glass-16-solid"
             placeholder="Search for a task..."
+            :ui="TEXT_INPUT_UI_OBJECT"
           />
         </div>
         <ul

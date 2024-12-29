@@ -1,10 +1,7 @@
 <script setup lang="ts">
   import { Doughnut } from 'vue-chartjs';
-  import {
-    Chart as ChartJS,
-    Tooltip,
-    ArcElement
-  } from 'chart.js';
+  import { Chart as ChartJS, Tooltip, ArcElement } from 'chart.js';
+
   const props = defineProps<{
     complete: number,
     ready: number,
@@ -20,8 +17,8 @@
   const GREEN_600 = '#16a34a'
   const BLUE_400 = '#60a5fa'
   const BLUE_600 = '#2563eb'
-  const SLATE_200 = '#e2e8f0'
-  const SLATE_800 = '#1e293b'
+  const SLATE_100 = '#f1f5f9'
+  const SLATE_900 = '#0f172a'
 
   ChartJS.register(
     ArcElement,
@@ -42,7 +39,7 @@ const statsChartData = computed(() => {
         isDark.value ? RED_400 : RED_600
       ],
       borderWidth: 1,
-      borderColor: isDark.value ? SLATE_800 : SLATE_200
+      borderColor: isDark.value ? SLATE_900 : SLATE_100
     }]
   }
 })
@@ -51,7 +48,8 @@ const chartOptions = computed(() => {
   return {
     responsive: true,
     maintainAspectRatio: false,
-    animation: {animateRotate: !noAnimate.value}
+    animation: {animateRotate: !noAnimate.value},
+    plugins: {tooltip: {bodyColor: SLATE_100}}
   }
 })
 
@@ -67,7 +65,7 @@ const chartOptions = computed(() => {
   </div>
   <div
     v-if="$props.complete > 0 || $props.ready > 0 || $props.notReady > 0"
-    class="w-64 mx-auto text-2xl font-bold"
+    class="w-64 mx-auto text-2xl font-bold text-slate-800 dark:text-slate-200"
   >
     <p>
       <span class="text-green-600 dark:text-green-400">{{ $props.complete }}</span> {{ $props.complete == 1 ? 'task' : 'tasks' }} completed

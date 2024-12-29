@@ -11,10 +11,11 @@
   const submitForm = async () => {
     if (boardName.value.length > 40) {
       errorMessage.value = "Board name is too long (maximum 40 characters)."
+      return
     }
 
+    disableSubmit.value = true
     try {
-      disableSubmit.value = true
       const { boardId } = await $fetch("/api/board/create", {
         method: 'post',
         body: {
@@ -46,8 +47,8 @@
             v-model="boardName" 
             required
             autocomplete="off"
-            class="block w-full text-base"
-            :ui="{size:{sm:'text-base'}}"
+            class="block w-full"
+            :ui="TEXT_INPUT_UI_OBJECT"
           />
           <CharLimit :str="boardName" :limit="40" :show-length="20" />
         </div>
@@ -60,7 +61,7 @@
               type="submit"
               label="Create Board"
               icon="i-heroicons-plus-16-solid"
-              class="text-base font-bold"
+              :ui="BUTTON_UI_OBJECT"
             />
           </div>
           <div>
@@ -70,7 +71,7 @@
               color="red"
               variant="ghost"
               icon="i-heroicons-x-mark-16-solid"
-              class="text-base"
+              :ui="BUTTON_UI_OBJECT"
               @click="() => {isVisible = false}"
             />
           </div>

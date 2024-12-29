@@ -1,4 +1,4 @@
-import { and, eq, or, asc, exists, lt, sql, gt } from 'drizzle-orm'
+import { and, eq, or, asc, exists, lt, sql, gt, gte, lte, ne } from 'drizzle-orm'
 import { drizzle, type DrizzleD1Database } from 'drizzle-orm/d1'
 import type { H3Event } from "h3"
 import { deps, tasks, boards } from './schema'
@@ -153,54 +153,67 @@ export class db {
     .set({ isComplete: isComplete })
     .where(eq(tasks.taskId, taskId))
 
-    
-    // const depsInfoOld = await this._db.select({
-    //   id: tasks.taskId,
-    //   numDeps: tasks.numDeps
-    // })
-    // .from(deps)
-    // .where(eq(deps.dest, taskId))
-    // .innerJoin(tasks, eq(deps.source, tasks.taskId))
-
-    const depsInfo = this._db.$with('completeDepsInfo').as(
-      this._db.select({
-        taskId: tasks.taskId,
-        numDeps: tasks.numDeps
-      })
-      .from(deps)
-      .where(eq(deps.dest, taskId))
-      .innerJoin(tasks, eq(deps.source, tasks.taskId))
-    )
-
     if (isComplete) {
       await this._db.update(tasks)
       .set({numDeps: 0})
       .where(and(
-        exists(depsInfo),
-        lt(tasks.numDeps, 1)
+        ne(tasks.taskId, taskId),
+        lte(tasks.numDeps, 1),
+        exists(
+          this._db.select()
+          .from(deps)
+          .where(and(
+            eq(deps.source, tasks.taskId),
+            eq(deps.dest, taskId)
+          ))
+        )
       ))
       await this._db.update(tasks)
       .set({numDeps: sql`${tasks.numDeps} - 1`})
       .where(and(
-        exists(depsInfo),
-        gt(tasks.numDeps, 0)
+        ne(tasks.taskId, taskId),
+        gt(tasks.numDeps, 1),
+        exists(
+          this._db.select()
+          .from(deps)
+          .where(and(
+            eq(deps.source, tasks.taskId),
+            eq(deps.dest, taskId)
+          ))
+        )
       ))
     } else {
       await this._db.update(tasks)
-      .set({numDeps: 1})
-      .where(and(
-        exists(depsInfo),
-        lt(tasks.numDeps, 1)
-      ))
-      await this._db.update(tasks)
       .set({numDeps: sql`${tasks.numDeps} + 1`})
       .where(and(
-        exists(depsInfo),
-        gt(tasks.numDeps, 0)
+        ne(tasks.taskId, taskId),
+        gte(tasks.numDeps, 1),
+        exists(
+          this._db.select()
+          .from(deps)
+          .where(and(
+            eq(deps.source, tasks.taskId),
+            eq(deps.dest, taskId)
+          ))
+        )
+      ))
+      await this._db.update(tasks)
+      .set({numDeps: 1})
+      .where(and(
+        ne(tasks.taskId, taskId),
+        lt(tasks.numDeps, 1),
+        exists(
+          this._db.select()
+          .from(deps)
+          .where(and(
+            eq(deps.source, tasks.taskId),
+            eq(deps.dest, taskId)
+          ))
+        )
       ))
     }
   }
-
+  
   public setTaskNumDeps = async (taskId: string, value: number) => {
     await this._db.update(tasks)
     .set({ numDeps: value })
@@ -208,49 +221,34 @@ export class db {
   }
 
   public deleteTask = async (taskId: string) => {
-    // const depsInfoOld = await this._db.select({
-    //   id: tasks.taskId,
-    //   num: tasks.numDeps
-    // })
-    // .from(deps)
-    // .where(eq(deps.dest, taskId))
-    // .innerJoin(tasks, eq(deps.source, tasks.taskId))
-
-    const depsInfo = this._db.$with('deleteDepsInfo').as(
-      this._db.select({
-        id: tasks.taskId,
-        num: tasks.numDeps
-      })
-      .from(deps)
-      .where(eq(deps.dest, taskId))
-      .innerJoin(tasks, eq(deps.source, tasks.taskId))
-    )
-
     await this._db.update(tasks)
-    .set({numDeps: 0})
-    .where(and(
-      exists(depsInfo),
-      lt(tasks.numDeps, 1)
-    ))
-    await this._db.update(tasks)
-    .set({numDeps: sql`${tasks.numDeps} - 1`})
-    .where(and(
-      exists(depsInfo),
-      gt(tasks.numDeps, 0)
-    ))
-
-    // for (const i of depsInfoOld) {
-    //   let newNum: number
-    //   if (i.num < 1) {
-    //     newNum = 0
-    //   } else {
-    //     newNum = i.num - 1
-    //   }
-
-    //   await this._db.update(tasks)
-    //   .set({ numDeps: newNum })
-    //   .where(eq(tasks.taskId, i.id))
-    // }
+      .set({numDeps: 0})
+      .where(and(
+        ne(tasks.taskId, taskId),
+        lte(tasks.numDeps, 1),
+        exists(
+          this._db.select()
+          .from(deps)
+          .where(and(
+            eq(deps.source, tasks.taskId),
+            eq(deps.dest, taskId)
+          ))
+        )
+      ))
+      await this._db.update(tasks)
+      .set({numDeps: sql`${tasks.numDeps} - 1`})
+      .where(and(
+        ne(tasks.taskId, taskId),
+        gt(tasks.numDeps, 1),
+        exists(
+          this._db.select()
+          .from(deps)
+          .where(and(
+            eq(deps.source, tasks.taskId),
+            eq(deps.dest, taskId)
+          ))
+        )
+      ))
     
     await this._db.delete(deps)
     .where(or(
@@ -294,29 +292,24 @@ export class db {
   }
 
   public addDeps = async (source: string, dest: string, newDepsNum: number) => {
-    await this._db.transaction(async (t) => {
-      await t.insert(deps)
-      .values({ source, dest })
+    await this._db.insert(deps)
+    .values({ source, dest })
 
-      await t.update(tasks)
-      .set({ numDeps: newDepsNum })
-      .where(eq(tasks.taskId, source))
-    })
-    
+    await this._db.update(tasks)
+    .set({ numDeps: newDepsNum })
+    .where(eq(tasks.taskId, source))
   }
 
   public removeDeps = async (source: string, dest: string, newDepsNum: number) => {
-    await this._db.transaction(async (t) => {
-      await t.delete(deps)
-      .where(and(
-        eq(deps.source, source),
-        eq(deps.dest, dest)
-      ))
+    await this._db.delete(deps)
+    .where(and(
+      eq(deps.source, source),
+      eq(deps.dest, dest)
+    ))
 
-      await t.update(tasks)
-      .set({ numDeps: newDepsNum })
-      .where(eq(tasks.taskId, source))
-    })
+    await this._db.update(tasks)
+    .set({ numDeps: newDepsNum })
+    .where(eq(tasks.taskId, source))
   }
 }
 

@@ -32,7 +32,7 @@
 
 <template>
   <UCard
-    class="w-full text-sm text-slate-200 dark:text-slate-800 inline-flex leading-8 line-clamp-1 overflow-ellipsis motion-safe:transition-colors"
+    class="w-full text-sm text-slate-100 dark:text-slate-900 inline-flex leading-8 line-clamp-1 overflow-ellipsis motion-safe:transition-colors"
     :class="bgClass"
     :ui="{
       body: { padding: 'px-1 py-0 sm:px-1 sm:py-0' }

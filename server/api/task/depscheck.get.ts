@@ -13,6 +13,8 @@ export default defineEventHandler(async (e) => {
   const db = useDB(e)
   await checkTaskExists(db, queryData.boardId, queryData.taskId)
 
+  console.log(`depscheck ${queryData.boardId} ${queryData.taskId}`)
+
   const deps = await db.getSourceDepsInfo(queryData.taskId)
   let num = 0
   for (const i of deps) {

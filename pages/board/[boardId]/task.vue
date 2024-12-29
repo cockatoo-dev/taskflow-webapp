@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts">  
   let refreshInterval: ReturnType<typeof setInterval>
   let addDepsLastUpdate = 0
   const route = useRoute()
@@ -18,13 +18,10 @@
   })
 
   const completeDisabled = ref(false)
-  const isEditing = ref(false)
-  const editTitle = ref('')
-  const editDescription = ref('')
-  const editDisable = ref(false)
+  const showEdit = ref(false)
   const addDepsSearch = ref('')
   const addDepsShow = ref(false)
-  const addDepsDisable = ref(true)
+  const addDepsDisable = ref(false)
   const removeDepsDisable = ref(false)
   const showError = ref(false)
   const errorMessage = ref('')
@@ -45,6 +42,7 @@
       // console.log(`numdeps check failed: expected: ${num}, actual: ${data.value.task.numDeps}`)
       // errorMessage.value = `numdeps check failed: expected: ${num}, actual: ${data.value.task.numDeps}`
       // showError.value = true
+      console.log(`depscheck ${route.params.boardId} ${route.query.taskId}`)
       await $fetch('/api/task/depscheck', {
         method: 'get',
         params: {
@@ -98,8 +96,8 @@
     return result
   })
 
-  const refreshFn = () => {
-    if (isEditing.value) {
+  const intervalRefresh = () => {
+    if (showEdit.value) {
       return
     }
     refresh()
@@ -144,60 +142,6 @@
     
   }
 
-  const editStart = () => {
-    if (!data || !data.value) {
-      return
-    }
-
-    editTitle.value = data.value.task.title
-    editDescription.value = data.value.task.description
-    isEditing.value = true
-  }
-  
-  const editSave = async () => {
-    editDisable.value = true
-    if (editTitle.value == '') {
-      errorMessage.value = 'Please enter a task title.'
-      showError.value = true
-      editDisable.value = false
-      return
-    } else if (editTitle.value.length > 25) {
-      errorMessage.value = 'Task title is too long.'
-      showError.value = true
-      editDisable.value = false
-      return
-    } else if (editDescription.value.length > 2500) {
-      errorMessage.value = 'Task description is too long.'
-      showError.value = true
-      editDisable.value = false
-      return
-    }
-
-    await $fetch('/api/task/edit', {
-      method: 'post',
-      body: {
-        boardId: route.params.boardId,
-        taskId: route.query.taskId,
-        title: editTitle.value,
-        description: editDescription.value
-      }
-    })
-    .catch((err) => {
-      errorMessage.value = err.data.message || err.message
-      showError.value = true
-    })
-
-    await refresh()
-    isEditing.value = false
-    editDisable.value = false
-    
-  }
-  const editDiscard = () => {
-    isEditing.value = false
-    editTitle.value = data.value?.task.title || ''
-    editDescription.value = data.value?.task.description || ''
-  }
-
   const addDepsFocus = async () => {
     if (Date.now() - addDepsLastUpdate > 20000) {
       addDepsFetch.refresh()
@@ -213,6 +157,7 @@
     }
     
     addDepsDisable.value = true
+    
     await $fetch('/api/deps/add', {
       method: 'post',
       body: {
@@ -250,7 +195,7 @@
   }
 
   onMounted(() => {
-    refreshInterval = setInterval(refreshFn, 20000)
+    refreshInterval = setInterval(intervalRefresh, 20000)
   })
   onUnmounted(() => {
     clearInterval(refreshInterval)
@@ -261,6 +206,14 @@
   <div>
     <NavBar />
     <StdContainer>
+      <EditTaskModal
+        v-model="showEdit"
+        :board-id="route.params.boardId"
+        :task-id="route.query.taskId"
+        :title="data?.task.title || ''"
+        :description="data?.task.description || ''"
+        :refresh
+      />
       <ErrorModal 
         v-model="showError"
         :message="errorMessage"
@@ -271,48 +224,54 @@
           <UCard
             v-if="data.task.isComplete"
             :ui="{ body: { padding: 'p-2 sm:p-2' } }"
-            class="bg-green-600 dark:bg-green-400 text-slate-200 dark:text-slate-800 text-sm"
+            class="bg-green-600 dark:bg-green-400 text-slate-100 dark:text-slate-900"
           >
-            <div class="inline-flex leading-5">
-              <UIcon
-                name="i-heroicons-check-circle-16-solid"
-                class="h-5 w-5 mr-2 mb-1"
-              />
-              <span class="font-bold tracking-wider">
+            <div class="flex gap-2">
+              <div>
+                <UIcon
+                  name="i-heroicons-check-circle-16-solid"
+                  class="h-5 w-5"
+                />
+              </div>
+              <div class="text-sm font-bold tracking-wider">
                 COMPLETED
-              </span>
+              </div>
             </div>
             <p>This task has been completed. Great Job!</p>
           </UCard>
           <UCard
             v-else-if="data.task.numDeps <= 0"
             :ui="{ body: { padding: 'p-2 sm:p-2' } }"
-            class="bg-blue-600 dark:bg-blue-400 text-slate-200 dark:text-slate-800 text-sm"
+            class="bg-blue-600 dark:bg-blue-400 text-slate-100 dark:text-slate-900"
           >
-            <div class="inline-flex leading-5">
-              <UIcon
-                name="i-heroicons-play-circle-16-solid"
-                class="h-5 w-5 mr-2 mb-1"
-              />
-              <span class="font-bold tracking-wider">
+            <div class="flex gap-2">
+              <div>
+                <UIcon
+                  name="i-heroicons-play-circle-16-solid"
+                  class="h-5 w-5"
+                />
+              </div>
+              <div class="text-sm font-bold tracking-wider">
                 READY
-              </span>
+              </div>
             </div>
             <p>This task is ready to be completed. Time to get to work!</p>
           </UCard>
           <UCard
             v-else
             :ui="{ body: { padding: 'p-2 sm:p-2' } }"
-            class="bg-red-600 dark:bg-red-400 text-slate-200 dark:text-slate-800 text-sm"
+            class="bg-red-600 dark:bg-red-400 text-slate-100 dark:text-slate-900"
           >
-            <div class="inline-flex leading-5">
-              <UIcon
-                name="i-heroicons-clock-16-solid"
-                class="h-5 w-5 mr-2 mb-1"
-              />
-              <span class="font-bold tracking-wider">
+            <div class="flex gap-2">
+              <div>
+                <UIcon
+                  name="i-heroicons-clock-16-solid"
+                  class="h-5 w-5"
+                />
+              </div>
+              <div class="text-sm font-bold tracking-wider">
                 NOT READY
-              </span>
+              </div>
             </div>
             <p>
               This task is not ready to be completed. {{ `${data.task.numDeps} ${data.task.numDeps == 1 ? 'task' : 'tasks'}` }} depended on by this task {{ `${data.task.numDeps == 1 ? 'has' : 'have'}` }} not been completed yet.
@@ -320,164 +279,61 @@
           </UCard>
         </div>
         
-        <div v-if="isEditing">
-          <form>
-            <div>
-              <label
-                for="edit-title"
-                class="block pt-2 font-bold"
-              >
-                Title (required)
-              </label>
-              <UInput 
-                id="edit-title"
-                v-model="editTitle"
-                required
-                autocomplete="off"
-                placeholder="Enter a task title here..."
-                class="font-bold"
-              />
-              <p
-                class=" h-4 text-right text-xs motion-safe:transition-colors"
-                :class="editTitle.length > 25 ? 'text-red-700 dark:text-red-300' : ''"
-              >
-                {{ editTitle.length }}/25
-              </p>
-            </div>
-            
-            <div>
-              <label
-                for="edit-description"
-                class="block pt-2  font-bold"
-              >
-                Description
-              </label>
-              <UTextarea 
-                id="edit-description"
-                v-model="editDescription"
-                :rows="4"
-                autocomplete="off"
-                placeholder="Enter a task description here..."
-              />
-              <p
-                class=" h-4 text-right text-xs"
-                :class="editDescription.length > 2500 ? 'text-red-700 dark:text-red-300' : ''"
-              >
-                <span v-if="editDescription.length >= 2250">{{ editDescription.length }}/2500</span>
-              </p>
-            </div>
-
-            <div class="block sm:hidden text-center">
-              <UButton 
-                type="submit"
-                color="green"
-                label="Save Changes"
-                icon="i-heroicons-document-check-16-solid"
-                class="font-bold"
-                @click.prevent="editSave"
-              />
-            </div>
-            <div class="block sm:hidden pt-1 text-center">
-              <UButton 
-                type="button"
-                label="Discard Changes"
-                icon="i-heroicons-trash-16-solid"
-                class="font-bold"
-                @click="editDiscard"
-              />
-            </div>
-            <div class="hidden sm:block text-center">
-              <UButton 
-                type="submit"
-                color="green"
-                label="Save Changes"
-                icon="i-heroicons-document-check-16-solid"
-                class="font-bold"
-                @click.prevent="editSave"
-              />
-              <UButton 
-                type="button"
-                label="Discard Changes"
-                icon="i-heroicons-trash-16-solid"
-                class="font-bold ml-1"
-                @click="editDiscard"
-              />
-            </div>
-          </form>
-        </div>
-        <div v-else>
+        <div>
           <h2 class=" text-3xl font-bold pb-2">
             {{ data.task.title }}
           </h2>
           <MultiLineP
             :text="data.task.description"
-            line-class="pb-2 text-sm"
+            line-class="pb-2"
           />
-
-          <div class="block sm:hidden pt-2 text-center">
-            <UButton 
-              label="Edit Task Details"
-              icon="i-heroicons-pencil-square-16-solid"
-              class="font-bold"
-              @click="editStart"
-            />
-          </div>
-          <div class="block sm:hidden pt-1 text-center">
+          <div class="block sm:hidden pt-2">
             <UButton 
               v-if="!data.task.isComplete"
               color="green"
               icon="i-heroicons-check-16-solid"
               label="Mark as Completed"
-              class="font-bold"
+              class="w-full justify-center"
+              :ui="BUTTON_UI_OBJECT"
               @click="() => setComplete(true)"
             />
             <UButton 
               v-else
               icon="i-heroicons-x-mark-16-solid"
               label="Mark as Not Completed"
-              class="font-bold"
+              class="w-full justify-center"
+              :ui="BUTTON_UI_OBJECT"
               @click="() => setComplete(false)"
             />
           </div>
-          <div class="hidden sm:block pt-2 text-center">
-            <UButton 
-              label="Edit Task Details"
-              icon="i-heroicons-pencil-square-16-solid"
-              class="font-bold mr-1 mt-1"
-              @click="editStart"
-            />
+          
+          <div class="text-center">
             <UButton 
               v-if="!data.task.isComplete"
               color="green"
               icon="i-heroicons-check-16-solid"
               label="Mark as Completed"
-              class="font-bold mt-1"
+              :ui="BUTTON_UI_OBJECT"
               @click="() => setComplete(true)"
             />
             <UButton 
               v-else
               icon="i-heroicons-x-mark-16-solid"
               label="Mark as Not Completed"
-              class="font-bold mt-1"
+              :ui="BUTTON_UI_OBJECT"
               @click="() => setComplete(false)"
             />
           </div>
 
-          <h3 class="text-xl font-bold pt-4">
-            Task Dependencies
-          </h3>
-          <div class="w-full md:grid md:grid-cols-2">
+          <div class="w-full md:grid md:grid-cols-2 pt-2">
             <div class="md:pr-1">
-              <h4 class="font-bold pb-1">
-                Current Dependencies
-              </h4>
-
+              <h3 class="pb-1 text-lg font-bold">Current Dependencies</h3>
               <div class="w-full max-w-full h-48 overflow-y-auto ">
                 <div v-if="displayDepsList.length > 0">
                   <div
                     v-for="item of displayDepsList"
                     :key="item.taskId"
-                    class="pt-1 grid grid-cols-[1fr_auto]"
+                    class="pb-1 grid grid-cols-[1fr_auto]"
                   >
                     <DepsListItem
                       :id="item.taskId"
@@ -490,30 +346,30 @@
                         color="red"
                         icon="i-heroicons-minus-16-solid"
                         label="Remove"
-                        class="font-bold"
-                        :disabled="removeDepsDisable"
+                        variant="ghost"
+                        :ui="BUTTON_UI_OBJECT"
+                        :loading="removeDepsDisable"
                         @click="() => removeDeps(item.taskId)"
                       />
                     </div>
                   </div>
                 </div>
                 <div v-else>
-                  <p class=" pt-20 text-sm leading-8 text-center">
+                  <p class="pt-20 leading-8 text-center">
                     This task does not have any dependencies.
                   </p>
                 </div>
               </div>
             </div>
             <div class="md:pl-1">
-              <h4 class=" font-bold pb-1">
-                Add a Dependency
-              </h4>
+              <h3 class="pb-1 text-lg font-bold">Add a Dependency</h3>
               <UInput 
                 v-model="addDepsSearch"
                 autocomplete="off"
                 variant="outline"
                 icon="i-heroicons-magnifying-glass-16-solid"
                 placeholder="Search for a task title..."
+                :ui="TEXT_INPUT_UI_OBJECT"
                 @focus="addDepsFocus"
               />
               <div class="h-40 w-full overflow-y-auto">
@@ -534,35 +390,69 @@
                         color="green"
                         icon="i-heroicons-plus-16-solid"
                         label="Add"
-                        class="font-bold"
-                        :disabled="removeDepsDisable"
+                        :loading="addDepsDisable"
+                        variant="ghost"
+                        :ui="BUTTON_UI_OBJECT"
                         @click="() => addDeps(item.id)"
                       />
                     </div>
                   </div>
                 </div>
                 <div v-else-if="addDepsShow">
-                  <p class="pt-14 text-sm text-center">
+                  <p class="pt-12 text-center">
                     Loading tasks...
                   </p>
                 </div>
                 <div v-else>
-                  <p class="pt-14 text-sm text-center">
+                  <p class="pt-12 text-center">
                     Use the search bar above to search for a task.
                   </p>
                 </div>
               </div>
             </div>
           </div>
-
-          <div class="text-center pt-8">
+          <h3 class="py-2 text-lg font-bold">Task Options</h3>
+          <div class="block sm:hidden pt-1">
+            <UButton 
+              label="Edit Task Details"
+              icon="i-heroicons-pencil-square-16-solid"
+              variant="ghost"
+              class="w-full justify-center"
+              :ui="BUTTON_UI_OBJECT"
+              @click="() => {showEdit = true}"
+            />
+          </div>
+          <div class="block sm:hidden pt-1">
             <UButton 
               color="red"
               icon="i-heroicons-trash-16-solid"
               label="Delete Task"
-              class="font-bold"
+              variant="ghost"
+              class="w-full justify-center"
+              :ui="BUTTON_UI_OBJECT"
               @click="deleteTask"
             />
+          </div>
+          <div class="hidden sm:flex gap-4 justify-center pt-2">
+            <div>
+              <UButton 
+                label="Edit Task Details"
+                icon="i-heroicons-pencil-square-16-solid"
+                variant="ghost"
+                :ui="BUTTON_UI_OBJECT"
+                @click="() => {showEdit = true}"
+              />
+            </div>
+            <div>
+              <UButton 
+                color="red"
+                icon="i-heroicons-trash-16-solid"
+                label="Delete Task"
+                variant="ghost"
+                :ui="BUTTON_UI_OBJECT"
+                @click="deleteTask"
+              />
+            </div>
           </div>
         </div>
       </div>

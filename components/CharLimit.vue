@@ -13,7 +13,7 @@
   >
     <span 
       class="motion-safe:transition-colors duration-300"
-      :class="str.length >= limit ? 'text-red-600 dark:text-red-400' : ''"
+      :class="str.length > limit ? 'text-red-600 dark:text-red-400' : ''"
     >
       {{ str.length }}/{{ limit }}
     </span>

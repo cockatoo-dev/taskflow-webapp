@@ -1,39 +1,56 @@
 <script setup lang="ts">
   import { FetchError } from 'ofetch'
-
+  import type { LocationQueryValue } from 'vue-router';
+  
   const isVisible = defineModel<boolean>()
+
   const props = defineProps<{
-    boardId: string | string[]
+    boardId: string | string[],
+    taskId: LocationQueryValue | LocationQueryValue[]
+    title: string,
+    description: string,
+    refresh: () => void
   }>()
 
-  const title = ref('')
-  const description = ref('')
+  const editTitle = ref('')
+  const editDescription = ref('')
   const disableSubmit = ref(false)
   const errorMessage = ref('')
 
+  watch(isVisible, () => {
+    if (isVisible.value) {
+      editTitle.value = props.title
+      editDescription.value = props.description
+      errorMessage.value = ''
+      disableSubmit.value = false
+    }
+  })
+
   const submitForm = async () => {
-    if (title.value == '') {
+    if (editTitle.value == '') {
       errorMessage.value = 'Please enter a task title.'
       return
-    } else if (title.value.length > 25) {
+    } else if (editTitle.value.length > 25) {
       errorMessage.value = 'Task ttitle is too long.'
       return
-    } else if (description.value.length > 2500) {
+    } else if (editDescription.value.length > 2500) {
       errorMessage.value = 'Task description is too long.'
       return
     }
     
     disableSubmit.value = true
     try {
-      const result = await $fetch('/api/task/add', {
+      await $fetch('/api/task/edit', {
         method: 'POST',
         body: {
           boardId: props.boardId,
-          title: title.value,
-          description: description.value
+          taskId: props.taskId,
+          title: editTitle.value,
+          description: editDescription.value
         }
       })
-      navigateTo(`/board/${props.boardId}/task?taskId=${result.taskId}`)
+      await props.refresh()
+      isVisible.value = false
     } catch (e) {
       disableSubmit.value = false
       if (e instanceof FetchError) {
@@ -46,38 +63,38 @@
 <template>
   <LargeModal v-model="isVisible">
     <div class="w-full p-4">
-      <h3 class="text-3xl font-bold pb-2">Add New Task</h3>
+      <h3 class="text-3xl font-bold pb-2">Edit Task Details</h3>
       <form @submit.prevent="submitForm">
         <div class="pb-2">
-          <label for="add-title" class="block pb-2 font-bold">Title (required)</label>
+          <label for="edit-title" class="block pb-2 font-bold">Title</label>
           <UInput 
-            id="add-title"
-            v-model="title" 
+            id="edit-title"
+            v-model="editTitle" 
             required
             autocomplete="off"
             class="block w-full"
             size="lg"
             :ui="TEXT_INPUT_UI_OBJECT"
           />
-          <CharLimit :str="title" :limit="25" :show-length="15" />
+          <CharLimit :str="editTitle" :limit="25" :show-length="15" />
         </div>
         <div class="pb-2">
-          <label for="add-description" class="block pb-2 font-bold">Description</label>
+          <label for="edit-description" class="block pb-2 font-bold">Description</label>
           <UTextarea
-            id="add-description"
-            v-model="description" 
+            id="edit-description"
+            v-model="editDescription" 
             autocomplete="off"
             class="block w-full"
             :ui="TEXT_INPUT_UI_OBJECT"
           />
-          <CharLimit :str="description" :limit="2500" :show-length="2250" />
+          <CharLimit :str="editDescription" :limit="2500" :show-length="2250" />
         </div>
         <div class="flex gap-4">
           <div>
             <UButton 
               type="submit"
-              label="Add Task"
-              icon="i-heroicons-document-plus-16-solid"
+              label="Save Changes"
+              icon="i-heroicons-document-check-16-solid"
               :loading="disableSubmit"
               :ui="BUTTON_UI_OBJECT"
             />
