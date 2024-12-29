@@ -36,7 +36,7 @@
             class="h-5 w-5"
           />
         </div>
-        <div class="py-px">{{ props.title }}</div>
+        <div class="py-0.5">{{ props.title }}</div>
       </div>
     </UCard>
     <UCard
@@ -51,7 +51,7 @@
             class="h-5 w-5"
           />
         </div>
-        <div class="py-px">{{ props.title }}</div>
+        <div class="py-0.5">{{ props.title }}</div>
       </div>
     </UCard>
   </div>

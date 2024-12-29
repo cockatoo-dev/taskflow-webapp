@@ -19,6 +19,7 @@
 
   const completeDisabled = ref(false)
   const showEdit = ref(false)
+  const showDelete = ref(false)
   const addDepsSearch = ref('')
   const addDepsShow = ref(false)
   const addDepsDisable = ref(false)
@@ -123,32 +124,32 @@
     completeDisabled.value = false
     
   }
-  const deleteTask = async () => {
-    try {
-      await $fetch('/api/task/delete', {
-        method: 'post',
-        body: {
-          boardId: route.params.boardId,
-          taskId: route.query.taskId
-        }
-      })
-      navigateTo(`/board/${route.params.boardId}`)
-    } catch (err) {
-      if (err instanceof Error) {
-        errorMessage.value = err.message
-        showError.value = true
-      }
-    }
-    
-  }
+  // const deleteTask = async () => {
+  //   try {
+  //     await $fetch('/api/task/delete', {
+  //       method: 'post',
+  //       body: {
+  //         boardId: route.params.boardId,
+  //         taskId: route.query.taskId
+  //       }
+  //     })
+  //     navigateTo(`/board/${route.params.boardId}`)
+  //   } catch (err) {
+  //     if (err instanceof Error) {
+  //       errorMessage.value = err.message
+  //       showError.value = true
+  //     }
+  //   }
+  // }
 
   const addDepsFocus = async () => {
     if (Date.now() - addDepsLastUpdate > 20000) {
-      addDepsFetch.refresh()
+      addDepsShow.value = false
+      await addDepsFetch.refresh()
       addDepsLastUpdate = Date.now()
     }
     addDepsShow.value = true
-    addDepsDisable.value = true
+    addDepsDisable.value = false
   }
 
   const addDeps = async (id: string) => {
@@ -208,12 +209,11 @@
     <StdContainer>
       <EditTaskModal
         v-model="showEdit"
-        :board-id="route.params.boardId"
-        :task-id="route.query.taskId"
         :title="data?.task.title || ''"
         :description="data?.task.description || ''"
         :refresh
       />
+      <DeleteTaskModal v-model="showDelete" />
       <ErrorModal 
         v-model="showError"
         :message="errorMessage"
@@ -287,38 +287,19 @@
             :text="data.task.description"
             line-class="pb-2"
           />
-          <div class="block sm:hidden pt-2">
-            <UButton 
-              v-if="!data.task.isComplete"
-              color="green"
-              icon="i-heroicons-check-16-solid"
-              label="Mark as Completed"
-              class="w-full justify-center"
-              :ui="BUTTON_UI_OBJECT"
-              @click="() => setComplete(true)"
-            />
-            <UButton 
-              v-else
-              icon="i-heroicons-x-mark-16-solid"
-              label="Mark as Not Completed"
-              class="w-full justify-center"
-              :ui="BUTTON_UI_OBJECT"
-              @click="() => setComplete(false)"
-            />
-          </div>
           
           <div class="text-center">
             <UButton 
               v-if="!data.task.isComplete"
               color="green"
-              icon="i-heroicons-check-16-solid"
+              icon="i-heroicons-check-circle-16-solid"
               label="Mark as Completed"
               :ui="BUTTON_UI_OBJECT"
               @click="() => setComplete(true)"
             />
             <UButton 
               v-else
-              icon="i-heroicons-x-mark-16-solid"
+              icon="i-heroicons-exclamation-circle-16-solid"
               label="Mark as Not Completed"
               :ui="BUTTON_UI_OBJECT"
               @click="() => setComplete(false)"
@@ -430,7 +411,7 @@
               variant="ghost"
               class="w-full justify-center"
               :ui="BUTTON_UI_OBJECT"
-              @click="deleteTask"
+              @click="() => {showDelete = true}"
             />
           </div>
           <div class="hidden sm:flex gap-4 justify-center pt-2">
@@ -450,7 +431,7 @@
                 label="Delete Task"
                 variant="ghost"
                 :ui="BUTTON_UI_OBJECT"
-                @click="deleteTask"
+                @click="() => {showDelete = true}"
               />
             </div>
           </div>

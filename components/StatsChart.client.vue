@@ -40,7 +40,8 @@ const statsChartData = computed(() => {
       ],
       borderWidth: 1,
       borderColor: isDark.value ? SLATE_900 : SLATE_100
-    }]
+    }],
+    labels: ['COMPLETED', 'READY', 'NOT READY']
   }
 })
 
@@ -49,7 +50,7 @@ const chartOptions = computed(() => {
     responsive: true,
     maintainAspectRatio: false,
     animation: {animateRotate: !noAnimate.value},
-    plugins: {tooltip: {bodyColor: SLATE_100}}
+    plugins: {tooltip: {titleColor: SLATE_100, bodyColor: SLATE_100}}
   }
 })
 

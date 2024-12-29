@@ -1,16 +1,14 @@
 <script setup lang="ts">
   import { FetchError } from 'ofetch'
-  import type { LocationQueryValue } from 'vue-router';
   
   const isVisible = defineModel<boolean>()
-
   const props = defineProps<{
-    boardId: string | string[],
-    taskId: LocationQueryValue | LocationQueryValue[]
     title: string,
     description: string,
     refresh: () => void
   }>()
+
+  const route = useRoute()
 
   const editTitle = ref('')
   const editDescription = ref('')
@@ -43,8 +41,8 @@
       await $fetch('/api/task/edit', {
         method: 'POST',
         body: {
-          boardId: props.boardId,
-          taskId: props.taskId,
+          boardId: route.params.boardId,
+          taskId: route.query.taskId,
           title: editTitle.value,
           description: editDescription.value
         }
