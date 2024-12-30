@@ -40,9 +40,6 @@
     }
 
     if (data.value.task.numDeps !== num) {
-      // console.log(`numdeps check failed: expected: ${num}, actual: ${data.value.task.numDeps}`)
-      // errorMessage.value = `numdeps check failed: expected: ${num}, actual: ${data.value.task.numDeps}`
-      // showError.value = true
       console.log(`depscheck ${route.params.boardId} ${route.query.taskId}`)
       await $fetch('/api/task/depscheck', {
         method: 'get',
@@ -124,23 +121,6 @@
     completeDisabled.value = false
     
   }
-  // const deleteTask = async () => {
-  //   try {
-  //     await $fetch('/api/task/delete', {
-  //       method: 'post',
-  //       body: {
-  //         boardId: route.params.boardId,
-  //         taskId: route.query.taskId
-  //       }
-  //     })
-  //     navigateTo(`/board/${route.params.boardId}`)
-  //   } catch (err) {
-  //     if (err instanceof Error) {
-  //       errorMessage.value = err.message
-  //       showError.value = true
-  //     }
-  //   }
-  // }
 
   const addDepsFocus = async () => {
     if (Date.now() - addDepsLastUpdate > 20000) {

@@ -1,6 +1,5 @@
 <script setup lang="ts">
   const isVisible = defineModel<boolean>()
-
   const noAnimate = useMediaQuery('(prefers-reduced-motion)')
 </script>
 

@@ -34,4 +34,3 @@ export default defineEventHandler(async (e) => {
 
   await db.editTask(bodyData.taskId, bodyData.title, bodyData.description)
 })
-

@@ -321,4 +321,3 @@ export const useDB = (e: H3Event) => {
   }
   return dbInstance
 }
-
