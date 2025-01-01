@@ -54,6 +54,7 @@
         </div>
         <div class="pb-4">
           <PublicPermsRadio v-model="publicPerms" />
+          <div class="p-1">You will always have full permissions for the boards that you create. Only you can change these settings or delete this board after it is created.</div>
         </div>
         <div class="flex gap-4">
           <div>

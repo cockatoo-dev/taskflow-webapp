@@ -109,12 +109,16 @@
     return result
   })
 
+  const refreshData = async () => {
+    await boardInfoFetch.refresh()
+    await refresh()
+  }
+  
   const intervalRefresh = async () => {
     if (showEdit.value) {
       return
     }
-    await boardInfoFetch.refresh()
-    await refresh()
+    await refreshData()
   }
 
   const setComplete = async (value: boolean) => {
@@ -209,7 +213,7 @@
         v-model="showEdit"
         :title="data?.task.title || ''"
         :description="data?.task.description || ''"
-        :refresh
+        :refresh="refreshData"
       />
       <DeleteTaskModal v-model="showDelete" />
       <ErrorModal 
@@ -295,13 +299,14 @@
           </div>
           <div class="md:pl-1">
             <h3 class="pb-1 text-lg font-bold">Add a Dependency</h3>
+            <label class="hidden" for="deps-search">Search for a task title to show tasks that can be added as dependencies</label>
             <UInput 
+              id="deps-search"
               v-model="addDepsSearch"
               autocomplete="off"
               variant="outline"
               icon="i-heroicons-magnifying-glass-16-solid"
               placeholder="Search for a task title..."
-              aria-label="Search for a task title to show tasks that can be added as dependencies."
               :ui="TEXT_INPUT_UI_OBJECT"
               @focus="addDepsFocus"
             />

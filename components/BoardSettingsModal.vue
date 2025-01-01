@@ -4,7 +4,8 @@
   const isVisible = defineModel<boolean>()
   const props = defineProps<{
     boardName: string,
-    publicPerms: number
+    publicPerms: number,
+    refresh: () => void
   }>()
   
   const route = useRoute()
@@ -76,7 +77,7 @@
             <UButton 
               type="submit"
               label="Save Changes"
-              icon="i-heroicons-plus-16-solid"
+              icon="i-heroicons-check-16-solid"
               :ui="BUTTON_UI_OBJECT"
             />
           </div>

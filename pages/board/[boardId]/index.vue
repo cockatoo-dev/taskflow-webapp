@@ -34,6 +34,11 @@
     }
   })
 
+  const refreshData = async () => {
+    await boardInfoFetch.refresh()
+    await refresh()
+  }
+
   const displayTasks = computed(() => {
     if (!data.value) {
       return []
@@ -79,13 +84,8 @@
     return result
   })
 
-  const intervalRefresh = async () => {
-    await boardInfoFetch.refresh()
-    await refresh()
-  }
-
   onMounted(() => {
-    refreshInterval = setInterval(intervalRefresh, 20000)
+    refreshInterval = setInterval(refreshData, 20000)
   })
   onUnmounted(() => {
     clearInterval(refreshInterval)
@@ -104,11 +104,13 @@
         v-model="showBoardSettings"
         :board-name="boardInfoFetch.data.value?.boardName || ''"
         :public-perms="boardInfoFetch.data.value?.publicPerms || 0"
+        :refresh="refreshData"
       />
+      <BoardInviteModal v-model="showBoardInvite" />
       <AddTaskModal v-model="showAddTask" :board-id="route.params.boardId" /> 
       <div class="w-full h-full">
         <div class="h-10 p-1 grid grid-cols-[1fr_auto]">
-          <h1 class="p-1 lg:pt-0.5 lg:text-2xl text-center line-clamp-1 overflow-ellipsis">
+          <h1 class="px-1 pt-1.5 lg:pt-0.5 lg:text-2xl text-center font-bold line-clamp-1 overflow-ellipsis">
             {{ boardInfoFetch.data.value.boardName }}
           </h1>
           <div v-if="boardInfoFetch.data.value.isOwner">
@@ -118,12 +120,12 @@
                   [{
                     label: 'Board Settings',
                     icon: 'i-heroicons-wrench-16-solid',
-                    click: () => {}
+                    click: () => {showBoardSettings = true}
                   }],
                   [{
                     label: 'Invite to Board',
                     icon: 'i-heroicons-user-plus-16-solid',
-                    click: () => {}
+                    click: () => {showBoardInvite = true}
                   }]
                 ]"
                 :content="{align:'end'}"
@@ -151,7 +153,7 @@
                 icon="i-heroicons-wrench-16-solid"
                 variant="ghost"
                 :ui="BUTTON_UI_OBJECT"
-                @click="() => {}"
+                @click="() => {showBoardSettings = true}"
               />
               <UButton 
                 type="button"
@@ -159,7 +161,7 @@
                 icon="i-heroicons-user-plus-16-solid"
                 variant="ghost"
                 :ui="BUTTON_UI_OBJECT"
-                @click="() => {}"
+                @click="() => {showBoardInvite = true}"
               />
             </div>
           </div>
@@ -170,7 +172,7 @@
               icon="i-heroicons-user-plus-16-solid"
               variant="ghost"
               :ui="BUTTON_UI_OBJECT"
-              @click="() => {}"
+              @click="() => {showBoardInvite = true}"
             />
           </div>
         </div>
@@ -179,7 +181,7 @@
           v-if="canEdit(boardInfoFetch.data.value)"
           class="h-10 p-1 grid grid-cols-[1fr_auto]"
         >
-          <h2 class="pl-2 pt-0.5 leading-8 text-2xl font-bold">Current Tasks</h2>
+          <h2 class="pl-2 pt-0.5 leading-8 text-2xl">Current Tasks</h2>
           <UButton 
             type="button"
             label="Add Task"
@@ -189,17 +191,18 @@
           />
         </div>
         <div v-else class="h-10 p-1">
-          <h2 class="pl-2 pt-0.5 leading-8 font-bold text-2xl">Current Tasks</h2>
+          <h2 class="pl-2 pt-0.5 leading-8 text-2xl">Current Tasks</h2>
         </div>
 
         <div class="p-1">
+          <label class="hidden" for="tasks-search">Search for a task</label>
           <UInput 
+            id="tasks-search"
             v-model="searchValue"
             autocomplete="off"
             variant="outline"
             icon="i-heroicons-magnifying-glass-16-solid"
             placeholder="Search for a task..."
-            aria-label="Search for a task"
             :ui="TEXT_INPUT_UI_OBJECT"
           />
         </div>
