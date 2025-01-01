@@ -34,7 +34,7 @@
 <template>
   <UModal v-model="isVisible" :transition="!noAnimate">
     <div class="p-4">
-      <h3 class="text-xl font-bold">Delete Task?</h3>
+      <h3 class="text-xl font-bold pb-2">Delete Task?</h3>
       <p>You are about to delete this task. Other tasks will be updated to no longer depend on this task. This cannot be undone.</p>
       <div class="block sm:hidden pt-1">
         <UButton 

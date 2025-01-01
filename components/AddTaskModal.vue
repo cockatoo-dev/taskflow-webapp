@@ -15,11 +15,11 @@
     if (title.value == '') {
       errorMessage.value = 'Please enter a task title.'
       return
-    } else if (title.value.length > 25) {
-      errorMessage.value = 'Task ttitle is too long.'
+    } else if (title.value.length > 50) {
+      errorMessage.value = 'Task ttitle is too long (maximum 50 characters).'
       return
     } else if (description.value.length > 2500) {
-      errorMessage.value = 'Task description is too long.'
+      errorMessage.value = 'Task description is too long (maximum 2500 characters).'
       return
     }
     
@@ -59,7 +59,7 @@
             size="lg"
             :ui="TEXT_INPUT_UI_OBJECT"
           />
-          <CharLimit :str="title" :limit="25" :show-length="15" />
+          <CharLimit :str="title" :limit="50" :show-length="40" />
         </div>
         <div class="pb-2">
           <label for="add-description" class="block pb-2 font-bold">Description</label>

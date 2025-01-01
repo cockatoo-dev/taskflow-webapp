@@ -17,15 +17,15 @@ export default defineEventHandler(async (e) => {
       statusCode: 400,
       statusMessage: "Please enter a task title."
     })
-  } else if (bodyData.title.length > 25) {
+  } else if (bodyData.title.length > 50) {
     throw createError({
       statusCode: 400,
-      statusMessage: "Task title is too long."
+      statusMessage: "Task title is too long (maximum 50 characters)."
     })
   } else if (bodyData.description.length > 2500) {
     throw createError({
       statusCode: 400,
-      statusMessage: "Task description is too long."
+      statusMessage: "Task description is too long (maximum 2500 characters)."
     })
   }
 

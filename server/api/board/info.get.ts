@@ -11,10 +11,17 @@ export default defineEventHandler(async (e) => {
 
   const db = useDB(e)
   const dbData = await db.getBoard(queryData.boardId)
-  return {
-    boardId: dbData[0].boardId,
-    isOwner: true,
-    boardname: dbData[0].title,
-    publicPerms: dbData[0].publicPerms
+  if (dbData.length === 0) {
+    throw createError({
+      status: 400,
+      message: 'Invlaid board ID.'
+    })
+  } else {
+    return {
+      boardId: dbData[0].boardId,
+      isOwner: true,
+      boardName: dbData[0].title,
+      publicPerms: dbData[0].publicPerms
+    }
   }
 })

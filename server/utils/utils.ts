@@ -20,3 +20,23 @@ export const checkTaskExists = async (db: db, boardId: string, taskId: string) =
     })
   }
 }
+
+export const canSetComplete = (
+  loginUserId: string, boardOwnerId: string, publicPerms: number
+) => {
+  if (loginUserId === boardOwnerId) {
+    return true
+  } else {
+    return publicPerms >= 1
+  }
+}
+
+export const canEdit = (
+  loginUserId: string, boardOwnerId: string, publicPerms: number
+) => {
+  if (loginUserId === boardOwnerId) {
+    return true
+  } else {
+    return publicPerms === 2
+  }
+}

@@ -26,7 +26,7 @@
         <div>
           <UIcon name="i-heroicons-check-circle-16-solid" class="h-5 w-5" />
         </div>
-        <div class="text-sm font-bold tracking-wider">COMPLETE</div>
+        <div class="text-sm font-bold tracking-wider">COMPLETED</div>
       </div>
 
       <h3
@@ -53,13 +53,13 @@
       </div>
 
       <h3
-        class="line-clamp-1 overflow-ellipsis text-2xl font-bold"
+        class="lg:h-16 line-clamp-2 overflow-ellipsis text-2xl font-bold"
         :class="isMouseOver ? 'underline' : ''"
         :title="$props.title"
       >
         {{ props.title }}
       </h3>
-      <p class=" h-10 lg:h-20 line-clamp-2 lg:line-clamp-4 overflow-ellipsis">
+      <p class="lg:h-20 line-clamp-2 lg:line-clamp-4 overflow-ellipsis">
         {{ props.description }}
       </p>
     </UCard>
