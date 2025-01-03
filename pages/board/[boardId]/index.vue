@@ -1,14 +1,5 @@
 <script setup lang="ts">
   const route = useRoute()
-  useHead({
-    title: "Taskflow"
-  })
-  useSeoMeta({
-    title: 'Taskflow',
-    ogTitle: 'Taskflow',
-    description: 'Helping keep your team coordinated to meet your goals!',
-    ogDescription: 'Helping keep your team coordinated to meet your goals!'
-  })
 
   let refreshInterval: ReturnType<typeof setTimeout>
   const { data, refresh } = useFetch("/api/tasks", {
@@ -32,6 +23,23 @@
     } else {
       return false
     }
+  })
+
+  const pageTitle = computed(() => {
+    if (!boardInfoFetch.data.value) {
+      return 'Taskflow'
+    } else {
+      return `${boardInfoFetch.data.value.boardName} | Taskflow`
+    }
+  })
+  useHead({
+    title: pageTitle
+  })
+  useSeoMeta({
+    title: pageTitle,
+    ogTitle: pageTitle,
+    description: 'Keep yourself and your team coordinated to meet your goals!',
+    ogDescription: 'Keep yourself and your team coordinated to meet your goals!'
   })
 
   const refreshData = async () => {
@@ -98,7 +106,7 @@
     <InvalidBoardModal v-model="showInvalidBoard" />
     <main 
       v-if="boardInfoFetch.data.value"
-      class="w-full min-w-80 h-[calc(100vh-4rem)] sm:grid sm:grid-cols-[50%_50%] lg:grid-cols-[67%_33%] 2xl:grid-cols-[75%_25%]"
+      class="w-full min-w-80 h-[calc(100vh-8rem)] sm:grid sm:grid-cols-[50%_50%] lg:grid-cols-[67%_33%] 2xl:grid-cols-[75%_25%]"
     >
       <BoardSettingsModal 
         v-model="showBoardSettings"

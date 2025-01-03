@@ -36,8 +36,9 @@
         @click="() => {isVisible = false}"
       />
     </div>
-    <div class="sm:pb-4 pl-4 pr-4 sm:pr-0 lg:pl-8 lg:pr-4 pb-4 lg:pb-8">
+    <div class="pl-4 pr-4 sm:pr-0 lg:pl-8 lg:pr-4">
       <div class="w-full">
+        <div class="pb-2 text-center text-xl">To open this board in your web browser,</div>
         <div class="block sm:grid sm:grid-cols-[60%_40%]">
           <div class="flex flex-col justify-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold p-2 sm:p-4 border-b sm:border-b-0 sm:border-r border-slate-300 dark:border-slate-700">
             <div class="leading-snug break-words">
@@ -47,18 +48,32 @@
               <span class="text-teal-600 dark:text-teal-400">{{ route.params.boardId }}</span>
             </div>
           </div>
+          
           <div>
-            <div class="px-8 text-center text-lg font-bold pt-2 sm:pt-0">You can also scan this QR code</div>
-            <img class="block dark:hidden w-full max-w-[360px] mx-auto" :src="lightQRCode">
-            <img class="hidden dark:block w-full max-w-[360px] mx-auto" :src="darkQRCode">
+            <div class="px-8 text-center text-lg font-bold pt-2 sm:pt-0">or scan this QR code</div>
+            <img 
+              class="block dark:hidden w-full max-w-[360px] mx-auto" 
+              :src="lightQRCode"
+              alt="QR code which directs people to this board."
+            >
+            <img 
+              class="hidden dark:block w-full max-w-[360px] mx-auto" 
+              :src="darkQRCode"
+              alt="QR code which directs people to this board."
+            >
           </div>
         </div>
       </div>
-      <div class="pt-2">
-        <div class="break-words">
-          You can also send this link to people: 
-          <a class="text-teal-600 dark:text-teal-400 hover:underline" href='https://github.com/max8539/taskflow'>https://github.com/max8539/taskflow</a>
-        </div>
+    </div>
+    <div class="p-4">
+      <div class="break-words">
+        You can also send this link to people: 
+        <a 
+          class="text-teal-600 dark:text-teal-400 hover:underline" 
+          href='https://github.com/max8539/taskflow'
+        >
+          https://{{ BASE_URL }}/board/{{ route.params.boardId }}
+        </a>
       </div>
     </div>
   </LargeModal>

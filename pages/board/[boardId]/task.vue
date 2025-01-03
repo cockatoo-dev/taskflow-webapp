@@ -1,4 +1,14 @@
 <script setup lang="ts">  
+  useHead({
+    title: 'Taskflow'
+  })
+  useSeoMeta({
+    title: 'Taskflow',
+    ogTitle: 'Taskflow',
+    description: 'Keep yourself and your team coordinated to meet your goals!',
+    ogDescription: 'Keep yourself and your team coordinated to meet your goals!'
+  })
+  
   let refreshInterval: ReturnType<typeof setInterval>
   let addDepsLastUpdate = 0
   const route = useRoute()
@@ -57,8 +67,8 @@
     if (data.value.task.numDeps !== num) {
       console.log(`depscheck ${route.params.boardId} ${route.query.taskId}`)
       await $fetch('/api/task/depscheck', {
-        method: 'get',
-        params: {
+        method: 'post',
+        body: {
           boardId: route.params.boardId,
           taskId: data.value.task.taskId
         }

@@ -149,69 +149,143 @@ export class db {
   }
 
   public setTaskComplete = async (taskId: string, isComplete: boolean) => {
-    await this._db.update(tasks)
-    .set({ isComplete: isComplete })
-    .where(eq(tasks.taskId, taskId))
-
     if (isComplete) {
-      await this._db.update(tasks)
-      .set({numDeps: 0})
-      .where(and(
-        ne(tasks.taskId, taskId),
-        lte(tasks.numDeps, 1),
-        exists(
-          this._db.select()
-          .from(deps)
-          .where(and(
-            eq(deps.source, tasks.taskId),
-            eq(deps.dest, taskId)
-          ))
-        )
-      ))
-      await this._db.update(tasks)
-      .set({numDeps: sql`${tasks.numDeps} - 1`})
-      .where(and(
-        ne(tasks.taskId, taskId),
-        gt(tasks.numDeps, 1),
-        exists(
-          this._db.select()
-          .from(deps)
-          .where(and(
-            eq(deps.source, tasks.taskId),
-            eq(deps.dest, taskId)
-          ))
-        )
-      ))
+      await this._db.batch([
+        this._db.update(tasks)
+        .set({ isComplete: isComplete })
+        .where(eq(tasks.taskId, taskId)),
+
+        this._db.update(tasks)
+        .set({numDeps: 0})
+        .where(and(
+          ne(tasks.taskId, taskId),
+          lte(tasks.numDeps, 1),
+          exists(
+            this._db.select()
+            .from(deps)
+            .where(and(
+              eq(deps.source, tasks.taskId),
+              eq(deps.dest, taskId)
+            ))
+          )
+        )),
+
+        this._db.update(tasks)
+        .set({numDeps: sql`${tasks.numDeps} - 1`})
+        .where(and(
+          ne(tasks.taskId, taskId),
+          gt(tasks.numDeps, 1),
+          exists(
+            this._db.select()
+            .from(deps)
+            .where(and(
+              eq(deps.source, tasks.taskId),
+              eq(deps.dest, taskId)
+            ))
+          )
+        ))
+      ])
     } else {
-      await this._db.update(tasks)
-      .set({numDeps: sql`${tasks.numDeps} + 1`})
-      .where(and(
-        ne(tasks.taskId, taskId),
-        gte(tasks.numDeps, 1),
-        exists(
-          this._db.select()
-          .from(deps)
-          .where(and(
-            eq(deps.source, tasks.taskId),
-            eq(deps.dest, taskId)
-          ))
-        )
-      ))
-      await this._db.update(tasks)
-      .set({numDeps: 1})
-      .where(and(
-        ne(tasks.taskId, taskId),
-        lt(tasks.numDeps, 1),
-        exists(
-          this._db.select()
-          .from(deps)
-          .where(and(
-            eq(deps.source, tasks.taskId),
-            eq(deps.dest, taskId)
-          ))
-        )
-      ))
+      await this._db.batch([
+        this._db.update(tasks)
+        .set({ isComplete: isComplete })
+        .where(eq(tasks.taskId, taskId)),
+
+        this._db.update(tasks)
+        .set({numDeps: sql`${tasks.numDeps} + 1`})
+        .where(and(
+          ne(tasks.taskId, taskId),
+          gte(tasks.numDeps, 1),
+          exists(
+            this._db.select()
+            .from(deps)
+            .where(and(
+              eq(deps.source, tasks.taskId),
+              eq(deps.dest, taskId)
+            ))
+          )
+        )),
+
+        this._db.update(tasks)
+        .set({numDeps: 1})
+        .where(and(
+          ne(tasks.taskId, taskId),
+          lt(tasks.numDeps, 1),
+          exists(
+            this._db.select()
+            .from(deps)
+            .where(and(
+              eq(deps.source, tasks.taskId),
+              eq(deps.dest, taskId)
+            ))
+          )
+        ))
+      ])
     }
+    
+  //   await this._db.update(tasks)
+  //   .set({ isComplete: isComplete })
+  //   .where(eq(tasks.taskId, taskId))
+
+  //   if (isComplete) {
+  //     await this._db.update(tasks)
+  //     .set({numDeps: 0})
+  //     .where(and(
+  //       ne(tasks.taskId, taskId),
+  //       lte(tasks.numDeps, 1),
+  //       exists(
+  //         this._db.select()
+  //         .from(deps)
+  //         .where(and(
+  //           eq(deps.source, tasks.taskId),
+  //           eq(deps.dest, taskId)
+  //         ))
+  //       )
+  //     ))
+  //     await this._db.update(tasks)
+  //     .set({numDeps: sql`${tasks.numDeps} - 1`})
+  //     .where(and(
+  //       ne(tasks.taskId, taskId),
+  //       gt(tasks.numDeps, 1),
+  //       exists(
+  //         this._db.select()
+  //         .from(deps)
+  //         .where(and(
+  //           eq(deps.source, tasks.taskId),
+  //           eq(deps.dest, taskId)
+  //         ))
+  //       )
+  //     ))
+  //   } else {
+  //     await this._db.update(tasks)
+  //     .set({numDeps: sql`${tasks.numDeps} + 1`})
+  //     .where(and(
+  //       ne(tasks.taskId, taskId),
+  //       gte(tasks.numDeps, 1),
+  //       exists(
+  //         this._db.select()
+  //         .from(deps)
+  //         .where(and(
+  //           eq(deps.source, tasks.taskId),
+  //           eq(deps.dest, taskId)
+  //         ))
+  //       )
+  //     ))
+  //     await this._db.update(tasks)
+  //     .set({numDeps: 1})
+  //     .where(and(
+  //       ne(tasks.taskId, taskId),
+  //       lt(tasks.numDeps, 1),
+  //       exists(
+  //         this._db.select()
+  //         .from(deps)
+  //         .where(and(
+  //           eq(deps.source, tasks.taskId),
+  //           eq(deps.dest, taskId)
+  //         ))
+  //       )
+  //     ))
+  //   }
   }
   
   public setTaskNumDeps = async (taskId: string, value: number) => {
@@ -221,7 +295,8 @@ export class db {
   }
 
   public deleteTask = async (taskId: string) => {
-    await this._db.update(tasks)
+    await this._db.batch([
+      this._db.update(tasks)
       .set({numDeps: 0})
       .where(and(
         ne(tasks.taskId, taskId),
@@ -234,8 +309,9 @@ export class db {
             eq(deps.dest, taskId)
           ))
         )
-      ))
-      await this._db.update(tasks)
+      )),
+
+      this._db.update(tasks)
       .set({numDeps: sql`${tasks.numDeps} - 1`})
       .where(and(
         ne(tasks.taskId, taskId),
@@ -248,16 +324,55 @@ export class db {
             eq(deps.dest, taskId)
           ))
         )
-      ))
-    
-    await this._db.delete(deps)
-    .where(or(
-      eq(deps.source, taskId),
-      eq(deps.dest, taskId)
-    ))
+      )),
 
-    await this._db.delete(tasks)
-    .where(eq(tasks.taskId, taskId))
+      this._db.delete(deps)
+      .where(or(
+        eq(deps.source, taskId),
+        eq(deps.dest, taskId)
+      )),
+
+      this._db.delete(tasks)
+      .where(eq(tasks.taskId, taskId))
+    ])
+    
+  //   await this._db.update(tasks)
+  //   .set({numDeps: 0})
+  //   .where(and(
+  //     ne(tasks.taskId, taskId),
+  //     lte(tasks.numDeps, 1),
+  //     exists(
+  //       this._db.select()
+  //       .from(deps)
+  //       .where(and(
+  //         eq(deps.source, tasks.taskId),
+  //         eq(deps.dest, taskId)
+  //       ))
+  //     )
+  //   ))
+  //   await this._db.update(tasks)
+  //   .set({numDeps: sql`${tasks.numDeps} - 1`})
+  //   .where(and(
+  //     ne(tasks.taskId, taskId),
+  //     gt(tasks.numDeps, 1),
+  //     exists(
+  //       this._db.select()
+  //       .from(deps)
+  //       .where(and(
+  //         eq(deps.source, tasks.taskId),
+  //         eq(deps.dest, taskId)
+  //       ))
+  //     )
+  //   ))
+    
+  //   await this._db.delete(deps)
+  //   .where(or(
+  //     eq(deps.source, taskId),
+  //     eq(deps.dest, taskId)
+  //   ))
+
+  //   await this._db.delete(tasks)
+  //   .where(eq(tasks.taskId, taskId))
   }
 
   public getDeps = async () => {
@@ -292,15 +407,36 @@ export class db {
   }
 
   public addDeps = async (source: string, dest: string, newDepsNum: number) => {
-    await this._db.insert(deps)
-    .values({ source, dest })
+    await this._db.batch([
+      this._db.insert(deps)
+      .values({ source, dest }),
 
-    await this._db.update(tasks)
-    .set({ numDeps: newDepsNum })
-    .where(eq(tasks.taskId, source))
+      this._db.update(tasks)
+      .set({ numDeps: newDepsNum })
+      .where(eq(tasks.taskId, source))
+    ])
+    
+    // await this._db.insert(deps)
+    // .values({ source, dest })
+
+    // await this._db.update(tasks)
+    // .set({ numDeps: newDepsNum })
+    // .where(eq(tasks.taskId, source))
   }
 
   public removeDeps = async (source: string, dest: string, newDepsNum: number) => {
+    await this._db.batch([
+      this._db.delete(deps)
+      .where(and(
+        eq(deps.source, source),
+        eq(deps.dest, dest)
+      )),
+
+      this._db.update(tasks)
+      .set({ numDeps: newDepsNum })
+      .where(eq(tasks.taskId, source))
+    ])
+    
     await this._db.delete(deps)
     .where(and(
       eq(deps.source, source),
