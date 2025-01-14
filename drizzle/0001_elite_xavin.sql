@@ -1,0 +1,1 @@
+CREATE INDEX `boardIndex` ON `tasks` (`boardId`);

@@ -1,4 +1,4 @@
-import { integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { index, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 // export const users = sqliteTable('users', {
   
@@ -9,7 +9,7 @@ export const boards = sqliteTable('boards', {
   ownerId: text('ownerId').notNull(),
   title: text('title').notNull(),
   publicPerms: integer('publicPerms').notNull()
-}, () => [])
+})
 
 export const tasks = sqliteTable('tasks', {
   taskId: text('taskId').primaryKey(),
@@ -18,7 +18,11 @@ export const tasks = sqliteTable('tasks', {
   description: text('description').notNull(),
   numDeps: integer('numDeps').notNull(),
   isComplete: integer('isComplete', { mode: 'boolean' }).notNull()
-}, () => [])
+}, (t) => {
+  return [
+    index('boardIndex').on(t.boardId)
+  ]
+})
 
 export const deps = sqliteTable('deps', {
   source: text('source').references(() => tasks.taskId).notNull(),

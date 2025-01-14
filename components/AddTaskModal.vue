@@ -41,6 +41,15 @@
       }
     }
   }
+
+  watch(isVisible, () => {
+    if (!isVisible.value) {
+      title.value = ''
+      description.value = ''
+      disableSubmit.value = false
+      errorMessage.value = ''
+    }
+  })
 </script>
 
 <template>
@@ -72,7 +81,7 @@
           />
           <CharLimit :str="description" :limit="2500" :show-length="2250" />
         </div>
-        <div class="flex gap-4">
+        <div class="flex gap-2 sm:gap-4">
           <div>
             <UButton 
               type="submit"

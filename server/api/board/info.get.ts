@@ -20,7 +20,7 @@ export default defineEventHandler(async (e) => {
     return {
       boardId: dbData[0].boardId,
       isOwner: true,
-      boardName: dbData[0].title,
+      title: dbData[0].title,
       publicPerms: dbData[0].publicPerms
     }
   }

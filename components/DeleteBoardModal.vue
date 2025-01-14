@@ -1,30 +1,28 @@
 <script setup lang="ts">
-  import type { LocationQueryValue } from 'vue-router';
-
   const isVisible = defineModel<boolean>()
 
   const props = defineProps<{
-    taskId: LocationQueryValue | LocationQueryValue[],
-    taskName: string
+    boardId: string,
+    title: string,
+    refresh: () => void
   }>()
 
-  const route = useRoute()
   const isMotionSafe = useMotionSafe()
 
   const errorMessage = ref('')
   const deleteLoading = ref(false)
 
-  const deleteTask = async () => {
+  const deleteBoard = async () => {
     deleteLoading.value = true
     try {
-      await $fetch('/api/task/delete', {
+      await $fetch('/api/board/delete', {
         method: 'post',
         body: {
-          boardId: route.params.boardId,
-          taskId: props.taskId
+          boardId: props.boardId
         }
       })
-      navigateTo(`/board/${route.params.boardId}`)
+      props.refresh()
+      isVisible.value = false
     } catch (err) {
       deleteLoading.value = false
       if (err instanceof Error) {
@@ -34,24 +32,28 @@
   }
 
   watch(isVisible, () => {
-    deleteLoading.value = false
-    errorMessage.value = ''
+    if (isVisible.value) {
+      errorMessage.value = ''
+      deleteLoading.value = false
+    }
   })
 </script>
 
 <template>
   <UModal v-model="isVisible" :transition="isMotionSafe" :ui="{background: 'dark:bg-black'}">
     <div class="p-4">
-      <h3 class="text-xl font-bold pb-2">Delete '{{ taskName }}'?</h3>
-      <p>You are about to delete this task. Other tasks will be updated to no longer depend on this task. This cannot be undone.</p>
+      <h3 class="text-xl font-bold pb-2">Delete '{{ title }}'?</h3>
+      <p>
+        You are about to delete this board. All tasks on this board will be deleted. People will no longer be able to access this board. This cannot be undone.
+      </p>
       <div class="flex gap-2 sm:gap-4 pt-2">
         <div>
           <UButton 
-            label="Delete Task"
+            label="Delete Board"
             icon="i-heroicons-trash-16-solid"
             color="red"
             :ui="BUTTON_UI_OBJECT"
-            @click="deleteTask"
+            @click="deleteBoard"
           />
         </div>
         <div>
@@ -59,6 +61,7 @@
             icon="i-heroicons-x-mark-16-solid"
             label="Cancel"
             variant="ghost"
+            :loading="deleteLoading"
             :ui="BUTTON_UI_OBJECT"
             @click="() => {isVisible = false}"
           />

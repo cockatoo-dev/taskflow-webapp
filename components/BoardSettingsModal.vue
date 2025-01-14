@@ -3,31 +3,30 @@
   
   const isVisible = defineModel<boolean>()
   const props = defineProps<{
-    boardName: string,
+    boardId: string | string[]
+    title: string,
     publicPerms: number,
     refresh: () => void
   }>()
-  
-  const route = useRoute()
 
-  const boardNameEdit = ref("")
+  const titleEdit = ref("")
   const publicPermsEdit = ref(1)
   const errorMessage = ref("")
   const disableSubmit = ref(false)
 
   const submitForm = async () => {
-    if (boardNameEdit.value.length > 40) {
-      errorMessage.value = "Board name is too long (maximum 40 characters)."
+    if (titleEdit.value.length > 40) {
+      errorMessage.value = "Board Name is too long (maximum 40 characters)."
       return
     }
 
     disableSubmit.value = true
     try {
-      await $fetch("/api/board/create", {
+      await $fetch("/api/board/edit", {
         method: 'post',
         body: {
-          boardId: route.params.boardId,
-          boardName: boardNameEdit.value,
+          boardId: props.boardId,
+          title: titleEdit.value,
           publicPerms: publicPermsEdit.value
         }
       })
@@ -44,7 +43,7 @@
 
   watch(isVisible, () => {
     if (isVisible.value) {
-      boardNameEdit.value = props.boardName
+      titleEdit.value = props.title
       publicPermsEdit.value = props.publicPerms
       errorMessage.value = ''
       disableSubmit.value = false
@@ -61,13 +60,13 @@
           <label for="settings-name" class="block pb-2 font-bold">Board Name</label>
           <UInput 
             id="settings-name"
-            v-model="boardNameEdit" 
+            v-model="titleEdit" 
             required
             autocomplete="off"
             class="block w-full"
             :ui="TEXT_INPUT_UI_OBJECT"
           />
-          <CharLimit :str="boardName" :limit="40" :show-length="30" />
+          <CharLimit :str="title" :limit="40" :show-length="30" />
         </div>
         <div class="pb-4">
           <PublicPermsRadio v-model="publicPermsEdit" />
@@ -95,6 +94,12 @@
         </div>
       </form>
       <FormError :message="errorMessage" />
+      <div v-if="$route.path !== '/account'" class="pt-2">
+        If you are looking to delete this board, please go to the
+        <NuxtLink to="/account" class="text-teal-600 dark:text-teal-400 hover:underline">
+          account page.
+        </NuxtLink>
+      </div>
     </div>
   </LargeModal>
 </template>

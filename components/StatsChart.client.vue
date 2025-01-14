@@ -7,8 +7,8 @@
     ready: number,
     notReady: number
   }>()
-  const isDark = useMediaQuery('(prefers-color-scheme: dark)')
-  const noAnimate = useMediaQuery('(prefers-reduced-motion)')
+  const isDark = useDark()
+  const isMotionSafe = useMotionSafe()
 
   // https://tailwindcss.com/docs/customizing-colors
   const RED_400 = '#f87171'
@@ -25,35 +25,34 @@
     Tooltip
   );
 
-const statsChartData = computed(() => {
-  return {
-    datasets: [{
-      data: [
-        props.complete,
-        props.ready,
-        props.notReady
-      ],
-      backgroundColor: [
-        isDark.value ? GREEN_400 : GREEN_600,
-        isDark.value ? BLUE_400 : BLUE_600,
-        isDark.value ? RED_400 : RED_600
-      ],
-      borderWidth: 1,
-      borderColor: isDark.value ? SLATE_900 : SLATE_100
-    }],
-    labels: ['COMPLETED', 'READY', 'NOT READY']
-  }
-})
+  const statsChartData = computed(() => {
+    return {
+      datasets: [{
+        data: [
+          props.complete,
+          props.ready,
+          props.notReady
+        ],
+        backgroundColor: [
+          isDark.value ? GREEN_400 : GREEN_600,
+          isDark.value ? BLUE_400 : BLUE_600,
+          isDark.value ? RED_400 : RED_600
+        ],
+        borderWidth: 1,
+        borderColor: isDark.value ? SLATE_900 : SLATE_100
+      }],
+      labels: ['COMPLETED', 'READY', 'NOT READY']
+    }
+  })
 
-const chartOptions = computed(() => {
-  return {
-    responsive: true,
-    maintainAspectRatio: false,
-    animation: {animateRotate: !noAnimate.value},
-    plugins: {tooltip: {titleColor: SLATE_100, bodyColor: SLATE_100}}
-  }
-})
-
+  const chartOptions = computed(() => {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: {animateRotate: isMotionSafe.value},
+      plugins: {tooltip: {titleColor: SLATE_100, bodyColor: SLATE_100}}
+    }
+  })
 </script>
 
 <template>
@@ -61,6 +60,7 @@ const chartOptions = computed(() => {
     <Doughnut
       :data="statsChartData"
       :options="chartOptions"
+      :update-mode="isMotionSafe ? 'default' : 'none'"
       aria-label="A doughnut chart comparing the number of tasks completed, the number of tasks ready to be complted, and the number of tasks not ready to be completed."
     />
   </div>

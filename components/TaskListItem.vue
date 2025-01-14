@@ -27,12 +27,12 @@
       </div>
 
       <h3
-        class="line-clamp-1 overflow-ellipsis text-2xl font-bold group-hover:underline group-focus:underline"
+        class="lg:h-16 line-clamp-2 overflow-ellipsis text-2xl font-bold group-hover:underline group-focus:underline"
         :title="$props.title"
       >
         {{ props.title }}
       </h3>
-      <p class="h-10 lg:h-20 line-clamp-2 lg:line-clamp-4 overflow-ellipsis">
+      <p class="lg:h-24 line-clamp-2 lg:line-clamp-4 overflow-ellipsis">
         {{ props.description }}
       </p>
     </UCard>
@@ -54,7 +54,7 @@
       >
         {{ props.title }}
       </h3>
-      <p class="lg:h-20 line-clamp-2 lg:line-clamp-4 overflow-ellipsis">
+      <p class="lg:h-24 line-clamp-2 lg:line-clamp-4 overflow-ellipsis">
         {{ props.description }}
       </p>
     </UCard>
@@ -74,12 +74,12 @@
       </div>
 
       <h3
-        class="line-clamp-1 overflow-ellipsis text-2xl font-bold group-hover:underline group-focus:underline"
+        class="lg:h-16 line-clamp-2 overflow-ellipsis text-2xl font-bold group-hover:underline group-focus:underline"
         :title="$props.title"
       >
         {{ props.title }}
       </h3>
-      <p class=" h-10 lg:h-20 line-clamp-2 lg:line-clamp-4 overflow-ellipsis">
+      <p class="lg:h-24 line-clamp-2 lg:line-clamp-4 overflow-ellipsis">
         {{ props.description }}
       </p>
     </UCard>

@@ -50,7 +50,7 @@
         <form class="block w-full max-w-[720px] mx-auto" @submit.prevent="submitForm">
           <div class="grid grid-cols-[1fr_auto]">
             <div class="pr-2">
-              <label for="homepage-board" class="hidden">Enter board code</label>
+              <label for="homepage-board" class="sr-only">Enter board code</label>
               <UInput 
                 id="homepage-board"
                 v-model="boardId"

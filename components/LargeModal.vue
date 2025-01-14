@@ -1,12 +1,12 @@
 <script setup lang="ts">
   const isVisible = defineModel<boolean>()
-  const noAnimate = useMediaQuery('(prefers-reduced-motion)')
+  const isMotionSafe = useMotionSafe()
 </script>
 
 <template>
   <UModal
     v-model="isVisible"
-    :transition="!noAnimate"
+    :transition="isMotionSafe"
     :ui="{
       container: 'items-center',
       width: 'w-11/12 lg:w-[960px] sm:max-w-full',

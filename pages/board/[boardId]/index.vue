@@ -2,7 +2,7 @@
   const route = useRoute()
 
   let refreshInterval: ReturnType<typeof setTimeout>
-  const { data, refresh } = useFetch("/api/tasks", {
+  const { data, error, refresh } = useFetch("/api/tasks", {
     query: {boardId: route.params.boardId},
     method: 'get'
   })
@@ -29,7 +29,7 @@
     if (!boardInfoFetch.data.value) {
       return 'Taskflow'
     } else {
-      return `${boardInfoFetch.data.value.boardName} | Taskflow`
+      return `${boardInfoFetch.data.value.title} | Taskflow`
     }
   })
   useHead({
@@ -42,9 +42,9 @@
     ogDescription: 'Keep yourself and your team coordinated to meet your goals!'
   })
 
-  const refreshData = async () => {
-    await boardInfoFetch.refresh()
-    await refresh()
+  const refreshData = () => {
+    boardInfoFetch.refresh()
+    refresh()
   }
 
   const displayTasks = computed(() => {
@@ -105,12 +105,13 @@
     <NavBar />
     <InvalidBoardModal v-model="showInvalidBoard" />
     <main 
-      v-if="boardInfoFetch.data.value"
+      v-if="boardInfoFetch.data.value && data"
       class="w-full min-w-80 h-[calc(100vh-8rem)] sm:grid sm:grid-cols-[50%_50%] lg:grid-cols-[67%_33%] 2xl:grid-cols-[75%_25%]"
     >
       <BoardSettingsModal 
         v-model="showBoardSettings"
-        :board-name="boardInfoFetch.data.value?.boardName || ''"
+        :board-id="$route.params.boardId"
+        :title="boardInfoFetch.data.value?.title || ''"
         :public-perms="boardInfoFetch.data.value?.publicPerms || 0"
         :refresh="refreshData"
       />
@@ -119,7 +120,7 @@
       <div class="w-full h-full">
         <div class="h-10 p-1 grid grid-cols-[1fr_auto]">
           <h1 class="px-1 pt-1.5 lg:pt-0.5 lg:text-2xl text-center font-bold line-clamp-1 overflow-ellipsis">
-            {{ boardInfoFetch.data.value.boardName }}
+            {{ boardInfoFetch.data.value.title }}
           </h1>
           <div v-if="boardInfoFetch.data.value.isOwner">
             <div class="block lg:hidden">
@@ -137,13 +138,7 @@
                   }]
                 ]"
                 :content="{align:'end'}"
-                :ui="{item: {
-                  ring: 'ring-teal-500 dark:ring-teal-500',
-                  size: 'text-base',
-                  active:'bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-400',
-                  inactive:'text-teal-600 dark:text-teal-400',
-                  icon: {active: 'text-teal-600 dark:text-teal-400', inactive: 'text-teal-600 dark:text-teal-400'}
-                }}"
+                :ui="DROPDOWN_UI_OBJECT"
               >
                 <UButton 
                   type="button"
@@ -203,7 +198,7 @@
         </div>
 
         <div class="p-1">
-          <label class="hidden" for="tasks-search">Search for a task</label>
+          <label class="sr-only" for="tasks-search">Search for a task. The list of tasks will update automatically.</label>
           <UInput 
             id="tasks-search"
             v-model="searchValue"
@@ -246,7 +241,7 @@
         <div class="p-1 lg:p-2 text-center text-3xl">
           <div v-if="stats.percent < 100">
             <p>
-              We're <span class="text-blue-600 dark:text-blue-400">{{ stats.percent }}%</span> of the way there!
+              We're <span class="text-teal-600 dark:text-teal-400">{{ stats.percent }}%</span> of the way there!
             </p>
           </div>
           <div v-else>
@@ -261,5 +256,11 @@
         />
       </div>
     </main>
+    <div v-else-if="error || (boardInfoFetch.error.value && boardInfoFetch.error.value.statusCode !== 400)">
+      <LoadingError :refresh="refreshData" />
+    </div>
+    <div v-else class="text-center font-bold text-xl pt-8">
+      Loading...
+    </div>
   </div>
 </template>

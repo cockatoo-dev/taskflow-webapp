@@ -54,11 +54,47 @@ export class db {
   }
 
   public deleteBoard = async (boardId: string, ownerId: string) => {
-    await this._db.delete(boards)
-    .where(and(
-      eq(boards.boardId, boardId),
-      eq(boards.ownerId, ownerId)
-    ))
+    await this._db.batch([
+      this._db.delete(deps)
+      .where(exists(
+        this._db.select().from(tasks)
+        .where(and(
+          eq(deps.source, tasks.taskId),
+          eq(tasks.boardId, boardId)
+        ))
+      )),
+      this._db.delete(boards)
+      .where(and(
+        eq(boards.boardId, boardId),
+        eq(boards.ownerId, ownerId)
+      ))
+    ])
+  }
+
+  public getUserBoards = async (userId: string) => {
+    return await this._db.select({
+      boardId: boards.boardId,
+      title: boards.title,
+      publicPerms: boards.publicPerms
+    })
+    .from(boards)
+    .where(eq(boards.ownerId, userId))
+  }
+
+  public deleteUserBaords = async (userId: string) => {
+    await this._db.batch([
+      this._db.delete(deps)
+      .where(exists(
+        this._db.select().from(tasks)
+        .innerJoin(boards, eq(tasks.boardId, boards.boardId))
+        .where(and(
+          eq(deps.source, tasks.taskId),
+          eq(boards.ownerId, userId)
+        ))
+      )),
+      this._db.delete(boards)
+      .where(eq(boards.ownerId, userId))
+    ])
   }
   
   public isTaskExists = async (boardId: string, taskId: string) => {
@@ -222,70 +258,6 @@ export class db {
         ))
       ])
     }
-    
-  //   await this._db.update(tasks)
-  //   .set({ isComplete: isComplete })
-  //   .where(eq(tasks.taskId, taskId))
-
-  //   if (isComplete) {
-  //     await this._db.update(tasks)
-  //     .set({numDeps: 0})
-  //     .where(and(
-  //       ne(tasks.taskId, taskId),
-  //       lte(tasks.numDeps, 1),
-  //       exists(
-  //         this._db.select()
-  //         .from(deps)
-  //         .where(and(
-  //           eq(deps.source, tasks.taskId),
-  //           eq(deps.dest, taskId)
-  //         ))
-  //       )
-  //     ))
-  //     await this._db.update(tasks)
-  //     .set({numDeps: sql`${tasks.numDeps} - 1`})
-  //     .where(and(
-  //       ne(tasks.taskId, taskId),
-  //       gt(tasks.numDeps, 1),
-  //       exists(
-  //         this._db.select()
-  //         .from(deps)
-  //         .where(and(
-  //           eq(deps.source, tasks.taskId),
-  //           eq(deps.dest, taskId)
-  //         ))
-  //       )
-  //     ))
-  //   } else {
-  //     await this._db.update(tasks)
-  //     .set({numDeps: sql`${tasks.numDeps} + 1`})
-  //     .where(and(
-  //       ne(tasks.taskId, taskId),
-  //       gte(tasks.numDeps, 1),
-  //       exists(
-  //         this._db.select()
-  //         .from(deps)
-  //         .where(and(
-  //           eq(deps.source, tasks.taskId),
-  //           eq(deps.dest, taskId)
-  //         ))
-  //       )
-  //     ))
-  //     await this._db.update(tasks)
-  //     .set({numDeps: 1})
-  //     .where(and(
-  //       ne(tasks.taskId, taskId),
-  //       lt(tasks.numDeps, 1),
-  //       exists(
-  //         this._db.select()
-  //         .from(deps)
-  //         .where(and(
-  //           eq(deps.source, tasks.taskId),
-  //           eq(deps.dest, taskId)
-  //         ))
-  //       )
-  //     ))
-  //   }
   }
   
   public setTaskNumDeps = async (taskId: string, value: number) => {
@@ -335,44 +307,6 @@ export class db {
       this._db.delete(tasks)
       .where(eq(tasks.taskId, taskId))
     ])
-    
-  //   await this._db.update(tasks)
-  //   .set({numDeps: 0})
-  //   .where(and(
-  //     ne(tasks.taskId, taskId),
-  //     lte(tasks.numDeps, 1),
-  //     exists(
-  //       this._db.select()
-  //       .from(deps)
-  //       .where(and(
-  //         eq(deps.source, tasks.taskId),
-  //         eq(deps.dest, taskId)
-  //       ))
-  //     )
-  //   ))
-  //   await this._db.update(tasks)
-  //   .set({numDeps: sql`${tasks.numDeps} - 1`})
-  //   .where(and(
-  //     ne(tasks.taskId, taskId),
-  //     gt(tasks.numDeps, 1),
-  //     exists(
-  //       this._db.select()
-  //       .from(deps)
-  //       .where(and(
-  //         eq(deps.source, tasks.taskId),
-  //         eq(deps.dest, taskId)
-  //       ))
-  //     )
-  //   ))
-    
-  //   await this._db.delete(deps)
-  //   .where(or(
-  //     eq(deps.source, taskId),
-  //     eq(deps.dest, taskId)
-  //   ))
-
-  //   await this._db.delete(tasks)
-  //   .where(eq(tasks.taskId, taskId))
   }
 
   public getDeps = async () => {
@@ -415,13 +349,6 @@ export class db {
       .set({ numDeps: newDepsNum })
       .where(eq(tasks.taskId, source))
     ])
-    
-    // await this._db.insert(deps)
-    // .values({ source, dest })
-
-    // await this._db.update(tasks)
-    // .set({ numDeps: newDepsNum })
-    // .where(eq(tasks.taskId, source))
   }
 
   public removeDeps = async (source: string, dest: string, newDepsNum: number) => {

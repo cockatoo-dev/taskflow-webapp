@@ -14,5 +14,7 @@ export default {
     "./plugins/**/*.{js,ts}",
     "./nuxt.config.{js,ts}",
     "./app.vue",
-  ]
+    "./utils/utils.ts"
+  ],
+  safelist: ['dark:hover:bg-primary-400', 'dark:hover:bg-red-400', 'dark:hover:bg-green-400']
 }
