@@ -36,14 +36,12 @@
       navigateTo(`/board/${props.boardId}/task?taskId=${result.taskId}`)
     } catch (e) {
       disableSubmit.value = false
-      if (e instanceof FetchError) {
-        errorMessage.value = e.message
-      }
+      fetchErrorHandler(e, errorMessage)
     }
   }
 
   watch(isVisible, () => {
-    if (!isVisible.value) {
+    if (isVisible.value) {
       title.value = ''
       description.value = ''
       disableSubmit.value = false

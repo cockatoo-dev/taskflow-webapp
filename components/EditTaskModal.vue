@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import { FetchError } from 'ofetch'
-  
   const isVisible = defineModel<boolean>()
   const props = defineProps<{
     title: string,
@@ -51,9 +49,7 @@
       isVisible.value = false
     } catch (e) {
       disableSubmit.value = false
-      if (e instanceof FetchError) {
-        errorMessage.value = e.message
-      }
+      fetchErrorHandler(e, errorMessage)
     }
   }
 </script>

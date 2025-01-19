@@ -10,18 +10,21 @@ export default defineEventHandler(async (e) => {
   const queryData = checkParseResult(queryParse)
 
   const db = useDB(e)
-  const dbData = await db.getBoard(queryData.boardId)
-  if (dbData.length === 0) {
-    throw createError({
-      status: 400,
-      message: 'Invlaid board ID.'
-    })
-  } else {
-    return {
-      boardId: dbData[0].boardId,
-      isOwner: true,
-      title: dbData[0].title,
-      publicPerms: dbData[0].publicPerms
-    }
-  }
+  
+  return await getBoardInfo(db, queryData.boardId, '')
+  
+  // const dbData = await db.getBoard(queryData.boardId)
+  // if (dbData.length === 0) {
+  //   throw createError({
+  //     status: 400,
+  //     message: 'Invlaid board ID.'
+  //   })
+  // } else {
+  //   return {
+  //     boardId: dbData[0].boardId,
+  //     isOwner: true,
+  //     title: dbData[0].title,
+  //     publicPerms: dbData[0].publicPerms
+  //   }
+  // }
 })

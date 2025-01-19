@@ -23,11 +23,9 @@
       })
       props.refresh()
       isVisible.value = false
-    } catch (err) {
+    } catch (e) {
       deleteLoading.value = false
-      if (err instanceof Error) {
-        errorMessage.value = err.message
-      }
+      fetchErrorHandler(e, errorMessage)
     }
   }
 

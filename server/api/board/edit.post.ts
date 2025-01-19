@@ -16,10 +16,10 @@ export default defineEventHandler(async (e) => {
       status: 400,
       message: 'Board Name is required.'
     })
-  } else if (bodyData.title.length > 40) {
+  } else if (bodyData.title.length > 50) {
     throw createError({
       status: 400,
-      message: 'Board Name is too long (maximum 40 characters).'
+      message: 'Board Name is too long (maximum 50 characters).'
     })
   } else if (
     bodyData.publicPerms !== 0 &&

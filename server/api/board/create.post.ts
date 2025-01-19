@@ -14,10 +14,10 @@ export default defineEventHandler(async (e) => {
       status: 400,
       message: 'Board Name is required.'
     })
-  } else if (bodyData.title.length > 40) {
+  } else if (bodyData.title.length > 50) {
     throw createError({
       status: 400,
-      message: 'Board Name is too long (maximum 40 characters).'
+      message: 'Board Name is too long (maximum 50 characters).'
     })
   } else if (
     bodyData.publicPerms !== 0 &&
@@ -33,6 +33,13 @@ export default defineEventHandler(async (e) => {
   const boardId = crypto.randomUUID().substring(0, 8)
   
   const db = useDB(e)
+  const userBoards = await db.getUserBoards("")
+  if (userBoards.length >= 5) {
+    throw createError({
+      status: 400,
+      message: "You've reached the maximum number of boards for your account. Consider deleting an existing board before you create a new one."
+    })
+  }
   await db.addBoard(boardId, "", bodyData.title, bodyData.publicPerms)
 
   return {boardId}

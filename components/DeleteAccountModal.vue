@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import { FetchError } from 'ofetch'
-  
   const isVisible = defineModel<boolean>()
 
   const errorMessage = ref('')
@@ -21,9 +19,7 @@
       navigateTo("/")
     } catch (e) {
       deleteLoading.value = false
-      if (e instanceof FetchError) {
-        errorMessage.value = e.message
-      }
+      fetchErrorHandler(e, errorMessage)
     }
   }
 </script>

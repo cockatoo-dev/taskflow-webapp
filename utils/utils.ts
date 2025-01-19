@@ -1,3 +1,5 @@
+import { FetchError } from 'ofetch'
+
 export const BUTTON_UI_OBJECT = {
   variant: {
     solid: 'bg-{color}-500 dark:bg-{color}-500 hover:bg-{color}-600 dark:hover:bg-{color}-400 disabled:bg-{color}-500 dark:disabled:bg-{color}-500 focus-visible:outline-{color}-500 dark:focus-visible:outline-{color}-500 text-slate-100 dark:text-slate-900 text-base font-bold',
@@ -6,9 +8,10 @@ export const BUTTON_UI_OBJECT = {
 }
 
 export const TEXT_INPUT_UI_OBJECT = {
-  placeholder: 'placeholder-slate-400 dark:placeholder-slate-600',
+  placeholder: 'placeholder-slate-500 dark:placeholder-slate-500',
   size: {sm: 'text-base', lg: 'text-2xl'},
-  color: {variant: {outline: 'focus:ring-{color}-500 dark:focus:ring-{color}-500 text-slate-800 dark:text-slate-200'}}
+  color: {white: {outline: 'bg-white dark:bg-black ring-slate-300 dark:ring-slate-700 focus:ring-teal-500 dark:focus:ring-teal-500 text-slate-800 dark:text-slate-200'}},
+  icon: {color: 'text-slate-500 dark:text-slate-500'},
 }
 
 export const DROPDOWN_UI_OBJECT = {item: {
@@ -42,5 +45,16 @@ export const canEdit = (boardInfoData: {isOwner: boolean, publicPerms: number}) 
     return true
   } else {
     return boardInfoData.publicPerms === 2
+  }
+}
+
+export const fetchErrorHandler = (e: unknown, messageRef: Ref<string>) => {
+  if (e instanceof FetchError) {
+    messageRef.value = e.data.message
+  } else if (e instanceof Error) {
+    messageRef.value = e.message
+    throw e
+  } else {
+    throw e
   }
 }

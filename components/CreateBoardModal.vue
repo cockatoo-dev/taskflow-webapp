@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import { FetchError } from 'ofetch'
-  
   const isVisible = defineModel<boolean>()
 
   const title = ref("")
@@ -9,8 +7,8 @@
   const disableSubmit = ref(false)
 
   const submitForm = async () => {
-    if (title.value.length > 40) {
-      errorMessage.value = "Board Name is too long (maximum 40 characters)."
+    if (title.value.length > 50) {
+      errorMessage.value = "Board Name is too long (maximum 50 characters)."
       return
     }
 
@@ -25,12 +23,8 @@
       })
       await navigateTo(`/board/${boardId}`)
     } catch (e) {
-      if (e instanceof FetchError) {
-        disableSubmit.value = false
-        errorMessage.value = e.message
-      } else {
-        throw e
-      }
+      disableSubmit.value = false
+      fetchErrorHandler(e, errorMessage)
     }
   }
 </script>

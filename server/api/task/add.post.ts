@@ -31,6 +31,14 @@ export default defineEventHandler(async (e) => {
   const db = useDB(e)
   const taskId = crypto.randomUUID()
 
+  const boardTasks = await db.getBoardTasks(bodyData.boardId)
+  if (boardTasks.length >= 50) {
+    throw createError({
+      status: 400,
+      message: "You've reached the maximum number of tasks for this board. Consider deleting an existing task before creating a new task."
+    })
+  }
+
   await db.addTask(bodyData.boardId, taskId, bodyData.title, bodyData.description)
   return { taskId }
 })

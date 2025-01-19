@@ -1,14 +1,4 @@
 <script setup lang="ts">  
-  useHead({
-    title: 'Taskflow'
-  })
-  useSeoMeta({
-    title: 'Taskflow',
-    ogTitle: 'Taskflow',
-    description: 'Keep yourself and your team coordinated to meet your goals!',
-    ogDescription: 'Keep yourself and your team coordinated to meet your goals!'
-  })
-  
   let refreshInterval: ReturnType<typeof setInterval>
   let addDepsLastUpdate = 0
   const route = useRoute()
@@ -20,18 +10,32 @@
     method: 'get'
   })
 
-  const boardInfoFetch = useFetch('/api/board/info', {
-    query: {boardId: route.params.boardId},
-    method: 'get'
-  })
   const showInvalidBoard = computed(() => {
-    if (!boardInfoFetch.error.value) {
+    if (!error.value) {
       return false
-    } else if (boardInfoFetch.error.value.statusCode === 400) {
+    } else if (error.value.statusCode === 400 && error.value.message === 'Invalid board ID.') {
       return true
     } else {
       return false
     }
+  })
+
+  const pageTitle = computed(() => {
+    if (!data.value) {
+      return 'Taskflow'
+    } else {
+      return `${data.value.task.title} | Taskflow`
+    }
+  })
+
+  useHead({
+    title: pageTitle
+  })
+  useSeoMeta({
+    title: pageTitle,
+    ogTitle: pageTitle,
+    description: 'Task tracking for keeping your team coordinated.',
+    ogDescription: 'Task tracking for keeping your team coordinated.'
   })
 
   const addDepsFetch = useFetch("/api/tasksInfo", {
@@ -119,18 +123,6 @@
     return result
   })
 
-  const refreshData = () => {
-    boardInfoFetch.refresh()
-    refresh()
-  }
-  
-  const intervalRefresh = () => {
-    if (showEdit.value) {
-      return
-    }
-    refreshData()
-  }
-
   const setComplete = async (value: boolean) => {
     completeDisabled.value = true
 
@@ -205,6 +197,12 @@
     removeDepsDisable.value = false
   }
 
+  const intervalRefresh = () => {
+    if (showEdit.value) {
+      return
+    }
+    refresh()
+  }
   onMounted(() => {
     refreshInterval = setInterval(intervalRefresh, 30000)
   })
@@ -217,13 +215,13 @@
   <div>
     <NavBar />
     <InvalidBoardModal v-model="showInvalidBoard" />
-    <main v-if="!boardInfoFetch.error.value">
+    <main v-if="data">
       <StdContainer>
         <EditTaskModal
           v-model="showEdit"
           :title="data?.task.title || ''"
           :description="data?.task.description || ''"
-          :refresh="refreshData"
+          :refresh
         />
         <DeleteTaskModal 
           v-model="showDelete" 
@@ -235,7 +233,7 @@
           :message="errorMessage"
         />
         <BackLink :board-id="route.params.boardId" />
-        <div v-if="boardInfoFetch.data.value && data">
+        <div>
           <div class="py-4">
             <TaskStatusCard 
               :is-complete="data?.task.isComplete || false"
@@ -248,7 +246,7 @@
           </h1>
 
           <div 
-            v-if="canSetComplete(boardInfoFetch.data.value)" 
+            v-if="canSetComplete(data.board)" 
             class="text-center pb-2"
           >
             <UButton 
@@ -274,7 +272,7 @@
           />
 
           <div 
-            v-if="canEdit(boardInfoFetch.data.value)"
+            v-if="canEdit(data.board)"
             class="w-full md:grid md:grid-cols-2 pt-2"
           >
             <div class="md:pr-1">
@@ -389,7 +387,7 @@
             </div>
           </div>
 
-          <div v-if="canEdit(boardInfoFetch.data.value)">
+          <div v-if="canEdit(data.board)">
             <h3 class="py-2 text-lg font-bold">Task Options</h3>
             <div class="block sm:hidden pt-1 text-center">
               <UButton 
@@ -433,23 +431,22 @@
             </div>
           </div>
         </div>
-
-        <div v-else-if="error && error.statusCode === 400" class="py-16">
-          <h1 class="pb-2 text-xl text-center font-bold">This task does not exist.</h1>
-          <div class="text-center">
-            <UButton 
-              label="Return to Board"
-              icon="i-heroicons-arrow-left-16-solid"
-              :ui="BUTTON_UI_OBJECT"
-              :to="`/board/${route.params.boardId}`"
-            />
-          </div>
-        </div>
-        <LoadingError v-else-if="error" :refresh="refreshData" />
-        <div v-else class="text-center font-bold text-xl pt-8">
-          Loading...
-        </div>
       </StdContainer>
     </main>
+    <div v-else-if="error && error.statusCode === 400" class="py-16">
+      <h1 class="pb-2 text-xl text-center font-bold">This task does not exist.</h1>
+      <div class="text-center">
+        <UButton 
+          label="Return to Board"
+          icon="i-heroicons-arrow-left-16-solid"
+          :ui="BUTTON_UI_OBJECT"
+          :to="`/board/${route.params.boardId}`"
+        />
+      </div>
+    </div>
+    <LoadingError v-else-if="error" :refresh />
+    <div v-else class="text-center font-bold text-xl pt-8">
+      Loading...
+    </div>
   </div>
 </template>

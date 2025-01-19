@@ -1,4 +1,14 @@
 <script setup lang="ts">
+  useHead({
+    title: 'My Account | Taskflow'
+  })
+  useSeoMeta({
+    title: 'My Account | Taskflow',
+    ogTitle: 'My Account | Taskflow',
+    description: 'Task tracking for keeping your team coordinated.',
+    ogDescription: 'Task tracking for keeping your team coordinated.'
+  })
+  
   const showCreate = ref(false)
 
   const { data, error, refresh } = useFetch('/api/account/boards', {method: 'get'})
@@ -80,7 +90,26 @@
             @click="() => {showDelete = true}"
           />
         </div>
-        <div class="hidden sm:flex sm:gap-2 sm:justify-center"></div>
+        <div class="hidden sm:flex sm:gap-2 sm:justify-center">
+          <div>
+            <UButton 
+              label="Edit Task Details"
+              icon="i-heroicons-pencil-square-16-solid"
+              variant="ghost"
+              :ui="BUTTON_UI_OBJECT"
+            />
+          </div>
+          <div>
+            <UButton 
+              color="red"
+              icon="i-heroicons-trash-16-solid"
+              label="Delete Task"
+              variant="ghost"
+              :ui="BUTTON_UI_OBJECT"
+              @click="() => {showDelete = true}"
+            />
+          </div>
+        </div>
       </StdContainer>
     </main>
     <div v-else-if="error">

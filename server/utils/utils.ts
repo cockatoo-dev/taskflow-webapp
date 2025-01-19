@@ -40,3 +40,20 @@ export const canEdit = (
     return publicPerms === 2
   }
 }
+
+export const getBoardInfo = async (db: db, boardId: string, userId: string) => {
+  const dbData = await db.getBoard(boardId)
+  if (dbData.length === 0) {
+    throw createError({
+      status: 400,
+      message: 'Invlaid board ID.'
+    })
+  } else {
+    return {
+      boardId: dbData[0].boardId,
+      isOwner: dbData[0].ownerId === userId,
+      title: dbData[0].title,
+      publicPerms: dbData[0].publicPerms
+    }
+  }
+}

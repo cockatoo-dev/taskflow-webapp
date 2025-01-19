@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import { FetchError } from 'ofetch'
-  
   const isVisible = defineModel<boolean>()
   const props = defineProps<{
     boardId: string | string[]
@@ -15,8 +13,8 @@
   const disableSubmit = ref(false)
 
   const submitForm = async () => {
-    if (titleEdit.value.length > 40) {
-      errorMessage.value = "Board Name is too long (maximum 40 characters)."
+    if (titleEdit.value.length > 50) {
+      errorMessage.value = "Board Name is too long (maximum 50 characters)."
       return
     }
 
@@ -32,12 +30,8 @@
       })
       isVisible.value = false
     } catch (e) {
-      if (e instanceof FetchError) {
-        disableSubmit.value = false
-        errorMessage.value = e.message
-      } else {
-        throw e
-      }
+      disableSubmit.value = false
+      fetchErrorHandler(e, errorMessage)
     }
   }
 

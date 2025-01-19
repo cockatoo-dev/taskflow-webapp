@@ -10,14 +10,14 @@
   const SLATE_200 = '#e2e8f0'
   const SLATE_800 = '#1e293b'
 
-  const colourMode = useColorMode()
+  const isDark = useDark()
   const imgDataUrl = ref('')
 
-  watch([props, colourMode], async () => {
+  watch([props, isDark], async () => {
     if (!props.baseUrl) {
       return
     }
-    if (colourMode.value === 'dark') {
+    if (isDark.value) {
       imgDataUrl.value = await QRCode.toDataURL('https://github.com/max8539/taskflow', {
         color: {light: BLACK, dark: SLATE_200}
       })

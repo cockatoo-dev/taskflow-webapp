@@ -11,6 +11,8 @@ export default defineEventHandler(async (e) => {
   const queryData = checkParseResult(queryParse)
   
   const db = useDB(e)
+
+  const boardInfo = await getBoardInfo(db, queryData.boardId, '')
   const dbTaskData = await db.getTask(queryData.boardId, queryData.taskId)
   if (dbTaskData.length < 1) {
     throw createError({
@@ -21,6 +23,7 @@ export default defineEventHandler(async (e) => {
   
   const dbDepsData = await db.getSourceDepsInfo(queryData.taskId)
   return {
+    board: boardInfo,
     task: dbTaskData[0],
     deps: dbDepsData
   }

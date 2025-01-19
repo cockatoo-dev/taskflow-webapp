@@ -11,14 +11,14 @@
   const showBoardInvite = ref(false)
   const showAddTask = ref(false)
 
-  const boardInfoFetch = useFetch('/api/board/info', {
-    query: {boardId: route.params.boardId},
-    method: 'get'
-  })
+  // const boardInfoFetch = useFetch('/api/board/info', {
+  //   query: {boardId: route.params.boardId},
+  //   method: 'get'
+  // })
   const showInvalidBoard = computed(() => {
-    if (!boardInfoFetch.error.value) {
+    if (!error.value) {
       return false
-    } else if (boardInfoFetch.error.value.statusCode === 400) {
+    } else if (error.value.statusCode === 400 && error.value.message === 'Invalid board ID.') {
       return true
     } else {
       return false
@@ -26,10 +26,10 @@
   })
 
   const pageTitle = computed(() => {
-    if (!boardInfoFetch.data.value) {
+    if (!data.value) {
       return 'Taskflow'
     } else {
-      return `${boardInfoFetch.data.value.title} | Taskflow`
+      return `${data.value.board.title} | Taskflow`
     }
   })
   useHead({
@@ -38,14 +38,9 @@
   useSeoMeta({
     title: pageTitle,
     ogTitle: pageTitle,
-    description: 'Keep yourself and your team coordinated to meet your goals!',
-    ogDescription: 'Keep yourself and your team coordinated to meet your goals!'
+    description: 'Task tracking for keeping your team coordinated.',
+    ogDescription: 'Task tracking for keeping your team coordinated.'
   })
-
-  const refreshData = () => {
-    boardInfoFetch.refresh()
-    refresh()
-  }
 
   const displayTasks = computed(() => {
     if (!data.value) {
@@ -93,7 +88,7 @@
   })
 
   onMounted(() => {
-    refreshInterval = setInterval(refreshData, 20000)
+    refreshInterval = setInterval(refresh, 20000)
   })
   onUnmounted(() => {
     clearInterval(refreshInterval)
@@ -105,24 +100,24 @@
     <NavBar />
     <InvalidBoardModal v-model="showInvalidBoard" />
     <main 
-      v-if="boardInfoFetch.data.value && data"
-      class="w-full min-w-80 h-[calc(100vh-8rem)] sm:grid sm:grid-cols-[50%_50%] lg:grid-cols-[67%_33%] 2xl:grid-cols-[75%_25%]"
+      v-if="data"
+      class="w-full min-w-80 sm:grid sm:grid-cols-[50%_50%] lg:grid-cols-[67%_33%] 2xl:grid-cols-[75%_25%]"
     >
       <BoardSettingsModal 
         v-model="showBoardSettings"
         :board-id="$route.params.boardId"
-        :title="boardInfoFetch.data.value?.title || ''"
-        :public-perms="boardInfoFetch.data.value?.publicPerms || 0"
-        :refresh="refreshData"
+        :title="data.board.title || ''"
+        :public-perms="data.board.publicPerms || 0"
+        :refresh
       />
       <BoardInviteModal v-model="showBoardInvite" />
       <AddTaskModal v-model="showAddTask" :board-id="route.params.boardId" /> 
       <div class="w-full h-full">
         <div class="h-10 p-1 grid grid-cols-[1fr_auto]">
           <h1 class="px-1 pt-1.5 lg:pt-0.5 lg:text-2xl text-center font-bold line-clamp-1 overflow-ellipsis">
-            {{ boardInfoFetch.data.value.title }}
+            {{ data.board.title }}
           </h1>
-          <div v-if="boardInfoFetch.data.value.isOwner">
+          <div v-if="data.board.isOwner">
             <div class="block lg:hidden">
               <UDropdown
                 :items="[
@@ -181,7 +176,7 @@
         </div>
         
         <div 
-          v-if="canEdit(boardInfoFetch.data.value)"
+          v-if="canEdit(data.board)"
           class="h-10 p-1 grid grid-cols-[1fr_auto]"
         >
           <h2 class="pl-2 pt-0.5 leading-8 text-2xl">Current Tasks</h2>
@@ -211,7 +206,7 @@
         </div>
         <ul
           v-if="data && data.tasks.length > 0" 
-          class="lg:grid lg:grid-cols-2 2xl:grid-cols-3 p-2 lg:p-4 lg:gap-4 max-h-[calc(100vh-8rem)] overflow-y-auto list-none m-0"
+          class="lg:grid lg:grid-cols-2 2xl:grid-cols-3 p-2 lg:p-4 lg:gap-4 max-h-[calc(100vh-11rem)] overflow-y-auto list-none m-0"
         >
           <li 
             v-for="item of displayTasks" 
@@ -256,8 +251,8 @@
         />
       </div>
     </main>
-    <div v-else-if="error || (boardInfoFetch.error.value && boardInfoFetch.error.value.statusCode !== 400)">
-      <LoadingError :refresh="refreshData" />
+    <div v-else-if="error">
+      <LoadingError :refresh />
     </div>
     <div v-else class="text-center font-bold text-xl pt-8">
       Loading...

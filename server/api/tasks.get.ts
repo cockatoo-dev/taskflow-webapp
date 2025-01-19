@@ -11,8 +11,11 @@ export default defineEventHandler(async (e) => {
   
   const db = useDB(e)
 
+  const boardInfo = await getBoardInfo(db, queryData.boardId, '')
+
   const dbData = await db.getBoardTasks(queryData.boardId)
   return {
-    tasks: dbData,
+    board: boardInfo,
+    tasks: dbData
   }
 })
