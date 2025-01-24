@@ -39,6 +39,7 @@
             icon="i-heroicons-trash-16-solid"
             color="red"
             :ui="BUTTON_UI_OBJECT"
+            :loading="deleteLoading"
             @click="deleteAccount"
           />
         </div>
@@ -47,7 +48,6 @@
             icon="i-heroicons-x-mark-16-solid"
             label="Cancel"
             variant="ghost"
-            :loading="deleteLoading"
             :ui="BUTTON_UI_OBJECT"
             @click="() => {isVisible = false}"
           />

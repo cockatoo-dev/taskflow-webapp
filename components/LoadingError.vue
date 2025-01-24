@@ -6,7 +6,7 @@
 
 <template>
   <div class="py-16">
-    <h2 class="pb-2 text-xl text-center font-bold">Something went wrong while loading data.</h2>
+    <h1 class="pb-2 text-xl text-center font-bold">Something went wrong while loading data.</h1>
     <div class="text-center">
       <UButton 
         type="button"

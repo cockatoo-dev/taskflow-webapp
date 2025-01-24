@@ -1,75 +1,11 @@
-# Nuxt Minimal Starter
+<img src="logo-github.webp" alt="Taskflow logo" width="480px">
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+# Taskflow
 
-## Setup
+**Task tracking for keeping your team coordinated.**
 
-Make sure to install dependencies:
+Taskflow is a web app for keeping track of tasks, helping you to keep your team coordinated and reach your goals.
 
-```bash
-# npm
-npm install
+Website coming online soon!
 
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Taskflow is made using Vue 3, Nuxt 3, Nuxt UI v2, Tailwind CSS v3, Chart.js (via vue-chartjs) and Drizzle ORM.

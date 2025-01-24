@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import QRCode  from 'qrcode';
+  import QRCode from 'qrcode';
   const props = defineProps<{
     baseUrl: string
   }>()
@@ -19,11 +19,15 @@
     }
     if (isDark.value) {
       imgDataUrl.value = await QRCode.toDataURL('https://github.com/max8539/taskflow', {
-        color: {light: BLACK, dark: SLATE_200}
+        color: {light: BLACK, dark: SLATE_200},
+        type: 'image/webp',
+        width: 360,
       })
     } else {
       imgDataUrl.value = await QRCode.toDataURL('https://github.com/max8539/taskflow', {
-        color: {light: WHITE, dark: SLATE_800}
+        color: {light: WHITE, dark: SLATE_800},
+        type: 'image/webp',
+        width: 360
       })
     }
   }, {immediate: true})

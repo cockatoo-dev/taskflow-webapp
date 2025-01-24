@@ -11,14 +11,13 @@
   const showBoardInvite = ref(false)
   const showAddTask = ref(false)
 
-  // const boardInfoFetch = useFetch('/api/board/info', {
-  //   query: {boardId: route.params.boardId},
-  //   method: 'get'
-  // })
   const showInvalidBoard = computed(() => {
     if (!error.value) {
       return false
-    } else if (error.value.statusCode === 400 && error.value.message === 'Invalid board ID.') {
+    } else if (
+      error.value.data.statusCode === 400 &&
+      error.value.data.message === 'Invalid board ID.'
+    ) {
       return true
     } else {
       return false
@@ -85,6 +84,11 @@
     }
     result.percent = Math.floor(result.complete / data.value.tasks.length * 100)
     return result
+  })
+
+  watch(error, () => {
+    console.log(error.value?.data.statusCode)
+    console.log(error.value?.data.message)
   })
 
   onMounted(() => {
@@ -251,7 +255,7 @@
         />
       </div>
     </main>
-    <div v-else-if="error">
+    <div v-else-if="error && !showInvalidBoard">
       <LoadingError :refresh />
     </div>
     <div v-else class="text-center font-bold text-xl pt-8">

@@ -52,6 +52,7 @@
             icon="i-heroicons-trash-16-solid"
             color="red"
             :ui="BUTTON_UI_OBJECT"
+            :loading="deleteLoading"
             @click="deleteTask"
           />
         </div>

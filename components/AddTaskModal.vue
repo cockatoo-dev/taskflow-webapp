@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import { FetchError } from 'ofetch'
-
   const isVisible = defineModel<boolean>()
   const props = defineProps<{
     boardId: string | string[]
@@ -79,6 +77,7 @@
           />
           <CharLimit :str="description" :limit="2500" :show-length="2250" />
         </div>
+        <div class="pb-2">Dependencies for this task can be added after the task is added to the board.</div>
         <div class="flex gap-2 sm:gap-4">
           <div>
             <UButton 

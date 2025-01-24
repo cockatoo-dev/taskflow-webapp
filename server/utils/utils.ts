@@ -46,7 +46,7 @@ export const getBoardInfo = async (db: db, boardId: string, userId: string) => {
   if (dbData.length === 0) {
     throw createError({
       status: 400,
-      message: 'Invlaid board ID.'
+      message: 'Invalid board ID.'
     })
   } else {
     return {

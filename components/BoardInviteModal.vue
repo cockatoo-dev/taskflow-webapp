@@ -26,7 +26,7 @@
       <div class="w-full">
         <div class="pb-2 text-center text-xl md:text-2xl">To open this board in your web browser,</div>
         <div class="block sm:grid sm:grid-cols-[60%_40%]">
-          <div class="flex flex-col justify-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold p-2 sm:p-4 border-b sm:border-b-0 sm:border-r border-slate-300 dark:border-slate-700">
+          <div class="flex flex-col justify-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold p-2 sm:p-4 border-b sm:border-b-0 sm:border-r sm:border-slate-300 sm:dark:border-slate-700">
             <div class="leading-snug break-words">
               Go to 
               <span class="text-teal-600 dark:text-teal-400">{{ BASE_URL }}</span>

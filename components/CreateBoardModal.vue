@@ -27,6 +27,15 @@
       fetchErrorHandler(e, errorMessage)
     }
   }
+
+  watch(isVisible, () => {
+    if (isVisible.value) {
+      title.value = ''
+      publicPerms.value = 1
+      disableSubmit.value = false
+      errorMessage.value = ''
+    }
+  })
 </script>
 
 <template>
@@ -56,6 +65,7 @@
             <div>
               <UButton 
                 type="submit"
+                :loading="disableSubmit"
                 label="Create Board"
                 icon="i-heroicons-plus-16-solid"
                 :ui="BUTTON_UI_OBJECT"

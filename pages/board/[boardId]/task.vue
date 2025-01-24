@@ -13,7 +13,10 @@
   const showInvalidBoard = computed(() => {
     if (!error.value) {
       return false
-    } else if (error.value.statusCode === 400 && error.value.message === 'Invalid board ID.') {
+    } else if (
+      error.value.data.statusCode === 400 &&
+      error.value.data.message === 'Invalid board ID.'
+    ) {
       return true
     } else {
       return false
@@ -444,7 +447,7 @@
         />
       </div>
     </div>
-    <LoadingError v-else-if="error" :refresh />
+    <LoadingError v-else-if="error && !showInvalidBoard" :refresh />
     <div v-else class="text-center font-bold text-xl pt-8">
       Loading...
     </div>
