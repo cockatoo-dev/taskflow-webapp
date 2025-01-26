@@ -32,8 +32,10 @@
       navigateTo(`/board/${boardId.value.toLowerCase()}`)
     } catch (e) {
       if (e instanceof FetchError) {
-        if (e.statusCode === 400) {
+        if (e.statusCode === 400 && e.data.message === 'Invalid task ID.') {
           errorMessage.value = 'This board does not exist.'
+        } else if (e.statusCode === 400) {
+          errorMessage.value = e.data.message
         }
       }
     }

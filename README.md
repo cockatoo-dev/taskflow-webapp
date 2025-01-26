@@ -16,4 +16,4 @@ Taskflow is made using Vue 3, Nuxt 3, Nuxt UI v2, Tailwind CSS v3, Chart.js (via
 
 ## Branch information
 
-This is the main production branch, though it was also used as the only branch in the repository up until the first release of the web aoo.
+This is the main production branch, though it was also used as the only branch in the repository up until the first release of the web app.

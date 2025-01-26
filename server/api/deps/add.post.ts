@@ -40,6 +40,8 @@ const bodySchema = z.object({
 })
 
 export default defineEventHandler(async (e) => {  
+  checkAPIEnabled()
+  
   const bodyParse = await readValidatedBody(e, (b) => bodySchema.safeParse(b))
   const bodyData = checkParseResult(bodyParse)
 

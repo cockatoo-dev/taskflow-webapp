@@ -201,10 +201,9 @@
   }
 
   const intervalRefresh = () => {
-    if (showEdit.value) {
-      return
+    if (!(showEdit.value || error.value)) {
+      refresh()
     }
-    refresh()
   }
   onMounted(() => {
     refreshInterval = setInterval(intervalRefresh, 30000)
