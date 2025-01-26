@@ -161,7 +161,7 @@
             Taskflow | Check out the project's 
             <NuxtLink 
               class="text-teal-600 dark:text-teal-400 hover:underline" 
-              href='https://github.com/max8539/taskflow'
+              href='https://github.com/max8539/taskflow-webapp'
               target="_blank"
             >
               Github page.
@@ -169,7 +169,7 @@
             Got a suggestion? Head over to the 
             <NuxtLink 
               class="text-teal-600 dark:text-teal-400 hover:underline" 
-              href='https://github.com/max8539/taskflow/issues'
+              href='https://github.com/max8539/taskflow-webapp/issues'
               target="_blank"
             >
               issues page.
