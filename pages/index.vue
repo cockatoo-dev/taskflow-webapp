@@ -32,8 +32,10 @@
       navigateTo(`/board/${boardId.value.toLowerCase()}`)
     } catch (e) {
       if (e instanceof FetchError) {
-        if (e.statusCode === 400) {
+        if (e.statusCode === 400 && e.data.message === 'Invalid task ID.') {
           errorMessage.value = 'This board does not exist.'
+        } else if (e.statusCode === 400) {
+          errorMessage.value = e.data.message
         }
       }
     }
@@ -159,7 +161,7 @@
             Taskflow | Check out the project's 
             <NuxtLink 
               class="text-teal-600 dark:text-teal-400 hover:underline" 
-              href='https://github.com/max8539/taskflow'
+              href='https://github.com/max8539/taskflow-webapp'
               target="_blank"
             >
               Github page.
@@ -167,7 +169,7 @@
             Got a suggestion? Head over to the 
             <NuxtLink 
               class="text-teal-600 dark:text-teal-400 hover:underline" 
-              href='https://github.com/max8539/taskflow/issues'
+              href='https://github.com/max8539/taskflow-webapp/issues'
               target="_blank"
             >
               issues page.

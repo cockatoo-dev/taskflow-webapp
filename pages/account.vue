@@ -24,8 +24,13 @@
   }
 
   let refreshInterval: ReturnType<typeof setTimeout>
+  const intervalRefresh = () => {
+    if (!error.value) {
+      refresh()
+    }
+  }
   onMounted(() => {
-    refreshInterval = setInterval(refresh, 60000)
+    refreshInterval = setInterval(intervalRefresh, 60000)
   })
   onUnmounted(() => {
     clearInterval(refreshInterval)

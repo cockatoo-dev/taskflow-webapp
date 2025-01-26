@@ -86,13 +86,13 @@
     return result
   })
 
-  watch(error, () => {
-    console.log(error.value?.data.statusCode)
-    console.log(error.value?.data.message)
-  })
-
+  const intervalRefresh = () => {
+    if (!error.value) {
+      refresh()
+    }
+  }
   onMounted(() => {
-    refreshInterval = setInterval(refresh, 20000)
+    refreshInterval = setInterval(intervalRefresh, 20000)
   })
   onUnmounted(() => {
     clearInterval(refreshInterval)

@@ -1,5 +1,5 @@
 {
-  "name": "taskflow",
+  "name": "taskflow-webapp",
   "private": true,
   "type": "module",
   "scripts": {
