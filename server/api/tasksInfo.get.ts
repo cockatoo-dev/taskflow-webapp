@@ -6,6 +6,8 @@ const querySchema = z.object({
 })
 
 export default defineEventHandler(async (e) => {
+  checkAPIEnabled()
+  
   const queryParse = await getValidatedQuery(e, (q) => querySchema.safeParse(q))
   const queryData = checkParseResult(queryParse)
   

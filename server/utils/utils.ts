@@ -1,6 +1,14 @@
 import type { z } from "zod";
 import type { db } from "../db/db";
 
+export const checkAPIEnabled = () => {
+  // return
+  throw createError({
+    statusCode: 400,
+    statusMessage: 'The API is temporarily disabled. Please try again later.'
+  })
+}
+
 export const checkParseResult = <T>(b: z.SafeParseReturnType<T, T>) => {
   if (!b.success) {
     throw createError({
