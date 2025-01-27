@@ -1,6 +1,10 @@
 <script setup lang="ts">
   const isVisible = defineModel<boolean>()
 
+  const props = defineProps<{
+    clearSession: () => Promise<void>
+  }>()
+
   const errorMessage = ref('')
   const deleteLoading = ref(false)
   const isMotionSafe = useMotionSafe()
@@ -16,6 +20,7 @@
     deleteLoading.value = true
     try {
       await $fetch("/api/account/delete", {method: 'post'})
+      await props.clearSession()
       navigateTo("/")
     } catch (e) {
       deleteLoading.value = false

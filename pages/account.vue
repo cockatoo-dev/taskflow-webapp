@@ -11,16 +11,25 @@
   
   const showCreate = ref(false)
 
+  const { clear } = useUserSession()
+
   const { data, error, refresh } = useFetch('/api/account/boards', {method: 'get'})
 
   const deleteBoardId = ref('')
   const deleteTitle = ref('')
-  const showDelete = ref(false)
+  const showDeleteTask = ref(false)
+  const showDeleteAccount = ref(false)
 
-  const deleteHandler = (boardId: string, title: string) => {
+
+  const deleteTaskHandler = (boardId: string, title: string) => {
     deleteBoardId.value = boardId
     deleteTitle.value = title
-    showDelete.value = true
+    showDeleteTask.value = true
+  }
+
+  const logout = async (clear: () => Promise<void>) => {
+    await clear()
+    navigateTo("/", {external: true})
   }
 
   let refreshInterval: ReturnType<typeof setTimeout>
@@ -42,11 +51,12 @@
     <NavBar />
     <CreateBoardModal v-model="showCreate"/>
     <DeleteBoardModal 
-      v-model="showDelete"
+      v-model="showDeleteTask"
       :board-id="deleteBoardId" 
       :title="deleteTitle"
       :refresh
     />
+    <DeleteAccountModal v-model="showDeleteAccount" :clear-session="clear" />
     <main v-if="data">
       <StdContainer>
         <h1 class="pb-4 text-3xl">My Account</h1>
@@ -61,7 +71,7 @@
               :board-id="board.boardId"
               :title="board.title"
               :public-perms="board.publicPerms"
-              :delete-handler="() => {deleteHandler(board.boardId, board.title)}"
+              :delete-handler="() => {deleteTaskHandler(board.boardId, board.title)}"
               :refresh
             />
           </li>
@@ -79,39 +89,45 @@
         <h2 class="pb-2 font-bold text-xl">Account Options</h2>
         <div class="block sm:hidden pt-1 text-center">
           <UButton 
-            label="Edit Task Details"
-            icon="i-heroicons-pencil-square-16-solid"
+            type="button"
+            label="Log Out"
+            icon="i-heroicons-arrow-right-start-on-rectangle-16-solid"
             variant="ghost"
             :ui="BUTTON_UI_OBJECT"
+            @click="() => logout(clear)"
           />
         </div>
         <div class="block sm:hidden pt-1 text-center">
           <UButton 
+            type="button"
             color="red"
             icon="i-heroicons-trash-16-solid"
             label="Delete Account"
             variant="ghost"
             :ui="BUTTON_UI_OBJECT"
-            @click="() => {showDelete = true}"
+            @click="() => {showDeleteAccount = true}"
           />
         </div>
         <div class="hidden sm:flex sm:gap-2 sm:justify-center">
           <div>
             <UButton 
-              label="Edit Task Details"
-              icon="i-heroicons-pencil-square-16-solid"
+              type="button"
+              label="Log Out"
+              icon="i-heroicons-arrow-right-start-on-rectangle-16-solid"
               variant="ghost"
               :ui="BUTTON_UI_OBJECT"
+              @click="() => {logout(clear)}"
             />
           </div>
           <div>
             <UButton 
+              type="button"
               color="red"
               icon="i-heroicons-trash-16-solid"
-              label="Delete Task"
+              label="Delete Account"
               variant="ghost"
               :ui="BUTTON_UI_OBJECT"
-              @click="() => {showDelete = true}"
+              @click="() => {showDeleteAccount = true}"
             />
           </div>
         </div>

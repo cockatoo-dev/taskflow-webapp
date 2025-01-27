@@ -83,6 +83,7 @@
           />
           <CharLimit :str="editDescription" :limit="2500" :show-length="2250" />
         </div>
+        <div class="pb-2 font-bold">This board can be opened by anyone on the internet with this board's board code or a link to this board. Do not put anything sensitive in the task title or description.</div>
         <div class="flex gap-4">
           <div>
             <UButton 

@@ -9,6 +9,7 @@ const bodySchema = z.object({
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
   
+  const userId = await requireUserId(e)
   const bodyParse = await readValidatedBody(e, (b) => bodySchema.safeParse(b))
   const bodyData = checkParseResult(bodyParse)
   if (bodyData.title === "") {
@@ -35,14 +36,14 @@ export default defineEventHandler(async (e) => {
   const boardId = crypto.randomUUID().substring(0, 8)
   
   const db = useDB(e)
-  const userBoards = await db.getUserBoards("")
+  const userBoards = await db.getUserBoards(userId)
   if (userBoards.length >= 5) {
     throw createError({
       status: 400,
       message: "You've reached the maximum number of boards for your account. Consider deleting an existing board before you create a new one."
     })
   }
-  await db.addBoard(boardId, "", bodyData.title, bodyData.publicPerms)
+  await db.addBoard(boardId, userId, bodyData.title, bodyData.publicPerms)
 
   return {boardId}
 })

@@ -12,7 +12,8 @@ export default defineNuxtConfig({
     "@nuxtjs/google-fonts",
     "@nuxt/ui",
     "@nuxt/eslint",
-    "@vueuse/nuxt"
+    "@vueuse/nuxt",
+    "nuxt-auth-utils"
   ],
   googleFonts: {
     families: {
