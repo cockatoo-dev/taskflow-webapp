@@ -1,6 +1,6 @@
 export default defineEventHandler((e) => {
-  console.log(`process env clientId ${process.env.NUXT_OAUTH_GITHUB_CLIENT_ID}`)
-  console.log(`cloudflare env clientId ${e.context.cloudflare.env.NUXT_OAUTH_GITHUB_CLIENT_ID}`)
+  // console.log(`process env clientId ${process.env.NUXT_OAUTH_GITHUB_CLIENT_ID}`)
+  // console.log(`cloudflare env clientId ${e.context.cloudflare.env.NUXT_OAUTH_GITHUB_CLIENT_ID}`)
   return defineOAuthGitHubEventHandler({
     onSuccess: async (e, {user}) => {
       await setUserSession(e, {

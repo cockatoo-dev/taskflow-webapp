@@ -3,7 +3,7 @@
   const props = defineProps<{
     title: string,
     description: string,
-    refresh: () => void
+    refresh: () => Promise<void>
   }>()
 
   const route = useRoute()

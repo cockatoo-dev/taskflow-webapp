@@ -4,7 +4,7 @@
     boardId: string | string[]
     title: string,
     publicPerms: number,
-    refresh: () => void
+    refresh: () => Promise<void>
   }>()
 
   const titleEdit = ref("")
@@ -28,6 +28,7 @@
           publicPerms: publicPermsEdit.value
         }
       })
+      await props.refresh()
       isVisible.value = false
     } catch (e) {
       disableSubmit.value = false
@@ -71,6 +72,7 @@
               type="submit"
               label="Save Changes"
               icon="i-heroicons-check-16-solid"
+              :loading="disableSubmit"
               :ui="BUTTON_UI_OBJECT"
             />
           </div>
