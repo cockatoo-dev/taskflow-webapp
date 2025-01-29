@@ -3,7 +3,7 @@
   const route = useRoute()
   const clipboard = useClipboard()
 
-  const BASE_URL = 'BASE_URL'
+  const BASE_URL = 'taskflow-webapp.pages.dev'
 
   const copyLink = () => {
     clipboard.copy(`https://${BASE_URL}/board/${route.params.boardId}`)
@@ -47,7 +47,7 @@
         You can also send this link to people: 
         <a 
           class="text-teal-600 dark:text-teal-400 hover:underline" 
-          href='https://github.com/max8539/taskflow'
+          :href="`https://${BASE_URL}/board/${route.params.boardId}`"
         >
           https://{{ BASE_URL }}/board/{{ route.params.boardId }}
         </a>

@@ -1,12 +1,13 @@
 import type { z } from "zod";
 import type { db } from "../db/db";
+import type { H3Event } from "h3"
 
 export const checkAPIEnabled = () => {
-  // return
-  throw createError({
-    statusCode: 400,
-    statusMessage: 'The API is temporarily disabled. Please try again later.'
-  })
+  return
+  // throw createError({
+  //   statusCode: 400,
+  //   statusMessage: 'The API is temporarily disabled. Please try again later.'
+  // })
 }
 
 export const checkParseResult = <T>(b: z.SafeParseReturnType<T, T>) => {
@@ -30,9 +31,9 @@ export const checkTaskExists = async (db: db, boardId: string, taskId: string) =
 }
 
 export const canSetComplete = (
-  loginUserId: string, boardOwnerId: string, publicPerms: number
+  isOwner: boolean, publicPerms: number
 ) => {
-  if (loginUserId === boardOwnerId) {
+  if (isOwner) {
     return true
   } else {
     return publicPerms >= 1
@@ -40,16 +41,16 @@ export const canSetComplete = (
 }
 
 export const canEdit = (
-  loginUserId: string, boardOwnerId: string, publicPerms: number
+  isOwner: boolean, publicPerms: number
 ) => {
-  if (loginUserId === boardOwnerId) {
+  if (isOwner) {
     return true
   } else {
     return publicPerms === 2
   }
 }
 
-export const getBoardInfo = async (db: db, boardId: string, userId: string) => {
+export const getBoardInfo = async (db: db, boardId: string, userId: string | null) => {
   const dbData = await db.getBoard(boardId)
   if (dbData.length === 0) {
     throw createError({
@@ -64,4 +65,18 @@ export const getBoardInfo = async (db: db, boardId: string, userId: string) => {
       publicPerms: dbData[0].publicPerms
     }
   }
+}
+
+export const getUserId = async (e: H3Event) => {
+  const session = await getUserSession(e)
+  if (session.user) {
+    return session.user.userId
+  } else {
+    return null
+  }
+}
+
+export const requireUserId = async (e: H3Event) => {
+  const session = await requireUserSession(e)
+  return session.user.userId
 }

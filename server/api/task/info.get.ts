@@ -9,12 +9,14 @@ const querySchema = z.object({
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
   
+  const userId = await getUserId(e)
+
   const queryParse = await getValidatedQuery(e, (q) => querySchema.safeParse(q))
   const queryData = checkParseResult(queryParse)
   
   const db = useDB(e)
 
-  const boardInfo = await getBoardInfo(db, queryData.boardId, '')
+  const boardInfo = await getBoardInfo(db, queryData.boardId, userId)
   const dbTaskData = await db.getTask(queryData.boardId, queryData.taskId)
   if (dbTaskData.length < 1) {
     throw createError({
