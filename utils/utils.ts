@@ -7,6 +7,10 @@ export const BUTTON_UI_OBJECT = {
   }
 }
 
+export const GITHUB_BUTTON_UI_OBJECT = {
+  color: {black: {solid: 'bg-black hover:bg-slate-900 dark:bg-white dark:hover:bg-slate-100 text-slate-200 dark:text-slate-800 text-base font-bold'}}
+}
+
 export const TEXT_INPUT_UI_OBJECT = {
   placeholder: 'placeholder-slate-500 dark:placeholder-slate-500',
   size: {sm: 'text-base', lg: 'text-2xl'},

@@ -32,7 +32,7 @@
       navigateTo(`/board/${boardId.value.toLowerCase()}`)
     } catch (e) {
       if (e instanceof FetchError) {
-        if (e.statusCode === 400 && e.data.message === 'Invalid task ID.') {
+        if (e.statusCode === 400 && e.data.message === 'Invalid board ID.') {
           errorMessage.value = 'This board does not exist.'
         } else if (e.statusCode === 400) {
           errorMessage.value = e.data.message
@@ -107,7 +107,7 @@
         <div class="pt-16 pb-4 sm:grid sm:grid-cols-2">
           <div class="sm:order-1 sm:pr-2">
             <h2 class="text-xl sm:text-3xl font-bold">All of your team's tasks at a glance.</h2>
-            <p class="py-2">Easily see all of your team's tasks on a virtual board, and know what tasks are left to complete. </p>
+            <p class="py-2">Easily see all of your team's tasks on a virtual board, and know what tasks are left to complete. The virtual board is ideal for being shown on a large screen. </p>
           </div>
           <div class="sm:order-2 sm:pl-2">
             <div class="w-full max-w-[488px] mx-auto grid grid-cols-2">

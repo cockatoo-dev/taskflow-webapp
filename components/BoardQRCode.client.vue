@@ -10,6 +10,7 @@
   const SLATE_200 = '#e2e8f0'
   const SLATE_800 = '#1e293b'
 
+  const route = useRoute()
   const isDark = useDark()
   const imgDataUrl = ref('')
 
@@ -18,13 +19,13 @@
       return
     }
     if (isDark.value) {
-      imgDataUrl.value = await QRCode.toDataURL('https://github.com/max8539/taskflow', {
+      imgDataUrl.value = await QRCode.toDataURL(`https://${props.baseUrl}/board/${route.params.boardId}`, {
         color: {light: BLACK, dark: SLATE_200},
         type: 'image/webp',
         width: 360,
       })
     } else {
-      imgDataUrl.value = await QRCode.toDataURL('https://github.com/max8539/taskflow', {
+      imgDataUrl.value = await QRCode.toDataURL(`https://${props.baseUrl}/board/${route.params.boardId}`, {
         color: {light: WHITE, dark: SLATE_800},
         type: 'image/webp',
         width: 360

@@ -42,15 +42,30 @@ const bodySchema = z.object({
 export default defineEventHandler(async (e) => {  
   checkAPIEnabled()
   
+  const userId = await getUserId(e)
   const bodyParse = await readValidatedBody(e, (b) => bodySchema.safeParse(b))
   const bodyData = checkParseResult(bodyParse)
+  if (bodyData.source === bodyData.dest) {
+    throw createError({
+      statusCode: 400,
+      message: "Cannot create a dependency with the same task."
+    })
+  }
 
   const db = useDB(e)
+  const boardInfo = await getBoardInfo(db, bodyData.boardId, userId)
+  if (!canEdit(boardInfo.isOwner, boardInfo.publicPerms)) {
+    throw createError({
+      statusCode: 403,
+      message: "You do not have permission to edit tasks on this board."
+    })
+  }
+
   const tasksInfo = await db.getTaskPair(bodyData.boardId, bodyData.source, bodyData.dest)
   if (tasksInfo.length < 2) {
     throw createError({
       statusCode: 400,
-      statusMessage: "One or more task IDs are invalid."
+      message: "One or more task IDs are invalid."
     })
   }
 
