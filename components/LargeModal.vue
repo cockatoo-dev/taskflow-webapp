@@ -9,7 +9,7 @@
     :transition="isMotionSafe"
     :ui="{
       container: 'items-center',
-      width: 'w-11/12 lg:w-[960px]',
+      width: 'w-11/12 sm:max-w-full lg:w-[960px]',
       background: 'dark:bg-black'
     }"
   >

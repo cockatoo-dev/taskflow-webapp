@@ -22,13 +22,16 @@
         <UButton
           to="/api/account/login/github"
           icon="i-simple-icons-github"
-          label="Log in with GitHub"
+          label="Log in with Github"
           color="black"
           :ui="GITHUB_BUTTON_UI_OBJECT"
           external
         />
       </div>
-      <div class="text-xs">When you log in with Github, you agree for a cookie to be saved to your web browser to store your login information for Taskflow. Taskflow does not use cookies for any other purpose. Only your Github user ID and username is collected by Taskflow, which is used to associate your Github account with the boards you create.</div>
+      <div class="text-xs">
+        When you log in with Github, you agree for a cookie to be saved to your web browser to store your login information for Taskflow. 
+        Taskflow does not use cookies for any other purpose. Only your Github user ID and username is collected by Taskflow, which is used to associate your Github account with the boards you create.
+      </div>
     </div>
   </UModal>
 </template>
