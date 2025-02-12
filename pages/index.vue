@@ -154,7 +154,7 @@
         </div>
       </StdContainer>
     </main>
-    <footer class="w-full h-24 bg-teal-50 dark:bg-teal-950">
+    <footer class="w-full min-h-24 bg-teal-50 dark:bg-teal-950">
       <StdContainer>
         <div class="pt-4 border-t border-t-slate-300 dark:border-t-slate-700">
           <p>
