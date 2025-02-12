@@ -13,11 +13,12 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "@nuxt/eslint",
     "@vueuse/nuxt",
-    "nuxt-auth-utils"
+    "nuxt-auth-utils",
+    "nuxt-security"
   ],
   googleFonts: {
     families: {
       "Open Sans": [400, 700]
     }
-  }
+  },
 })
