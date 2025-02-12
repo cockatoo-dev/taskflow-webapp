@@ -12,6 +12,8 @@
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
+    "@iconify-json/heroicons": "^1.2.2",
+    "@iconify-json/simple-icons": "^1.2.23",
     "@nuxt/eslint": "^0.7.3",
     "@nuxt/ui": "^2.21.0",
     "@nuxtjs/google-fonts": "^3.2.0",

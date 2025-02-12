@@ -39,10 +39,10 @@
 </script>
 
 <template>
-  <LargeModal v-model="isVisible">
-    <div class="w-full p-4">
-      <AuthState v-slot="{loggedIn}">
-        <div v-if="loggedIn">
+  <AuthState v-slot="{loggedIn}">
+    <template v-if="loggedIn">
+      <LargeModal v-model="isVisible">
+        <div class="w-full p-4">
           <h3 class="text-3xl font-bold pb-2">Create New Board</h3>
           <form @submit.prevent="submitForm">
             <div class="pb-2">
@@ -87,7 +87,11 @@
           </form>
           <FormError :message="errorMessage" />
         </div>
-        <div v-else>
+      </LargeModal>
+    </template>
+    <template v-else>
+      <UModal v-model="isVisible">
+        <div class="p-2">
           <div class="text-right">
             <UButton 
               color="red"
@@ -103,15 +107,18 @@
             <UButton
               to="/api/account/login/github"
               icon="i-simple-icons-github"
-              label="Log in with GitHub"
+              label="Log in with Github"
               color="black"
               :ui="GITHUB_BUTTON_UI_OBJECT"
               external
             />
           </div>
-          <div class="text-xs px-2 pb-2">When you log in with Github, you agree for a cookie to be saved to your web browser to store your login information for Taskflow. Taskflow does not use cookies for any other purpose. Only your Github user ID is collected by Taskflow, which is used to associate your Github account with the boards you create.</div>
+          <div class="text-xs px-2 pb-2">
+            When you log in with Github, you agree for a cookie to be saved to your web browser to store your login information for Taskflow. 
+            Taskflow does not use cookies for any other purpose. Only your Github user ID and username is collected by Taskflow, which is used to associate your Github account with the boards you create.
+          </div>
         </div>
-      </AuthState>
-    </div>
-  </LargeModal>
+      </UModal>
+    </template>
+  </AuthState>
 </template>

@@ -236,7 +236,7 @@
           </p>
         </div>
       </div>
-      <div class="hidden sm:block w-full h-full overflow-y-auto p-1 lg:p-2">
+      <div class="hidden sm:block w-full max-h-[calc(100vh-3rem)] overflow-y-auto p-1 lg:p-2">
         <div class="p-1 lg:p-2 text-center text-3xl">
           <div v-if="stats.percent < 100">
             <p>

@@ -8,7 +8,7 @@
     if (props.error.statusCode === 404) {
       console.info("Error information:\n", props.error)
     } else {
-      console.info("Error information:\n", props.error, "\nIf this error appears repeatedly, consider creating an issue at https://github.com/max8539/taskflow/issues")
+      console.info("Error information:\n", props.error, "\nIf this error appears repeatedly, consider creating an issue at https://github.com/cockatoo-dev/taskflow-webapp/issues")
     }
 
   })

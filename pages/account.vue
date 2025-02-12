@@ -59,7 +59,14 @@
     <DeleteAccountModal v-model="showDeleteAccount" :clear-session="clear" />
     <main v-if="data">
       <StdContainer>
-        <h1 class="pb-4 text-3xl">My Account</h1>
+        <h1 class="text-3xl">My Account</h1>
+        <AuthState v-slot="{ user }">
+          <div class="pb-4">
+            <div v-if="user?.userName" class="pt-2 font-bold">
+              You are logged in as {{ user.userName }}.
+            </div>
+          </div>
+        </AuthState>
         <h2 class="pb-2 font-bold text-xl">My Boards</h2>
         <ul>
           <li
