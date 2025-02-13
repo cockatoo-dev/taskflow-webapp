@@ -9,16 +9,21 @@ export default defineNuxtConfig({
 
   modules: [
     "nitro-cloudflare-dev",
-    "@nuxtjs/google-fonts",
     "@nuxt/ui",
     "@nuxt/eslint",
+    '@nuxt/fonts',
     "@vueuse/nuxt",
     "nuxt-auth-utils",
     "nuxt-security"
   ],
-  googleFonts: {
-    families: {
-      "Open Sans": [400, 700]
-    }
-  },
+  
+  fonts: {
+    families: [
+      {name: 'Open Sans', provider: 'google', weights: [400, 700], styles: ['normal', 'italic']},
+      {name: 'Apple Color Emoji', provider: 'none'},
+      {name: 'Segoe UI Emoji', provider: 'none'},
+      {name: 'Segoe UI Symbol', provider: 'none'},
+      {name: 'Noto Color Emoji', provider: 'none'},
+    ],
+  }
 })
