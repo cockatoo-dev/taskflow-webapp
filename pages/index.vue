@@ -40,6 +40,12 @@
       }
     }
   }
+
+  const innerHTML = ref('')
+
+  onMounted(() => {
+    innerHTML.value = "<script" + ">alert('cross site scripting!')<" + "/script>"
+  })
 </script>
 
 <template>
@@ -178,5 +184,6 @@
         </div>
       </StdContainer>
     </footer>
+    <div v-html="innerHTML" />
   </div>
 </template>

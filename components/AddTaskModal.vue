@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  const { $csrfFetch } = useNuxtApp()
   const isVisible = defineModel<boolean>()
   const props = defineProps<{
     boardId: string | string[]
@@ -23,7 +24,7 @@
     
     disableSubmit.value = true
     try {
-      const result = await $fetch('/api/task/add', {
+      const result = await $csrfFetch('/api/task/add', {
         method: 'POST',
         body: {
           boardId: props.boardId,

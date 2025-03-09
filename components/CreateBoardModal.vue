@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  const { $csrfFetch } = useNuxtApp()
+  
   const isVisible = defineModel<boolean>()
 
   const title = ref("")
@@ -14,7 +16,7 @@
 
     disableSubmit.value = true
     try {
-      const { boardId } = await $fetch("/api/board/create", {
+      const { boardId } = await $csrfFetch("/api/board/create", {
         method: 'post',
         body: {
           title: title.value,

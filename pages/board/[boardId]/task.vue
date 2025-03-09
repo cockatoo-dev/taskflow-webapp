@@ -1,4 +1,6 @@
 <script setup lang="ts">  
+  const { $csrfFetch } = useNuxtApp()
+  
   let refreshInterval: ReturnType<typeof setInterval>
   let addDepsLastUpdate = 0
   const route = useRoute()
@@ -73,8 +75,8 @@
 
     if (data.value.task.numDeps !== num) {
       console.log(`depscheck ${route.params.boardId} ${route.query.taskId}`)
-      await $fetch('/api/task/depscheck', {
-        method: 'post',
+      await $csrfFetch('/api/task/depscheck', {
+        method: 'POST',
         body: {
           boardId: route.params.boardId,
           taskId: data.value.task.taskId
@@ -129,8 +131,8 @@
   const setComplete = async (value: boolean) => {
     completeDisabled.value = true
 
-    await $fetch('/api/task/complete', {
-      method: 'post',
+    await $csrfFetch('/api/task/complete', {
+      method: 'POST',
       body: {
         boardId: route.params.boardId,
         taskId: route.query.taskId,
@@ -164,8 +166,8 @@
     
     addDepsDisable.value = true
     
-    await $fetch('/api/deps/add', {
-      method: 'post',
+    await $csrfFetch('/api/deps/add', {
+      method: 'POST',
       body: {
         boardId: route.params.boardId,
         source: data.value.task.taskId,
@@ -183,8 +185,8 @@
 
   const removeDeps = async (id: string) => {
     removeDepsDisable.value = true
-    await $fetch('/api/deps/remove', {
-      method: 'post',
+    await $csrfFetch('/api/deps/remove', {
+      method: 'POST',
       body: {
         boardId: route.params.boardId,
         source: route.query.taskId,

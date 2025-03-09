@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  const { $csrfFetch } = useNuxtApp()
+  
   const isVisible = defineModel<boolean>()
 
   const props = defineProps<{
@@ -19,7 +21,7 @@
   const deleteAccount = async () => {
     deleteLoading.value = true
     try {
-      await $fetch("/api/account/delete", {method: 'post'})
+      await $csrfFetch("/api/account/delete", {method: 'post'})
       await props.clearSession()
       navigateTo("/")
     } catch (e) {

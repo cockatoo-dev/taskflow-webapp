@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import type { LocationQueryValue } from 'vue-router';
+  const { $csrfFetch } = useNuxtApp()
 
   const isVisible = defineModel<boolean>()
 
@@ -17,7 +18,7 @@
   const deleteTask = async () => {
     deleteLoading.value = true
     try {
-      await $fetch('/api/task/delete', {
+      await $csrfFetch('/api/task/delete', {
         method: 'post',
         body: {
           boardId: route.params.boardId,

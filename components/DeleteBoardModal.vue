@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  const { $csrfFetch } = useNuxtApp()
+  
   const isVisible = defineModel<boolean>()
 
   const props = defineProps<{
@@ -15,7 +17,7 @@
   const deleteBoard = async () => {
     deleteLoading.value = true
     try {
-      await $fetch('/api/board/delete', {
+      await $csrfFetch('/api/board/delete', {
         method: 'post',
         body: {
           boardId: props.boardId
