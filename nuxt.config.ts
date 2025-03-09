@@ -25,5 +25,16 @@ export default defineNuxtConfig({
       {name: 'Segoe UI Symbol', provider: 'none'},
       {name: 'Noto Color Emoji', provider: 'none'},
     ],
+  },
+
+  security: {
+    corsHandler: false,
+    csrf: true
+  },
+  csurf: {
+    methodsToProtect: ['POST', 'PATCH', 'PUT', 'DELETE']
+  },
+  routeRules: {
+    '/api/_auth/session': {csurf: false}
   }
 })
