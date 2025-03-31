@@ -1,6 +1,4 @@
 export default defineEventHandler((e) => {
-  // console.log(`process env clientId ${process.env.NUXT_OAUTH_GITHUB_CLIENT_ID}`)
-  // console.log(`cloudflare env clientId ${e.context.cloudflare.env.NUXT_OAUTH_GITHUB_CLIENT_ID}`)
   return defineOAuthGitHubEventHandler({
     onSuccess: async (e, {user}) => {
       await setUserSession(e, {
@@ -18,17 +16,3 @@ export default defineEventHandler((e) => {
   })(e)
 })
 
-// export default defineOAuthGitHubEventHandler({
-//   onSuccess: async (e, {user}) => {
-//     await setUserSession(e, {
-//       user: {
-//         userId: `github:${user.id}`
-//       }
-//     })
-//     sendRedirect(e, "/")
-//   },
-//   config: {
-//     clientId: process.env.NUXT_OAUTH_GITHUB_CLIENT_ID,
-//     clientSecret: process.env.NUXT_OAUTH_GITHUB_CLIENT_SECRET,
-//   }
-// })

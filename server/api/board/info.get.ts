@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { useDB } from "~/server/db/db"
+import { useDB } from "~~/server/db/db"
 
 const querySchema = z.object({
   boardId: z.string()

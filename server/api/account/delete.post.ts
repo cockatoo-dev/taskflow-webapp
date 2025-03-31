@@ -1,4 +1,4 @@
-import { useDB } from "~/server/db/db"
+import { useDB } from "~~/server/db/db"
 
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
