@@ -10,9 +10,15 @@ export const BUTTON_UI_OBJECT = {
   }
 }
 
+export const BUTTON_SOLID_CLASS = 'text-base font-bold text-slate-100 dark:text-slate-900'
+export const BUTTON_GHOST_CLASS = 'text-base font-normal'
+export const GITHUB_BUTTON_CLASS = 'bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-slate-200 text-slate-100 dark:text-slate-900'
+
 export const GITHUB_BUTTON_UI_OBJECT = {
   color: {black: {solid: 'bg-black hover:bg-slate-900 dark:bg-white dark:hover:bg-slate-100 text-slate-200 dark:text-slate-800 text-base font-bold'}}
 }
+
+export const TEXT_INPUT_UI = {base: 'text-base text-slate-800 dark:text-slate-200'}
 
 export const TEXT_INPUT_UI_OBJECT = {
   placeholder: 'placeholder-slate-500 dark:placeholder-slate-500',
@@ -20,6 +26,8 @@ export const TEXT_INPUT_UI_OBJECT = {
   color: {white: {outline: 'bg-white dark:bg-black ring-slate-300 dark:ring-slate-700 focus:ring-teal-500 dark:focus:ring-teal-500 text-slate-800 dark:text-slate-200'}},
   icon: {color: 'text-slate-500 dark:text-slate-500'},
 }
+
+export const DROPDOWN_UI = {item: 'text-base font-normal'}
 
 export const DROPDOWN_UI_OBJECT = {item: {
   ring: 'ring-teal-500 dark:ring-teal-500',

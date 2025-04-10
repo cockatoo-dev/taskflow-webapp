@@ -18,6 +18,8 @@ export default defineNuxtConfig({
     "nuxt-auth-utils",
     "nuxt-security"
   ],
+
+  css: ['~/assets/style.css'],
   
   fonts: {
     families: [

@@ -109,13 +109,14 @@
     >
       <BoardSettingsModal 
         v-model="showBoardSettings"
-        :board-id="$route.params.boardId"
+        :board-id="$route.params.boardId || ''"
         :title="data.board.title || ''"
         :public-perms="data.board.publicPerms || 0"
+        :is-owner="data.board.isOwner || false"
         :refresh
       />
       <BoardInviteModal v-model="showBoardInvite" />
-      <AddTaskModal v-model="showAddTask" :board-id="route.params.boardId" /> 
+      <AddTaskModal v-model="showAddTask" :board-id="route.params.boardId || ''" /> 
       <div class="w-full h-full">
         <div class="h-10 p-1 grid grid-cols-[1fr_auto]">
           <h1 class="px-1 pt-1.5 lg:pt-0.5 lg:text-2xl text-center font-bold line-clamp-1 overflow-ellipsis">
@@ -123,59 +124,66 @@
           </h1>
           <div v-if="data.board.isOwner">
             <div class="block lg:hidden">
-              <UDropdown
+              <UDropdownMenu
                 :items="[
                   [{
                     label: 'Board Settings',
                     icon: 'i-heroicons-wrench-16-solid',
-                    click: () => {showBoardSettings = true}
+                    color: 'primary',
+                    onSelect: () => {showBoardSettings = true}
                   }],
                   [{
                     label: 'Invite to Board',
                     icon: 'i-heroicons-user-plus-16-solid',
-                    click: () => {showBoardInvite = true}
+                    color: 'primary',
+                    onSelect: () => {showBoardInvite = true}
                   }]
                 ]"
                 :content="{align:'end'}"
-                :ui="DROPDOWN_UI_OBJECT"
+                :ui="DROPDOWN_UI"
               >
                 <UButton 
                   type="button"
-                  label="Options"
                   icon="i-heroicons-ellipsis-vertical-16-solid"
                   variant="ghost"
-                  :ui="BUTTON_UI_OBJECT"
-                />
-              </UDropdown>
+                  :class="BUTTON_GHOST_CLASS"
+                >
+                  Options
+                </UButton>
+              </UDropdownMenu>
             </div>
             <div class="hidden lg:flex gap-1">
               <UButton 
                 type="button"
-                label="Board Settings"
                 icon="i-heroicons-wrench-16-solid"
                 variant="ghost"
-                :ui="BUTTON_UI_OBJECT"
+                :class="BUTTON_GHOST_CLASS"
                 @click="() => {showBoardSettings = true}"
-              />
+              >
+                Board Settings
+              </UButton>
               <UButton 
                 type="button"
                 label="Invite to Board"
                 icon="i-heroicons-user-plus-16-solid"
                 variant="ghost"
-                :ui="BUTTON_UI_OBJECT"
+                :class="BUTTON_GHOST_CLASS"
                 @click="() => {showBoardInvite = true}"
-              />
+              >
+                Invite to Board
+              </UButton>
             </div>
           </div>
           <div v-else>
             <UButton 
               type="button"
-              label="Invite to Board"
               icon="i-heroicons-user-plus-16-solid"
               variant="ghost"
-              :ui="BUTTON_UI_OBJECT"
+              :class="BUTTON_GHOST_CLASS"
               @click="() => {showBoardInvite = true}"
-            />
+            >
+              Invite to Board
+            </UButton>
           </div>
         </div>
         
@@ -186,11 +194,12 @@
           <h2 class="pl-2 pt-0.5 leading-8 text-2xl">Current Tasks</h2>
           <UButton 
             type="button"
-            label="Add Task"
             icon="i-heroicons-plus-16-solid"
-            :ui="BUTTON_UI_OBJECT"
+            :class="BUTTON_SOLID_CLASS"
             @click="() => {showAddTask = true}"
-          />
+          >
+            Add Task
+          </UButton>
         </div>
         <div v-else class="h-10 p-1">
           <h2 class="pl-2 pt-0.5 leading-8 text-2xl">Current Tasks</h2>
@@ -205,7 +214,8 @@
             variant="outline"
             icon="i-heroicons-magnifying-glass-16-solid"
             placeholder="Search for a task..."
-            :ui="TEXT_INPUT_UI_OBJECT"
+            class="w-full"
+            :ui="TEXT_INPUT_UI"
           />
         </div>
         <ul

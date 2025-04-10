@@ -50,9 +50,13 @@
 </script>
 
 <template>
-  <LargeModal v-model="isVisible">
+  <LargeModal 
+    v-model="isVisible"
+    title="Add New Task"
+    description="Fill out this form to add a new task."
+  >
     <div class="w-full p-4">
-      <h3 class="text-3xl font-bold pb-2">Add New Task</h3>
+      <div class="text-3xl font-bold pb-2">Add New Task</div>
       <form @submit.prevent="submitForm">
         <div class="pb-2">
           <label for="add-title" class="block pb-2 font-bold">Title (required)</label>
@@ -63,7 +67,7 @@
             autocomplete="off"
             class="block w-full"
             size="lg"
-            :ui="TEXT_INPUT_UI_OBJECT"
+            :ui="TEXT_INPUT_UI"
           />
           <CharLimit :str="title" :limit="50" :show-length="40" />
         </div>
@@ -74,7 +78,7 @@
             v-model="description" 
             autocomplete="off"
             class="block w-full"
-            :ui="TEXT_INPUT_UI_OBJECT"
+            :ui="TEXT_INPUT_UI"
           />
           <CharLimit :str="description" :limit="2500" :show-length="2250" />
         </div>
@@ -84,22 +88,25 @@
           <div>
             <UButton 
               type="submit"
-              label="Add Task"
               icon="i-heroicons-document-plus-16-solid"
               :loading="disableSubmit"
-              :ui="BUTTON_UI_OBJECT"
-            />
+              loading-icon="i-heroicons-arrow-path-16-solid"
+              :class="BUTTON_SOLID_CLASS"
+            >
+              Add Task
+            </UButton>
           </div>
           <div>
             <UButton 
               type="button"
-              label="Cancel"
-              color="red"
+              color="error"
               variant="ghost"
               icon="i-heroicons-x-mark-16-solid"
-              :ui="BUTTON_UI_OBJECT"
+              :class="BUTTON_GHOST_CLASS"
               @click="() => {isVisible = false}"
-            />
+            >
+              Cancel
+            </UButton>
           </div>
         </div>
       </form>

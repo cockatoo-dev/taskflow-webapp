@@ -20,7 +20,6 @@
   const showDeleteTask = ref(false)
   const showDeleteAccount = ref(false)
 
-
   const deleteTaskHandler = (boardId: string, title: string) => {
     deleteBoardId.value = boardId
     deleteTitle.value = title
@@ -86,60 +85,78 @@
         <div class="pt-2 text-center">
           <UButton 
             type="button"
-            label="Create New Board"
             icon="i-heroicons-plus-16-solid"
             variant="ghost"
-            :ui="BUTTON_UI_OBJECT"
+            :class="BUTTON_GHOST_CLASS"
             @click="() => {showCreate = true}"
-          />
+          >
+            Create New Board
+          </UButton>
         </div>
         <h2 class="pb-2 font-bold text-xl">Account Options</h2>
         <div class="block sm:hidden pt-1 text-center">
           <UButton 
             type="button"
-            label="Log Out"
             icon="i-heroicons-arrow-right-start-on-rectangle-16-solid"
             variant="ghost"
-            :ui="BUTTON_UI_OBJECT"
+            :class="BUTTON_GHOST_CLASS"
             @click="() => logout(clear)"
-          />
+          >
+            Log Out
+          </UButton>
         </div>
         <div class="block sm:hidden pt-1 text-center">
           <UButton 
             type="button"
-            color="red"
+            color="error"
             icon="i-heroicons-trash-16-solid"
-            label="Delete Account"
             variant="ghost"
-            :ui="BUTTON_UI_OBJECT"
+            :class="BUTTON_SOLID_CLASS"
             @click="() => {showDeleteAccount = true}"
-          />
+          >
+            Delete Account
+          </UButton>
         </div>
         <div class="hidden sm:flex sm:gap-2 sm:justify-center">
           <div>
             <UButton 
               type="button"
-              label="Log Out"
               icon="i-heroicons-arrow-right-start-on-rectangle-16-solid"
               variant="ghost"
-              :ui="BUTTON_UI_OBJECT"
+              :class="BUTTON_GHOST_CLASS"
               @click="() => {logout(clear)}"
-            />
+            >
+              Log Out
+            </UButton>
           </div>
           <div>
             <UButton 
               type="button"
-              color="red"
+              color="error"
               icon="i-heroicons-trash-16-solid"
-              label="Delete Account"
               variant="ghost"
-              :ui="BUTTON_UI_OBJECT"
+              :class="BUTTON_GHOST_CLASS"
               @click="() => {showDeleteAccount = true}"
-            />
+            >
+              Delete Account
+            </UButton>
           </div>
         </div>
       </StdContainer>
     </main>
+    <div v-else-if="error && error.statusCode === 401" class="py-10">
+      <h1 class="pb-2 text-xl text-center font-bold">You are not logged in.</h1>
+      <div class="text-center">
+        <UButton 
+          type="button"
+          icon="i-heroicons-home-16-solid"
+          :class="BUTTON_SOLID_CLASS"
+          to="/"
+        >
+          Back to Homepage
+        </UButton>
+      </div>
+    </div>
     <div v-else-if="error">
       <LoadingError :refresh />
     </div>

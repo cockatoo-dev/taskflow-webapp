@@ -42,32 +42,39 @@
 </script>
 
 <template>
-  <UModal v-model="isVisible" :transition="isMotionSafe" :ui="{background: 'dark:bg-black'}">
-    <div class="p-4">
+  <SmallModal 
+    v-model="isVisible" 
+    :title="`Delete ${taskName}?`"
+    description="Are you sure you want to delete this task?"
+  >
+  <div class="p-4">
       <h3 class="text-xl font-bold pb-2">Delete '{{ taskName }}'?</h3>
       <p>You are about to delete this task. Other tasks will be updated to no longer depend on this task. This cannot be undone.</p>
       <div class="flex gap-2 sm:gap-4 pt-2">
         <div>
           <UButton 
-            label="Delete Task"
             icon="i-heroicons-trash-16-solid"
-            color="red"
-            :ui="BUTTON_UI_OBJECT"
+            color="error"
+            :class="BUTTON_SOLID_CLASS"
             :loading="deleteLoading"
+            loading-icon="i-heroicons-arrow-path-16-solid"
             @click="deleteTask"
-          />
+          >
+            Delete Task
+          </UButton>
         </div>
         <div>
           <UButton 
             icon="i-heroicons-x-mark-16-solid"
-            label="Cancel"
             variant="ghost"
-            :ui="BUTTON_UI_OBJECT"
+            :class="BUTTON_GHOST_CLASS"
             @click="() => {isVisible = false}"
-          />
+          >
+            Cancel
+          </UButton>
         </div>
       </div>
       <FormError :message="errorMessage" />
     </div>
-  </UModal>
+  </SmallModal>
 </template>

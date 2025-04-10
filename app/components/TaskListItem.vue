@@ -16,8 +16,8 @@
   >
     <UCard
       v-if="isComplete"
-      :ui="{ body: { padding: 'p-2 sm:p-2 lg:p-4' } }"
-      class="lg:h-[13.5rem] bg-green-600 dark:bg-green-400 group-hover:bg-green-700 dark:group-hover:bg-green-300 text-slate-100 dark:text-slate-900"
+      :ui="{body: 'p-2 sm:p-2 lg:p-4'}"
+      class="lg:h-[13.5rem] bg-green-600 dark:bg-green-400 group-hover:bg-green-500 text-slate-100 dark:text-slate-900 transition-colors"
     >
       <div class="flex gap-2 leading-5">
         <div>
@@ -38,8 +38,8 @@
     </UCard>
     <UCard
       v-else-if="numDeps <= 0"
-      :ui="{ body: { padding: 'p-2 sm:p-2 lg:p-4' } }"
-      class="lg:h-[13.5rem] bg-blue-600 dark:bg-blue-400 group-hover:bg-blue-700 dark:group-hover:bg-blue-300 text-slate-100 dark:text-slate-900"
+      :ui="{body: 'p-2 sm:p-2 lg:p-4'}"
+      class="lg:h-[13.5rem] bg-blue-600 dark:bg-blue-400 group-hover:bg-blue-500 text-slate-100 dark:text-slate-900 transition-colors"
     >
       <div class="flex gap-2 leading-5">
         <div>
@@ -60,8 +60,8 @@
     </UCard>
     <UCard
       v-else
-      :ui="{ body: { padding: 'p-2 sm:p-2 lg:p-4' } }"
-      class="lg:h-[13.5rem] bg-red-600 dark:bg-red-400 group-hover:bg-red-700 dark:group-hover:bg-red-300 text-slate-100 dark:text-slate-900"
+      :ui="{body: 'p-2 sm:p-2 lg:p-4'}"
+      class="lg:h-[13.5rem] bg-red-600 dark:bg-red-400 group-hover:bg-red-500 text-slate-100 dark:text-slate-900 transition-colors"
     >
       <div class="flex gap-2 leading-5">
         <div>

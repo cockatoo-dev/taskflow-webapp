@@ -4,9 +4,9 @@
     baseUrl: string
   }>()
 
-  // https://tailwindcss.com/docs/customizing-colors
+  // https://tailwindcss.com/docs/colors
   const WHITE = '#ffffff'
-  const BLACK = '#000000'
+  const SLATE_900 = '#0f172a'
   const SLATE_200 = '#e2e8f0'
   const SLATE_800 = '#1e293b'
 
@@ -20,7 +20,7 @@
     }
     if (isDark.value) {
       imgDataUrl.value = await QRCode.toDataURL(`https://${props.baseUrl}/board/${route.params.boardId}`, {
-        color: {light: BLACK, dark: SLATE_200},
+        color: {light: SLATE_900, dark: SLATE_200},
         type: 'image/webp',
         width: 360,
       })

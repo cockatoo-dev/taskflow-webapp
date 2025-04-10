@@ -11,16 +11,21 @@
 </script>
 
 <template>
-  <LargeModal v-model="isVisible">
+  <LargeModal 
+    v-model="isVisible"
+    title="Invite other people to your board."
+    :description="`Use board code ${route.params.boardId}, or go to https://${BASE_URL}/board/${route.params.boardId}`"
+  >
     <div class="p-2 text-right">
       <UButton 
-        color="red"
-        label="Close"
+        color="error"
         variant="ghost"
         icon="i-heroicons-x-mark-16-solid"
-        :ui="BUTTON_UI_OBJECT"
+        :class="BUTTON_GHOST_CLASS"
         @click="() => {isVisible = false}"
-      />
+      >
+        Close
+      </UButton>
     </div>
     <div class="pl-4 pr-4 sm:pr-0 lg:pl-8 lg:pr-4">
       <div class="w-full">
@@ -54,12 +59,13 @@
       </div>
       <div v-if="clipboard.isSupported" class="pt-1">
         <UButton 
-          :label="clipboard.copied.value ? 'Copied Link' : 'Copy Link'"
           variant="ghost"
           :icon="clipboard.copied.value ? 'i-heroicons-clipboard-document-check-16-solid' :'i-heroicons-clipboard-document-16-solid'"
-          :ui="BUTTON_UI_OBJECT"
+          :class="BUTTON_GHOST_CLASS"
           @click="copyLink"
-        />
+        >
+          {{ clipboard.copied.value ? 'Copied Link' : 'Copy Link'}}
+        </UButton>
       </div>
     </div>
   </LargeModal>

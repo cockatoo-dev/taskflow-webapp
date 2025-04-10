@@ -3,7 +3,7 @@
     boardId: string,
     title: string,
     publicPerms: number,
-    refresh: () => void,
+    refresh: () => Promise<void>,
     deleteHandler: () => void
   }>()
 
@@ -12,7 +12,14 @@
 
 <template>
   <div>
-    <BoardSettingsModal v-model="showSettings" :board-id :title :public-perms :refresh />
+    <BoardSettingsModal 
+      v-model="showSettings" 
+      :board-id 
+      :title 
+      :public-perms 
+      is-owner 
+      :refresh 
+    />
     <div class="grid grid-cols-[1fr_auto]">
       <div class="pl-2 pr-1">
         <h3 class="line-clamp-1 overflow-elipsis">{{ title }}</h3>
@@ -21,101 +28,112 @@
       <div class="flex flex-col justify-center">
         <div>
           <div class="block sm:hidden">
-            <UDropdown
+            <UDropdownMenu
               :items="[
                 [{
                   label: 'Open Board',
                   icon: 'i-heroicons-arrow-right-16-solid',
+                  color: 'primary',
                   to:`/board/${boardId}`
                 }],
                 [{
                   label: 'Board Settings',
                   icon: 'i-heroicons-wrench-16-solid',
-                  click: () => {showSettings = true}
+                  color: 'primary',
+                  onSelect: () => {showSettings = true}
                 }],
                 [{
                   label: 'Delete Board',
                   icon: 'i-heroicons-trash-16-solid',
-                  click: props.deleteHandler
+                  color: 'error',
+                  onSelect: props.deleteHandler
                 }]
               ]"
               :content="{align:'end'}"
-              :ui="DROPDOWN_UI_OBJECT"
+              :ui="DROPDOWN_UI"
             >
               <UButton 
                 type="button"
-                label="Options"
                 icon="i-heroicons-ellipsis-vertical-16-solid"
                 variant="ghost"
-                :ui="BUTTON_UI_OBJECT"
-              />
-            </UDropdown>
+                :class="BUTTON_GHOST_CLASS"
+              >
+                Options
+              </UButton>
+            </UDropdownMenu>
           </div>
           <div class="hidden sm:flex lg:hidden gap-2">
             <div>
               <UButton 
-                label="Open Board"
                 icon="i-heroicons-arrow-right-16-solid"
-                :ui="BUTTON_UI_OBJECT"
+                :class="BUTTON_SOLID_CLASS"
                 :to="`/board/${boardId}`"
-              />
+              >
+                Open Board
+              </UButton>
             </div>
             <div>
-              <UDropdown
+              <UDropdownMenu
                 :items="[
                   [{
                     label: 'Board Settings',
                     icon: 'i-heroicons-wrench-16-solid',
-                    click: () => {showSettings = true}
+                    color: 'primary',
+                    onSelect: () => {showSettings = true}
                   }],
                   [{
                     label: 'Delete Board',
                     icon: 'i-heroicons-trash-16-solid',
-                    click: props.deleteHandler
+                    color: 'error',
+                    onSelect: props.deleteHandler
                   }]
                 ]"
                 :content="{align:'end'}"
-                :ui="DROPDOWN_UI_OBJECT"
+                :ui="DROPDOWN_UI"
               >
                 <UButton 
                   type="button"
-                  label="Options"
                   icon="i-heroicons-ellipsis-vertical-16-solid"
                   variant="ghost"
-                  :ui="BUTTON_UI_OBJECT"
-                />
-              </UDropdown>
+                  :class="BUTTON_GHOST_CLASS"
+                >
+                  Options
+                </UButton>
+              </UDropdownMenu>
             </div>
           </div>
           <div class="hidden lg:flex gap-2">
             <div>
               <UButton 
-                label="Open Board"
                 icon="i-heroicons-arrow-right-16-solid"
-                :ui="BUTTON_UI_OBJECT"
+                :class="BUTTON_SOLID_CLASS"
                 :to="`/board/${boardId}`"
-              />
+              >
+                Open Board
+              </UButton>
             </div>
             <div>
               <UButton 
                 type="button"
-                label="Board Settings"
                 icon="i-heroicons-wrench-16-solid"
                 variant="ghost"
-                :ui="BUTTON_UI_OBJECT"
+                :class="BUTTON_GHOST_CLASS"
                 @click="() => {showSettings = true}"
-              />
+              >
+                Board Settings
+              </UButton>
             </div>
             <div>
               <UButton 
                 type="button"
-                label="Delete Board"
                 icon="i-heroicons-trash-16-solid"
                 variant="ghost"
-                color="red"
-                :ui="BUTTON_UI_OBJECT"
+                color="error"
+                :class="BUTTON_GHOST_CLASS"
                 @click="deleteHandler"
-              />
+              >
+                Delete Board
+              </UButton>
             </div>
           </div>
         </div>

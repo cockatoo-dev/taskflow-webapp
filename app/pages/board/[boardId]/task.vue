@@ -1,5 +1,7 @@
 <script setup lang="ts">  
   const { $csrfFetch } = useNuxtApp()
+
+  const toast = useToast()
   
   let refreshInterval: ReturnType<typeof setInterval>
   let addDepsLastUpdate = 0
@@ -29,7 +31,7 @@
     if (!data.value) {
       return 'Taskflow'
     } else {
-      return `${data.value.task.title} | Taskflow`
+      return `${data.value.task?.title} | Taskflow`
     }
   })
 
@@ -73,13 +75,13 @@
       }
     }
 
-    if (data.value.task.numDeps !== num) {
+    if (data.value.task?.numDeps !== num) {
       console.log(`depscheck ${route.params.boardId} ${route.query.taskId}`)
       await $csrfFetch('/api/task/depscheck', {
         method: 'POST',
         body: {
           boardId: route.params.boardId,
-          taskId: data.value.task.taskId
+          taskId: data.value.task?.taskId
         }
       })
       refresh()
@@ -140,8 +142,11 @@
       }
     })
     .catch((err) => {
-      errorMessage.value = err.data.message || err.message
-      showError.value = true
+      toast.add({
+        title: 'Error',
+        description: err.data.message || err.message,
+        color: 'error'
+      })
     })
 
     await refresh()
@@ -170,13 +175,16 @@
       method: 'POST',
       body: {
         boardId: route.params.boardId,
-        source: data.value.task.taskId,
+        source: data.value.task?.taskId,
         dest: id,
       }
     })
     .catch((err) => {
-      errorMessage.value = err.data.message || err.message
-      showError.value = true
+      toast.add({
+        title: 'Error',
+        description: err.data.message || err.message,
+        color: 'error'
+      })
     })
 
     await refresh()
@@ -223,30 +231,26 @@
       <StdContainer>
         <EditTaskModal
           v-model="showEdit"
-          :title="data?.task.title || ''"
-          :description="data?.task.description || ''"
+          :title="data?.task?.title || ''"
+          :description="data?.task?.description || ''"
           :refresh
         />
         <DeleteTaskModal 
           v-model="showDelete" 
-          :task-id="$route.query.taskId"
-          :task-name="data?.task.title || ''"
-        />
-        <ErrorModal 
-          v-model="showError"
-          :message="errorMessage"
+          :task-id="$route.query.taskId || ''"
+          :task-name="data.task?.title || ''"
         />
         <BackLink :board-id="route.params.boardId" />
         <div>
           <div class="py-4">
             <TaskStatusCard 
-              :is-complete="data?.task.isComplete || false"
-              :num-deps="data?.task.numDeps || 0"
+              :is-complete="data.task?.isComplete || false"
+              :num-deps="data.task?.numDeps || 0"
             />
           </div>
           
           <h1 class="text-3xl pb-2">
-            {{ data.task.title }}
+            {{ data.task?.title }}
           </h1>
 
           <div 
@@ -254,24 +258,26 @@
             class="text-center pb-2"
           >
             <UButton 
-              v-if="!data.task.isComplete"
-              color="green"
+              v-if="!data.task?.isComplete"
+              color="success"
               icon="i-heroicons-check-circle-16-solid"
-              label="Mark as Completed"
-              :ui="BUTTON_UI_OBJECT"
+              :class="BUTTON_SOLID_CLASS"
               @click="() => setComplete(true)"
-            />
+            >
+              Mark as Completed
+            </UButton>
             <UButton 
               v-else
               icon="i-heroicons-exclamation-circle-16-solid"
-              label="Mark as Not Completed"
-              :ui="BUTTON_UI_OBJECT"
+              :class="BUTTON_SOLID_CLASS"
               @click="() => setComplete(false)"
-            />
+            >
+              Mark as Not Completed
+            </UButton>
           </div>
 
           <MultiLineP
-            :text="data.task.description"
+            :text="data.task?.description || ''"
             line-class="pb-2"
           />
 
@@ -296,14 +302,16 @@
                     />
                     <div class="pl-1">
                       <UButton 
-                        color="red"
+                        color="error"
                         icon="i-heroicons-minus-16-solid"
                         label="Remove"
                         variant="ghost"
-                        :ui="BUTTON_UI_OBJECT"
+                        :class="BUTTON_GHOST_CLASS"
                         :loading="removeDepsDisable"
                         @click="() => removeDeps(item.taskId)"
-                      />
+                      >
+                        Remove
+                      </UButton>
                     </div>
                   </div>
                 </div>
@@ -324,7 +332,8 @@
                 variant="outline"
                 icon="i-heroicons-magnifying-glass-16-solid"
                 placeholder="Search for a task title..."
-                :ui="TEXT_INPUT_UI_OBJECT"
+                class="w-full"
+                :ui="TEXT_INPUT_UI"
                 @focus="addDepsFocus"
               />
               <div class="max-h-40 md:h-40 w-full overflow-y-auto">
@@ -342,14 +351,16 @@
                     />
                     <div class="pl-1">
                       <UButton 
-                        color="green"
+                        color="success"
                         icon="i-heroicons-plus-16-solid"
-                        label="Add"
                         :loading="addDepsDisable"
+                        loading-icon="i-heroicons-arrow-path-16-solid"
                         variant="ghost"
-                        :ui="BUTTON_UI_OBJECT"
+                        :class="BUTTON_GHOST_CLASS"
                         @click="() => addDeps(item.id)"
-                      />
+                      >
+                        Add
+                      </UButton>
                     </div>
                   </div>
                 </div>
@@ -395,42 +406,47 @@
             <h3 class="py-2 text-lg font-bold">Task Options</h3>
             <div class="block sm:hidden pt-1 text-center">
               <UButton 
-                label="Edit Task Details"
                 icon="i-heroicons-pencil-square-16-solid"
                 variant="ghost"
-                :ui="BUTTON_UI_OBJECT"
+                :class="BUTTON_GHOST_CLASS"
                 @click="() => {showEdit = true}"
-              />
+              >
+                Edit Task Details
+              </UButton>
             </div>
             <div class="block sm:hidden pt-1 text-center">
               <UButton 
-                color="red"
+                color="error"
                 icon="i-heroicons-trash-16-solid"
                 label="Delete Task"
                 variant="ghost"
-                :ui="BUTTON_UI_OBJECT"
+                :class="BUTTON_GHOST_CLASS"
                 @click="() => {showDelete = true}"
-              />
+              >
+                Delete Task
+              </UButton>
             </div>
             <div class="hidden sm:flex gap-4 justify-center pt-2">
               <div>
                 <UButton 
-                  label="Edit Task Details"
                   icon="i-heroicons-pencil-square-16-solid"
                   variant="ghost"
-                  :ui="BUTTON_UI_OBJECT"
+                  :class="BUTTON_GHOST_CLASS"
                   @click="() => {showEdit = true}"
-                />
+                >
+                  Edit Task Details
+                </UButton>
               </div>
               <div>
                 <UButton 
-                  color="red"
+                  color="error"
                   icon="i-heroicons-trash-16-solid"
-                  label="Delete Task"
                   variant="ghost"
-                  :ui="BUTTON_UI_OBJECT"
+                  :class="BUTTON_GHOST_CLASS"
                   @click="() => {showDelete = true}"
-                />
+                >
+                  Delete Task
+                </UButton>
               </div>
             </div>
           </div>
@@ -441,11 +457,12 @@
       <h1 class="pb-2 text-xl text-center font-bold">This task does not exist.</h1>
       <div class="text-center">
         <UButton 
-          label="Return to Board"
           icon="i-heroicons-arrow-left-16-solid"
-          :ui="BUTTON_UI_OBJECT"
+          :class="BUTTON_SOLID_CLASS"
           :to="`/board/${route.params.boardId}`"
-        />
+        >
+          Return to Board
+        </UButton>
       </div>
     </div>
     <LoadingError v-else-if="error && !showInvalidBoard" :refresh />

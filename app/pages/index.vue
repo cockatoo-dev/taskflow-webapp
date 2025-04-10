@@ -40,12 +40,6 @@
       }
     }
   }
-
-  const innerHTML = ref('')
-
-  onMounted(() => {
-    innerHTML.value = "<script" + ">alert('cross site scripting!')<" + "/script>"
-  })
 </script>
 
 <template>
@@ -62,7 +56,7 @@
           </h1>
           <p class="pt-4 sm:pt-8 sm:text-2xl text-center">Taskflow is a web app for keeping track of tasks, helping you to keep your team coordinated and reach your goals.</p>
         </div>
-        <div class="w-full p-4 bg-white dark:bg-black rounded-xl shadow-xl">
+        <div class="w-full p-4 bg-white dark:bg-slate-900 rounded-xl shadow-xl">
           <form class="block w-full mx-auto" @submit.prevent="submitForm">
             <div class="grid grid-cols-[1fr_auto]">
               <div class="pr-2">
@@ -71,27 +65,23 @@
                   id="homepage-board"
                   v-model="boardId"
                   placeholder="Enter board code..."
-                  class="block w-full"
-                  :ui="TEXT_INPUT_UI_OBJECT"
+                  class="w-full"
+                  :ui="TEXT_INPUT_UI"
                 />
               </div>
               <div>
-                <div class="block sm:hidden">
-                  <UButton 
-                    type="submit"
-                    label="Open"
-                    icon="i-heroicons-arrow-right-16-solid"
-                    :ui="BUTTON_UI_OBJECT"
-                  />
-                </div>
-                <div class="hidden sm:block">
-                  <UButton 
-                    type="submit"
-                    label="Open Board"
-                    icon="i-heroicons-arrow-right-16-solid"
-                    :ui="BUTTON_UI_OBJECT"
-                  />
-                </div>
+                <UButton
+                  type="submit"
+                  icon="i-heroicons-arrow-right-16-solid"
+                  :class="BUTTON_SOLID_CLASS"
+                  :loading="joinLoading"
+                  loading-icon="i-heroicons-arrow-path-16-solid"
+                >
+                  <span>
+                    <span class="inline sm:hidden">Open</span>
+                    <span class="hidden sm:inline">Open Board</span>
+                  </span>
+                </UButton>
               </div>
             </div>
             <FormError :message="errorMessage" />
@@ -101,12 +91,13 @@
             <div class="text-center">
               <UButton 
                 type="button"
-                label="Create New Board"
                 icon="i-heroicons-plus-16-solid"
                 variant="ghost"
-                :ui="BUTTON_UI_OBJECT"
+                :class="BUTTON_GHOST_CLASS"
                 @click="() => {showCreate = true}"
-              />
+              >
+                Create New Board
+              </UButton>
             </div>
           </div>
         </div>
@@ -144,7 +135,7 @@
             <p class="py-2">Each board has a unique board code, along with a QR code and a shareable link, so your team members can easily open your board in their web browsers.</p>
           </div>
           <div class="sm:order-2 sm:pl-2">
-            <div class="w-full max-w-[488px] mx-auto p-2 bg-white dark:bg-black rounded-md shadow-md">
+            <div class="w-full max-w-[488px] mx-auto p-2 bg-white dark:bg-slate-900 rounded-md shadow-md">
               <div class="grid grid-cols-[70%_30%]">
                 <div class="pl-2 flex flex-col justify-center border-r border-r-slate-300 dark:border-r-slate-700 text-3xl font-bold leading-snug">
                   Board code
@@ -184,6 +175,5 @@
         </div>
       </StdContainer>
     </footer>
-    <div v-html="innerHTML" />
   </div>
 </template>

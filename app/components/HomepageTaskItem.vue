@@ -9,7 +9,7 @@
   <div class="p-1">
     <UCard
       v-if="status === 'completed'"
-      :ui="{ body: { padding: 'p-2 sm:p-2 lg:p-2' } }"
+      :ui="{body: 'p-2 sm:p-2 lg:p-2'}"
       class="bg-green-600 dark:bg-green-400 text-slate-100 dark:text-slate-900"
     >
       <div class="flex gap-2 leading-5">
@@ -27,7 +27,7 @@
     </UCard>
     <UCard
       v-else-if="status === 'ready'"
-      :ui="{ body: { padding: 'p-2 sm:p-2 lg:p-2' } }"
+      :ui="{body: 'p-2 sm:p-2 lg:p-2'}"
       class="bg-blue-600 dark:bg-blue-400 text-slate-100 dark:text-slate-900"
     >
       <div class="flex gap-2 leading-5">
@@ -45,7 +45,7 @@
     </UCard>
     <UCard
       v-else
-      :ui="{ body: { padding: 'p-2 sm:p-2 lg:p-2' } }"
+      :ui="{body: 'p-2 sm:p-2 lg:p-2'}"
       class="bg-red-600 dark:bg-red-400 text-slate-100 dark:text-slate-900"
     >
       <div class="flex gap-2 leading-5">

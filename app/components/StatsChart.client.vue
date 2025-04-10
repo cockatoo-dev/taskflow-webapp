@@ -10,7 +10,7 @@
   const isDark = useDark()
   const isMotionSafe = useMotionSafe()
 
-  // https://tailwindcss.com/docs/customizing-colors
+  // https://tailwindcss.com/docs/colors
   const RED_400 = '#f87171'
   const RED_600 = '#dc2626'
   const GREEN_400 = '#4ade80'

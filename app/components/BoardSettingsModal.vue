@@ -5,11 +5,12 @@
     boardId: string | string[]
     title: string,
     publicPerms: number,
+    isOwner: boolean
     refresh: () => Promise<void>
   }>()
 
   const titleEdit = ref("")
-  const publicPermsEdit = ref(1)
+  const publicPermsEdit = ref("1")
   const errorMessage = ref("")
   const disableSubmit = ref(false)
 
@@ -40,7 +41,7 @@
   watch(isVisible, () => {
     if (isVisible.value) {
       titleEdit.value = props.title
-      publicPermsEdit.value = props.publicPerms
+      publicPermsEdit.value = String(props.publicPerms)
       errorMessage.value = ''
       disableSubmit.value = false
     }
@@ -48,9 +49,13 @@
 </script>
 
 <template>
-  <LargeModal v-model="isVisible">
+  <LargeModal 
+    v-model="isVisible"
+    title="Board Settings"
+    description="Update the settings for this board."
+  >
     <div class="w-full p-4">
-      <h3 class="text-3xl font-bold pb-2">Board Settings</h3>
+      <div class="text-3xl font-bold pb-2">Board Settings</div>
       <form @submit.prevent="submitForm">
         <div class="pb-2">
           <label for="settings-name" class="block pb-2 font-bold">Board Name</label>
@@ -60,9 +65,9 @@
             required
             autocomplete="off"
             class="block w-full"
-            :ui="TEXT_INPUT_UI_OBJECT"
+            :ui="TEXT_INPUT_UI"
           />
-          <CharLimit :str="title" :limit="40" :show-length="30" />
+          <CharLimit :str="title" :limit="50" :show-length="40" />
         </div>
         <div class="pb-4">
           <PublicPermsRadio v-model="publicPermsEdit" />
@@ -71,28 +76,31 @@
           <div>
             <UButton 
               type="submit"
-              label="Save Changes"
               icon="i-heroicons-check-16-solid"
               :loading="disableSubmit"
-              :ui="BUTTON_UI_OBJECT"
-            />
+              loading-icon="i-heroicons-arrow-path-16-solid"
+              :class="BUTTON_SOLID_CLASS"
+            >
+              Save Changes
+            </UButton>
           </div>
           <div>
             <UButton 
               type="button"
-              label="Cancel"
-              color="red"
+              color="error"
               variant="ghost"
               icon="i-heroicons-x-mark-16-solid"
-              :ui="BUTTON_UI_OBJECT"
+              :class="BUTTON_GHOST_CLASS"
               @click="() => {isVisible = false}"
-            />
+            >
+              Cancel
+            </UButton>
           </div>
         </div>
       </form>
       <FormError :message="errorMessage" />
-      <div v-if="$route.path !== '/account'" class="pt-2">
-        If you are looking to delete this board, please go to the
+      <div v-if="isOwner && $route.path !== '/account'" class="pt-2">
+        If you are looking to delete this board, please go to your
         <NuxtLink to="/account" class="text-teal-600 dark:text-teal-400 hover:underline">
           account page.
         </NuxtLink>

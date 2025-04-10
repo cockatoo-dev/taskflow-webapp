@@ -5,6 +5,7 @@
     },
     truncate: 'truncate text-clip'
   }
+  const NAVBAR_BUTTON_CLASS = 'bg-teal-500 dark:bg-teal-500 hover:bg-teal-400 dark:hover:bg-teal-600 text-base font-bold text-slate-100 dark:text-slate-900'
 
   const showLogin = ref(false)
 </script>
@@ -32,21 +33,23 @@
           <UButton 
             v-if="loggedIn"
             type="button"
-            label="My Account"
             to="/account"
             icon="i-heroicons-user-16-solid"
             truncate
-            :ui="NAVBAR_BUTTON_UI_OBJECT"
-          />
+            :class="NAVBAR_BUTTON_CLASS"
+          >
+            My Account
+          </UButton>
           <UButton 
             v-else
             type="button"
-            label="Log In"
             icon="i-heroicons-arrow-right-end-on-rectangle-16-solid"
             truncate
-            :ui="NAVBAR_BUTTON_UI_OBJECT"
+            :class="NAVBAR_BUTTON_CLASS"
             @click="() => {showLogin = true}"
-          />
+          >
+            Log In
+          </UButton> 
         </AuthState>
       </div>
     </nav>

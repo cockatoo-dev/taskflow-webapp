@@ -10,11 +10,12 @@
     <div class="text-center">
       <UButton 
         type="button"
-        label="Try Again"
         icon="i-heroicons-arrow-uturn-right-16-solid"
-        :ui="BUTTON_UI_OBJECT"
+        :class="BUTTON_SOLID_CLASS"
         @click="refresh"
-      />
+      >
+        Try Again
+      </UButton>
     </div>
   </div>
 </template>

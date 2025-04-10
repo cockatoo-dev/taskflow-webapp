@@ -9,7 +9,6 @@
 
   const errorMessage = ref('')
   const deleteLoading = ref(false)
-  const isMotionSafe = useMotionSafe()
 
   watch(isVisible, () => {
     if (isVisible.value) {
@@ -32,9 +31,13 @@
 </script>
 
 <template>
-  <UModal v-model="isVisible" :transition="isMotionSafe" :ui="{background: 'dark:bg-black'}">
+  <SmallModal 
+    v-model="isVisible"
+    title="Delete your account?"
+    description="Are you sure you want to delete your account?"
+  >
     <div class="p-4">
-      <h3 class="text-xl font-bold pb-2">Delete your account??</h3>
+      <div class="text-xl font-bold pb-2">Delete your account?</div>
       <p>
         You are about to delete your account. All your boards, and all the tasks on your boards, will be deleted. This cannot be undone.
         If you log in again with the same Github account, you will have an empty account.
@@ -42,25 +45,29 @@
       <div class="flex gap-2 sm:gap-4 pt-2">
         <div>
           <UButton 
-            label="Delete Board"
             icon="i-heroicons-trash-16-solid"
-            color="red"
-            :ui="BUTTON_UI_OBJECT"
+            color="error"
+            :class="BUTTON_SOLID_CLASS"
             :loading="deleteLoading"
+            loading-icon="i-heroicons-arrow-path-16-solid"
             @click="deleteAccount"
-          />
+          >
+            Delete Board
+          </UButton>
         </div>
         <div>
           <UButton 
             icon="i-heroicons-x-mark-16-solid"
             label="Cancel"
             variant="ghost"
-            :ui="BUTTON_UI_OBJECT"
+            :class="BUTTON_GHOST_CLASS"
             @click="() => {isVisible = false}"
-          />
+          >
+            Cancel
+          </UButton>
         </div>
       </div>
       <FormError :message="errorMessage" />
     </div>
-  </UModal>
+  </SmallModal>
 </template>
