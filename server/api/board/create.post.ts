@@ -6,6 +6,8 @@ const bodySchema = z.object({
   publicPerms: z.number()
 })
 
+// POST /api/board/create
+// Creates a new board
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
   

@@ -7,6 +7,8 @@ const bodySchema = z.object({
   dest: z.string()
 })
 
+// POST /api/deps/remove
+// Removes a dependency between two tasks.
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
   
@@ -23,14 +25,15 @@ export default defineEventHandler(async (e) => {
     })
   }
 
-  const tasksInfo = await db.getTaskPair(bodyData.boardId, bodyData.source, bodyData.dest)
-  if (tasksInfo.length < 2) {
+  const depsExists = await db.isDepsExist(bodyData.source, bodyData.dest)
+  if (!depsExists) {
     throw createError({
       statusCode: 400,
-      statusMessage: "One or more task IDs are invalid."
+      message: "Dependency does not exist."
     })
   }
-
+  
+  const tasksInfo = await db.getTaskPair(bodyData.boardId, bodyData.source, bodyData.dest)
   let newNum: number
   if (tasksInfo[1].isComplete) {
     newNum = tasksInfo[0].numDeps

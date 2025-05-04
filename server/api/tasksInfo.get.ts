@@ -5,6 +5,10 @@ const querySchema = z.object({
   boardId: z.string()
 })
 
+// GET /api/tasksInfo
+// Returns limited information about all tasks on a board.
+// This is used for generating a list of tasks 
+// that can be added as dependencies.
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
   

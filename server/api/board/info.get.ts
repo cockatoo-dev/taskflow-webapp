@@ -5,6 +5,8 @@ const querySchema = z.object({
   boardId: z.string()
 })
 
+// GET /api/board/info
+// Returns information about a board.
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
   

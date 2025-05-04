@@ -9,6 +9,11 @@ export class db {
     this._db = drizzle(e.context.cloudflare.env.CF_DB)
   }
 
+  /**
+   * Check if a board exists.
+   * @param boardId board ID
+   * @returns true if the board exists, false otherwise
+   */
   public isBoardExists = async (boardId: string) => {
     const dbData = await this._db.select({ boardId: boards.boardId })
     .from(boards)
@@ -17,12 +22,24 @@ export class db {
     return dbData.length > 0
   }
 
+  /**
+   * Get information about a board.
+   * @param boardId board ID
+   * @returns board name, owner ID, and public permissions
+   */
   public getBoard = async (boardId: string) => {
     return (await this._db.select()
     .from(boards)
     .where(eq(boards.boardId, boardId)))
   }
 
+  /**
+   * Add a new board to the database.
+   * @param boardId board ID
+   * @param ownerId owner ID
+   * @param title board title
+   * @param publicPerms public permissions
+   */
   public addBoard = async (
     boardId: string, 
     ownerId: string, 
@@ -37,6 +54,13 @@ export class db {
     })
   }
 
+  /**
+   * Edit an existing board.
+   * @param boardId board ID
+   * @param ownerId owner ID
+   * @param title board title
+   * @param publicPerms public permissions
+   */
   public editBoard = async (
     boardId: string, 
     ownerId: string,
@@ -53,6 +77,11 @@ export class db {
     ))
   }
 
+  /**
+   * Delete a board.
+   * @param boardId board ID
+   * @param ownerId owner ID
+   */
   public deleteBoard = async (boardId: string, ownerId: string) => {
     await this._db.batch([
       this._db.delete(deps)
@@ -71,6 +100,11 @@ export class db {
     ])
   }
 
+  /**
+   * Get all boards owned by a user.
+   * @param userId user ID
+   * @returns array of boards (board ID, title, and public permissions)
+   */
   public getUserBoards = async (userId: string) => {
     return await this._db.select({
       boardId: boards.boardId,
@@ -81,6 +115,10 @@ export class db {
     .where(eq(boards.ownerId, userId))
   }
 
+  /**
+   * Delete all boards owned by a user.
+   * @param userId user ID
+   */
   public deleteUserBaords = async (userId: string) => {
     await this._db.batch([
       this._db.delete(deps)
@@ -97,6 +135,12 @@ export class db {
     ])
   }
   
+  /**
+   * Check if a task exists on a board.
+   * @param boardId board ID
+   * @param taskId task ID
+   * @returns true if the task exists, false otherwise
+   */
   public isTaskExists = async (boardId: string, taskId: string) => {
     const dbData = await this._db.select({ taskId: tasks.taskId })
     .from(tasks)
@@ -108,6 +152,12 @@ export class db {
     return dbData.length > 0
   }
 
+  /**
+   * Check if a dependency exists between two tasks.
+   * @param source source task ID
+   * @param dest dest task ID
+   * @returns true if the dependency exists, false otherwise
+   */
   public isDepsExist = async (source: string, dest: string) => {
     const dbData = await this._db.select({ id: deps.source })
     .from(deps)
@@ -119,6 +169,12 @@ export class db {
     return dbData.length > 0
   }
   
+  /**
+   * Get information about a task.
+   * @param boardId board ID
+   * @param taskId task ID
+   * @returns task ID, title, description, number of dependencies, and completion status
+   */
   public getTask = async (boardId: string, taskId: string) => {
     return (await this._db.select()
     .from(tasks)
@@ -128,6 +184,14 @@ export class db {
     )))
   }
 
+  /**
+   * Get information about two tasks. Useful when managing dependencies.
+   * @param boardId board ID
+   * @param first first task ID
+   * @param second second task ID
+   * @returns array of two tasks (task ID, title, description, number of dependencies, and completion status),
+   * first task will always be in position 0 and second task in position 1.
+   */
   public getTaskPair = async (boardId: string, first: string, second: string) => {
     const dbData = await this._db.select()
     .from(tasks)
@@ -147,6 +211,11 @@ export class db {
     }
   }
 
+  /**
+   * Get all tasks on a board.
+   * @param boardId board ID
+   * @returns array of tasks (task ID, title, description, number of dependencies, and completion status)
+   */
   public getBoardTasks = async (boardId: string) => {
     return await this._db.select()
     .from(tasks)
@@ -154,6 +223,11 @@ export class db {
     .orderBy(asc(tasks.title))
   }
 
+  /**
+   * Get limited information about all tasks on a board.
+   * @param boardId board ID
+   * @returns list of tasks (task ID, title, and completion status)
+   */
   public getBoardTasksInfo = async (boardId: string) => {
     return await this._db.select({
       id: tasks.taskId,
@@ -166,6 +240,13 @@ export class db {
     .orderBy(asc(tasks.title))
   }
 
+  /**
+   * Add a new task to a board.
+   * @param boardId board ID
+   * @param taskId task ID
+   * @param title task title
+   * @param description task description
+   */
   public addTask = async (boardId: string, taskId: string, title: string, description: string) => {
     await this._db.insert(tasks)
     .values({ 
@@ -178,12 +259,24 @@ export class db {
     })
   }
 
+  /**
+   * Edit an existing task.
+   * @param taskId task ID
+   * @param title task title
+   * @param description task description
+   */
   public editTask = async (taskId: string, title: string, description: string) => {
     await this._db.update(tasks)
     .set({ title, description })
     .where(eq(tasks.taskId, taskId))
   }
 
+  /**
+   * Set the completion status of a task, and update the number of dependencies
+   * for tasks that depend on this task.
+   * @param taskId task ID
+   * @param isComplete completion status
+   */
   public setTaskComplete = async (taskId: string, isComplete: boolean) => {
     if (isComplete) {
       await this._db.batch([
@@ -260,60 +353,100 @@ export class db {
     }
   }
   
+  /**
+   * Set the number of dependencies for a task.
+   * @param taskId task ID
+   * @param value number of dependencies
+   */
   public setTaskNumDeps = async (taskId: string, value: number) => {
     await this._db.update(tasks)
     .set({ numDeps: value })
     .where(eq(tasks.taskId, taskId))
   }
 
+  /**
+   * Delete a task and all dependencies with this task, 
+   * and update the number of dependencies for tasks that depend on this task.
+   * @param taskId task ID
+   */
   public deleteTask = async (taskId: string) => {
-    await this._db.batch([
-      this._db.update(tasks)
-      .set({numDeps: 0})
-      .where(and(
-        ne(tasks.taskId, taskId),
-        lte(tasks.numDeps, 1),
-        exists(
-          this._db.select()
-          .from(deps)
-          .where(and(
-            eq(deps.source, tasks.taskId),
-            eq(deps.dest, taskId)
-          ))
-        )
-      )),
+    const task = await this._db.select()
+    .from(tasks)
+    .where(eq(tasks.taskId, taskId))
+    if (task[0].isComplete) {
+      await this._db.batch([
+        this._db.delete(deps)
+        .where(or(
+          eq(deps.source, taskId),
+          eq(deps.dest, taskId)
+        )),
+        this._db.delete(tasks)
+        .where(eq(tasks.taskId, taskId))
+      ])
+    } else {
+      await this._db.batch([
+        this._db.update(tasks)
+        .set({numDeps: 0})
+        .where(and(
+          ne(tasks.taskId, taskId),
+          lte(tasks.numDeps, 1),
+          exists(
+            this._db.select()
+            .from(deps)
+            .where(and(
+              eq(deps.source, tasks.taskId),
+              eq(deps.dest, taskId)
+            ))
+          )
+        )),
 
-      this._db.update(tasks)
-      .set({numDeps: sql`${tasks.numDeps} - 1`})
-      .where(and(
-        ne(tasks.taskId, taskId),
-        gt(tasks.numDeps, 1),
-        exists(
-          this._db.select()
-          .from(deps)
-          .where(and(
-            eq(deps.source, tasks.taskId),
-            eq(deps.dest, taskId)
-          ))
-        )
-      )),
+        this._db.update(tasks)
+        .set({numDeps: sql`${tasks.numDeps} - 1`})
+        .where(and(
+          ne(tasks.taskId, taskId),
+          gt(tasks.numDeps, 1),
+          exists(
+            this._db.select()
+            .from(deps)
+            .where(and(
+              eq(deps.source, tasks.taskId),
+              eq(deps.dest, taskId)
+            ))
+          )
+        )),
 
-      this._db.delete(deps)
-      .where(or(
-        eq(deps.source, taskId),
-        eq(deps.dest, taskId)
-      )),
+        this._db.delete(deps)
+        .where(or(
+          eq(deps.source, taskId),
+          eq(deps.dest, taskId)
+        )),
 
-      this._db.delete(tasks)
-      .where(eq(tasks.taskId, taskId))
-    ])
+        this._db.delete(tasks)
+        .where(eq(tasks.taskId, taskId))
+      ])
+    }
   }
 
-  public getDeps = async () => {
-    return await this._db.select()
+  /**
+   * Get all dependencies between tasks for a board.
+   * @param boardId board ID
+   * @returns array of dependencies (source task ID, dest task ID)
+   */
+  public getDeps = async (boardId: string) => {
+    return await this._db.select({
+      source: deps.source,
+      dest: deps.dest
+    })
     .from(deps)
+    .innerJoin(tasks, eq(deps.source, tasks.taskId))
+    .where(eq(tasks.boardId, boardId))
   }
 
+  /**
+   * Get information about tasks where a task is the destination of a dependency.
+   * @param dest destination task ID
+   * @returns task ID, title, number of dependencies, and completion status
+   */
   public getDestDepsInfo = async (dest: string) => {
     return await this._db.select({
       taskId: tasks.taskId,
@@ -327,6 +460,11 @@ export class db {
     .innerJoin(tasks, eq(deps.source, tasks.taskId))
   }
 
+  /**
+   * Get information about tasks where a task is the source of a dependency.
+   * @param source source task ID
+   * @returns task ID, title, number of dependencies, and completion status
+   */
   public getSourceDepsInfo = async (source: string) => {
     return await this._db.select({
       taskId: tasks.taskId,
@@ -340,6 +478,12 @@ export class db {
     .innerJoin(tasks, eq(deps.dest, tasks.taskId))
   }
 
+  /**
+   * Add a dependency between two tasks.
+   * @param source source task ID
+   * @param dest destination task ID
+   * @param newDepsNum mew number of dependencies for the source task
+   */
   public addDeps = async (source: string, dest: string, newDepsNum: number) => {
     await this._db.batch([
       this._db.insert(deps)
@@ -351,6 +495,12 @@ export class db {
     ])
   }
 
+  /**
+   * Remove a dependency between two tasks.
+   * @param source source task ID
+   * @param dest destination task ID
+   * @param newDepsNum new number of dependencies for the source task
+   */
   public removeDeps = async (source: string, dest: string, newDepsNum: number) => {
     await this._db.batch([
       this._db.delete(deps)
@@ -378,6 +528,11 @@ export class db {
 
 let dbInstance: db | undefined = undefined
 
+/**
+ * Get the database instance.
+ * @param e H3 event, pass directly from the event handler
+ * @returns database instance
+ */
 export const useDB = (e: H3Event) => {
   if (!dbInstance) {
     dbInstance = new db(e)

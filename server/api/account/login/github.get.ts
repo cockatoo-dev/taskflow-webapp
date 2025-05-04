@@ -1,3 +1,5 @@
+// GET /api/account/login/github
+// Login with GitHub handler via nuxt-auth-utils
 export default defineEventHandler((e) => {
   return defineOAuthGitHubEventHandler({
     onSuccess: async (e, {user}) => {
@@ -15,4 +17,3 @@ export default defineEventHandler((e) => {
     }
   })(e)
 })
-

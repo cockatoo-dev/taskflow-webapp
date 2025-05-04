@@ -5,6 +5,9 @@ const querySchema = z.object({
   boardId: z.string()
 })
 
+// GET /api/task/info
+// Returns information about all tasks on a board.
+// This includes the tasks themselves and the board they are on.
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
   

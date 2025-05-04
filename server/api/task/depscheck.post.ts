@@ -6,6 +6,11 @@ const bodySchema = z.object({
   taskId: z.string()
 })
 
+// POST /api/task/depscheck
+// Checks that the number of dependencies for a task is correct, 
+// and updates the task if required.
+// This route is called automatically by the client when 
+// it detects an error in the number of dependencies for a task.
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
   
