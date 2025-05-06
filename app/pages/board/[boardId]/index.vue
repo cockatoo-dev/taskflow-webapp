@@ -6,11 +6,14 @@
     query: {boardId: route.params.boardId},
     method: 'get'
   })
+
+  // State variables
   const searchValue = ref('')
   const showBoardSettings = ref(false)
   const showBoardInvite = ref(false)
   const showAddTask = ref(false)
 
+  // Show invalid board modal if the board ID is invalid
   const showInvalidBoard = computed(() => {
     if (!error.value) {
       return false
@@ -24,6 +27,7 @@
     }
   })
 
+  // Dynamic page title
   const pageTitle = computed(() => {
     if (!data.value) {
       return 'Taskflow'
@@ -41,6 +45,8 @@
     ogDescription: 'Task tracking for keeping your team coordinated.'
   })
 
+  // Generate sorted array of tasks to be displayed, which
+  // is filtered by the search value 
   const displayTasks = computed(() => {
     if (!data.value) {
       return []
@@ -61,6 +67,11 @@
     return result
   })
 
+  // Generate board statistics
+  // - complete: number of tasks that are complete
+  // - ready: number of tasks that are not complete but have no dependencies
+  // - notReady: number of tasks that are not complete and have dependencies
+  // - percent: percentage of tasks that are complete
   const stats = computed(() => {
     const result = {
       complete: 0,
@@ -86,11 +97,14 @@
     return result
   })
 
+  // Refresh data if there is no error
   const intervalRefresh = () => {
     if (!error.value) {
       refresh()
     }
   }
+
+  // Automatically refresh data every 20 seconds.
   onMounted(() => {
     refreshInterval = setInterval(intervalRefresh, 20000)
   })

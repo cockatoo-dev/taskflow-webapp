@@ -10,11 +10,11 @@
   }>()
 
   const route = useRoute()
-  const isMotionSafe = useMotionSafe()
 
   const errorMessage = ref('')
   const deleteLoading = ref(false)
 
+  // Delete task and navigate to the board page
   const deleteTask = async () => {
     deleteLoading.value = true
     try {
@@ -32,6 +32,7 @@
     }
   }
 
+  // Clear error message and loading state when the modal is opened
   watch(isVisible, () => {
     if (isVisible.value) {
       deleteLoading.value = false

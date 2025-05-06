@@ -1,3 +1,4 @@
+<!-- Form error message component -->
 <script setup lang="ts">
   defineProps<{
     message: string

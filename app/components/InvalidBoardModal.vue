@@ -1,3 +1,4 @@
+<!-- Invalid board modal, used on board and task pages -->
 <script setup lang="ts">
   const isVisible = defineModel<boolean>()
   const isMotionSafe = useMotionSafe()
@@ -10,7 +11,7 @@
     :dismissible="false"
     class="dark:bg-black"
     title="This board does not exist."
-    description="If you've reached this after clicking a link or scanning a QR code, the board may have been deleted.<"
+    description="If you've reached this after clicking a link or scanning a QR code, the board may have been deleted."
   >
     <template #content>
       <div class="p-4">

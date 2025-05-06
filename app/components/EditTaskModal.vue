@@ -1,3 +1,4 @@
+<!-- Edit Task Modal, used on the task page -->
 <script setup lang="ts">
   const { $csrfFetch } = useNuxtApp()
   
@@ -10,11 +11,13 @@
 
   const route = useRoute()
 
+  // Form state variables
   const editTitle = ref('')
   const editDescription = ref('')
   const disableSubmit = ref(false)
   const errorMessage = ref('')
 
+  // Reset form state when the modal is opened
   watch(isVisible, () => {
     if (isVisible.value) {
       editTitle.value = props.title
@@ -24,6 +27,9 @@
     }
   })
 
+  // Form submission
+  // Check if the title and description are valid, and if so,
+  // send the data to the server, then refresh the task data.
   const submitForm = async () => {
     if (editTitle.value == '') {
       errorMessage.value = 'Please enter a task title.'

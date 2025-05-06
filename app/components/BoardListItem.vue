@@ -1,3 +1,4 @@
+<!-- Board list item on account page -->
 <script setup lang="ts">
   const props = defineProps<{
     boardId: string,

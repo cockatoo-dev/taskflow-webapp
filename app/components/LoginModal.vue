@@ -1,3 +1,4 @@
+<!-- Login modal, used by navbar -->
 <script setup lang="ts">
   const isVisible = defineModel<boolean>()
 </script>

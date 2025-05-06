@@ -1,3 +1,4 @@
+<!-- Component to display strings with multiple likes as individual paragraphs -->
 <script setup lang="ts">
   defineProps<{
     text: string,

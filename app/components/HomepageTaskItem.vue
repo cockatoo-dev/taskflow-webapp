@@ -1,3 +1,4 @@
+<!-- Task item componenent for homepage -->
 <script setup lang="ts">
   defineProps<{
     title: string,

@@ -1,10 +1,12 @@
+<!-- Board invite modal (show information for others to find your board)-->
 <script setup lang="ts">  
   const isVisible = defineModel<boolean>()
   const route = useRoute()
   const clipboard = useClipboard()
 
-  const BASE_URL = 'taskflow-webapp.pages.dev'
+  
 
+  // Copy board link to clipboard
   const copyLink = () => {
     clipboard.copy(`https://${BASE_URL}/board/${route.params.boardId}`)
   }
@@ -39,9 +41,8 @@
               <span class="text-teal-600 dark:text-teal-400">{{ route.params.boardId }}</span>
             </div>
           </div>
-          
           <div>
-            <BoardQRCode :base-url="BASE_URL" />
+            <BoardQRCode />
             <div class="px-8 text-center text-lg md:text-xl sm:pt-0">or scan this QR code.</div>
           </div>
         </div>

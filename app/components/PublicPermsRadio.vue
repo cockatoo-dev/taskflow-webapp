@@ -1,3 +1,4 @@
+<!-- Public permissions selection component for forms -->
 <script setup lang="ts">
   const value = defineModel<string>({default: "1"})
 </script>

@@ -1,12 +1,6 @@
+<!-- Navbar displayed on all pages -->
 <script setup lang="ts">
-  const NAVBAR_BUTTON_UI_OBJECT = {
-    variant: {
-      solid: 'shadow-none bg-{color}-500 dark:bg-{color}-500 hover:bg-{color}-600 dark:hover:bg-{color}-400 disabled:bg-{color}-500 dark:disabled:bg-{color}-500 focus-visible:outline-slate-100 dark:focus-visible:outline-slate-900 text-slate-100 dark:text-slate-900 text-base font-bold',
-    },
-    truncate: 'truncate text-clip'
-  }
   const NAVBAR_BUTTON_CLASS = 'bg-teal-500 dark:bg-teal-500 hover:bg-teal-400 dark:hover:bg-teal-600 text-base font-bold text-slate-100 dark:text-slate-900'
-
   const showLogin = ref(false)
 </script>
 

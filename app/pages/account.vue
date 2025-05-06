@@ -8,35 +8,46 @@
     description: 'Task tracking for keeping your team coordinated.',
     ogDescription: 'Task tracking for keeping your team coordinated.'
   })
-  
-  const showCreate = ref(false)
 
+  // Clear user session (logout or delete account)
   const { clear } = useUserSession()
 
   const { data, error, refresh } = useFetch('/api/account/boards', {method: 'get'})
 
+  // Toggle for the create board modal
+  const showCreate = ref(false)
+
+  // State variables for the delete board modal
   const deleteBoardId = ref('')
   const deleteTitle = ref('')
-  const showDeleteTask = ref(false)
+  const showDeleteBoard = ref(false)
+
+  // Toggle for the delete account modal
   const showDeleteAccount = ref(false)
 
-  const deleteTaskHandler = (boardId: string, title: string) => {
+  // Function to show the delete board modal
+  const deleteBoardHandler = (boardId: string, title: string) => {
     deleteBoardId.value = boardId
     deleteTitle.value = title
-    showDeleteTask.value = true
+    showDeleteBoard.value = true
   }
 
+  // Logout function
   const logout = async (clear: () => Promise<void>) => {
     await clear()
     navigateTo("/", {external: true})
   }
 
   let refreshInterval: ReturnType<typeof setTimeout>
+  
+  // Refresh data if there is no error
   const intervalRefresh = () => {
     if (!error.value) {
       refresh()
     }
   }
+
+  // Automatically refresh data every 60 seconds
   onMounted(() => {
     refreshInterval = setInterval(intervalRefresh, 60000)
   })
@@ -50,7 +61,7 @@
     <NavBar />
     <CreateBoardModal v-model="showCreate"/>
     <DeleteBoardModal 
-      v-model="showDeleteTask"
+      v-model="showDeleteBoard"
       :board-id="deleteBoardId" 
       :title="deleteTitle"
       :refresh
@@ -77,7 +88,7 @@
               :board-id="board.boardId"
               :title="board.title"
               :public-perms="board.publicPerms"
-              :delete-handler="() => {deleteTaskHandler(board.boardId, board.title)}"
+              :delete-handler="() => {deleteBoardHandler(board.boardId, board.title)}"
               :refresh
             />
           </li>

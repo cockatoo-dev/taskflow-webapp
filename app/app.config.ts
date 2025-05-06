@@ -9,6 +9,9 @@ export default defineAppConfig({
         title: 'text-base font-bold text-slate-800 dark:text-slate-200',
         description: 'text-base font-normal text-slate-800 dark:text-slate-200'
       }
+    },
+    icons: {
+      loading: 'i-heroicons-arrow-path-16-solid',
     }
     // button: {
     //   variants: {

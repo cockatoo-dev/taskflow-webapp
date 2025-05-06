@@ -1,3 +1,4 @@
+<!-- Loading error component, used on all pages that load data -->
 <script setup lang="ts">
   defineProps<{
     refresh: () => void

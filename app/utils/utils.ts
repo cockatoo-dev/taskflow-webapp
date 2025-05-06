@@ -1,5 +1,10 @@
 import { FetchError } from 'ofetch'
 
+// Web app URL
+export const BASE_URL = 'taskflow-webapp.pages.dev'
+
+// Class lists and configuration objects for various UI components
+
 export const BUTTON_UI_OBJECT = {
   variant: {
     solid: 'bg-{color}-500 dark:bg-{color}-500 hover:bg-{color}-600 dark:hover:bg-{color}-400 disabled:bg-{color}-500 dark:disabled:bg-{color}-500 focus-visible:outline-{color}-500 dark:focus-visible:outline-{color}-500 text-slate-100 dark:text-slate-900 text-base font-bold',
@@ -37,6 +42,12 @@ export const DROPDOWN_UI_OBJECT = {item: {
   icon: {active: 'text-teal-600 dark:text-teal-400', inactive: 'text-teal-600 dark:text-teal-400'}
 }}
 
+/**
+ * Generates a number for a task based on completion and dependencies, used for sorting tasks.
+ * @param isComplete task completion status
+ * @param numDeps number of dependencies
+ * @returns number for sorting (0: completed, 1: not ready, 2: ready)
+ */
 export const taskSortNum = (isComplete: boolean, numDeps: number) => {
   if (isComplete) {
     return 0
@@ -47,6 +58,12 @@ export const taskSortNum = (isComplete: boolean, numDeps: number) => {
   }
 }
 
+/**
+ * Checks if the user has permission to set a task as complete.
+ * Owner OR public permissions = 1 or 2
+ * @param boardInfoData object containing board information
+ * @returns boolean indicating if the user can set the task as complete 
+ */
 export const canSetComplete = (boardInfoData: {isOwner: boolean, publicPerms: number}) => {
   if (boardInfoData.isOwner) {
     return true
@@ -55,6 +72,12 @@ export const canSetComplete = (boardInfoData: {isOwner: boolean, publicPerms: nu
   }
 }
 
+/**
+ * Checks if the user has permission to edit a task.
+ * Owner OR public permissions = 2
+ * @param boardInfoData object containing board information
+ * @returns boolean indicating if the user can edit the task
+ */
 export const canEdit = (boardInfoData: {isOwner: boolean, publicPerms: number}) => {
   if (boardInfoData.isOwner) {
     return true
@@ -63,6 +86,11 @@ export const canEdit = (boardInfoData: {isOwner: boolean, publicPerms: number}) 
   }
 }
 
+/**
+ * Handles errors from fetch requests.
+ * @param e error object
+ * @param messageRef reactive message ref
+ */
 export const fetchErrorHandler = (e: unknown, messageRef: Ref<string>) => {
   if (e instanceof FetchError) {
     messageRef.value = e.data.message

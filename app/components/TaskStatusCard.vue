@@ -1,3 +1,4 @@
+<!-- Task status card component, used on the task page -->
 <script setup lang="ts">
   defineProps<{
     isComplete: boolean,

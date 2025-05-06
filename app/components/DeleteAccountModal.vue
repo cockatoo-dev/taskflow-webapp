@@ -1,3 +1,4 @@
+<!-- Delete Account modal, used on the account page -->
 <script setup lang="ts">
   const { $csrfFetch } = useNuxtApp()
   
@@ -10,6 +11,7 @@
   const errorMessage = ref('')
   const deleteLoading = ref(false)
 
+  // Clear error message and loading state when the modal is opened
   watch(isVisible, () => {
     if (isVisible.value) {
       errorMessage.value = ''
@@ -17,6 +19,7 @@
     }
   })
 
+  // Delete user account, logout, and navigate to the homepage
   const deleteAccount = async () => {
     deleteLoading.value = true
     try {

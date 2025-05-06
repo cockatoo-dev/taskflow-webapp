@@ -1,13 +1,18 @@
+<!-- Create Board Modal, shown on the homepage and account page -->
 <script setup lang="ts">
   const { $csrfFetch } = useNuxtApp()
   
   const isVisible = defineModel<boolean>()
 
+  // Form state variables
   const title = ref("")
   const publicPerms = ref("1")
   const errorMessage = ref("")
   const disableSubmit = ref(false)
 
+  // Form submission
+  // Check if the title is valid, and if so,
+  // send the data to the server, then navigate to the new board.
   const submitForm = async () => {
     if (title.value.length > 50) {
       errorMessage.value = "Board Name is too long (maximum 50 characters)."
@@ -30,6 +35,7 @@
     }
   }
 
+  // Reset form state when the modal is opened
   watch(isVisible, () => {
     if (isVisible.value) {
       title.value = ''

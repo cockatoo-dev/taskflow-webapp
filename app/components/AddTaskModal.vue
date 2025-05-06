@@ -1,3 +1,4 @@
+<!-- Add Task Modal -->
 <script setup lang="ts">
   const { $csrfFetch } = useNuxtApp()
   const isVisible = defineModel<boolean>()
@@ -5,11 +6,15 @@
     boardId: string | string[]
   }>()
 
+  // Form state variables
   const title = ref('')
   const description = ref('')
   const disableSubmit = ref(false)
   const errorMessage = ref('')
 
+  // Form submission
+  // Check if the title and description are valid, and if so, 
+  // send the data to ther server, then navigate to the task page.
   const submitForm = async () => {
     if (title.value == '') {
       errorMessage.value = 'Please enter a task title.'
@@ -39,6 +44,7 @@
     }
   }
 
+  // Reset form state when the modal is opened
   watch(isVisible, () => {
     if (isVisible.value) {
       title.value = ''

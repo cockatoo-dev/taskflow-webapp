@@ -14,6 +14,7 @@
     method: 'get'
   })
 
+  // Show modal if the board ID is invalid
   const showInvalidBoard = computed(() => {
     if (!error.value) {
       return false
@@ -27,6 +28,7 @@
     }
   })
 
+  // Dynamic page title
   const pageTitle = computed(() => {
     if (!data.value) {
       return 'Taskflow'
@@ -45,6 +47,7 @@
     ogDescription: 'Task tracking for keeping your team coordinated.'
   })
 
+  // Array of all tasks, used for displaying options for adding dependencies
   const addDepsFetch = useFetch("/api/tasksInfo", {
     query: {
       boardId: route.params.boardId
@@ -53,6 +56,7 @@
     immediate: false
   })
 
+  // State variables
   const completeDisabled = ref(false)
   const showEdit = ref(false)
   const showDelete = ref(false)
@@ -68,13 +72,14 @@
       return
     }
 
+    // Validate dependency count, request server to check the value if 
+    // client detects that it is incorrect, and refresh the task data.
     let num = 0
     for (const i of data.value.deps) {
       if (!i.isComplete) {
         num += 1
       }
     }
-
     if (data.value.task?.numDeps !== num) {
       console.log(`depscheck ${route.params.boardId} ${route.query.taskId}`)
       await $csrfFetch('/api/task/depscheck', {
@@ -84,10 +89,11 @@
           taskId: data.value.task?.taskId
         }
       })
-      refresh()
+      await refresh()
     }
   })
 
+  // Check if a task is a dependency of the current task
   const depsExists = (id: string) => {
     for (const i of data.value?.deps || []) {
       if (i.taskId === id) {
@@ -97,6 +103,7 @@
     return false
   }
   
+  // Sort task dependencies to be displayed
   const displayDepsList = computed(() => {
     if (!data || !data.value) {
       return []
@@ -108,18 +115,19 @@
     return result
   })
   
+  // Generate array of tasks that can be added as dependencies, and
+  // update the list when the search input is changed.
   const addDepsList = computed(() => {
     if (!addDepsFetch.data || !addDepsFetch.data.value) {
       return []
     }
-
     const result: typeof addDepsFetch.data.value.tasksInfo = []
     for (const i of addDepsFetch.data.value.tasksInfo) {
       if (
-          i.id !== route.query.taskId &&
-          i.title.toLowerCase().includes(addDepsSearch.value.toLowerCase()) &&
-          !depsExists(i.id)
-        ) {
+        i.id !== route.query.taskId &&
+        i.title.toLowerCase().includes(addDepsSearch.value.toLowerCase()) &&
+        !depsExists(i.id)
+      ) {
         result.push(i)
       }
     }
@@ -130,6 +138,7 @@
     return result
   })
 
+  // Set the completed status of this task and refresh the task data.
   const setComplete = async (value: boolean) => {
     completeDisabled.value = true
 
@@ -154,6 +163,9 @@
     
   }
 
+  // Fetch array of tasks that can be added as dependencies
+  // when the search input is focused and the array was 
+  // last updated more than 20 seconds ago.
   const addDepsFocus = async () => {
     if (Date.now() - addDepsLastUpdate > 20000) {
       addDepsShow.value = false
@@ -164,6 +176,8 @@
     addDepsDisable.value = false
   }
 
+  // Add a dependency to the current task
+  // and refresh the task data.
   const addDeps = async (id: string) => {
     if (!data.value) {
       return
@@ -191,6 +205,8 @@
     addDepsDisable.value = false
   }
 
+  // Remove a dependency from the current task
+  // and refresh the task data.
   const removeDeps = async (id: string) => {
     removeDepsDisable.value = true
     await $csrfFetch('/api/deps/remove', {
@@ -210,11 +226,15 @@
     removeDepsDisable.value = false
   }
 
+  // Refresh data if the task is not being edited
+  // and there is no error.
   const intervalRefresh = () => {
     if (!(showEdit.value || error.value)) {
       refresh()
     }
   }
+
+  // Automatically refresh the task data every 30 seconds.
   onMounted(() => {
     refreshInterval = setInterval(intervalRefresh, 30000)
   })
@@ -240,6 +260,7 @@
           :task-id="$route.query.taskId || ''"
           :task-name="data.task?.title || ''"
         />
+
         <BackLink :board-id="route.params.boardId" />
         <div>
           <div class="py-4">

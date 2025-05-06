@@ -1,3 +1,4 @@
+<!-- Large modal component, modal has a larger width -->
 <script setup lang="ts">
   defineProps<{
     title: string,

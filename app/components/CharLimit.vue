@@ -1,3 +1,4 @@
+<!-- Character limit display for text fields -->
 <script setup lang="ts">
   defineProps<{
     str: string,

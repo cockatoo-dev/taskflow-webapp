@@ -1,3 +1,4 @@
+<!-- Task dependency list item, used on the task page -->
 <script setup lang="ts">
   const props = defineProps<{
     id: string,

@@ -12,6 +12,7 @@
   const errorMessage = ref('')
   const deleteLoading = ref(false)
 
+  // Delete board and refresh the board list
   const deleteBoard = async () => {
     deleteLoading.value = true
     try {
@@ -29,6 +30,7 @@
     }
   }
 
+  // Clear error message and loading state when the modal is opened
   watch(isVisible, () => {
     if (isVisible.value) {
       errorMessage.value = ''

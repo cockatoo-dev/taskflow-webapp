@@ -1,3 +1,4 @@
+<!-- Task list item component, used on the board page -->
 <script setup lang="ts">
   const props = defineProps<{
     boardId: string,

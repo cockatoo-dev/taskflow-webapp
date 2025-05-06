@@ -1,9 +1,8 @@
+<!-- QR Code component for borrd invite modal -->
 <script setup lang="ts">
   import QRCode from 'qrcode';
-  const props = defineProps<{
-    baseUrl: string
-  }>()
 
+  // QR code colours
   // https://tailwindcss.com/docs/colors
   const WHITE = '#ffffff'
   const SLATE_900 = '#0f172a'
@@ -14,18 +13,16 @@
   const isDark = useDark()
   const imgDataUrl = ref('')
 
-  watch([props, isDark], async () => {
-    if (!props.baseUrl) {
-      return
-    }
+  // Genereae QR code, update when dark mode changes
+  watch([isDark], async () => {
     if (isDark.value) {
-      imgDataUrl.value = await QRCode.toDataURL(`https://${props.baseUrl}/board/${route.params.boardId}`, {
+      imgDataUrl.value = await QRCode.toDataURL(`https://${BASE_URL}/board/${route.params.boardId}`, {
         color: {light: SLATE_900, dark: SLATE_200},
         type: 'image/webp',
         width: 360,
       })
     } else {
-      imgDataUrl.value = await QRCode.toDataURL(`https://${props.baseUrl}/board/${route.params.boardId}`, {
+      imgDataUrl.value = await QRCode.toDataURL(`https://${BASE_URL}/board/${route.params.boardId}`, {
         color: {light: WHITE, dark: SLATE_800},
         type: 'image/webp',
         width: 360

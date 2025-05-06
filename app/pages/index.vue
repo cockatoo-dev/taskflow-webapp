@@ -11,11 +11,14 @@
     ogDescription: 'Task tracking for keeping your team coordinated.'
   })
 
+  // State variables
   const showCreate = ref(false)
   const boardId = ref('')
   const errorMessage = ref('')
   const joinLoading = ref(false)
 
+  // Board code form submit
+  // Check if the board code is valid, and if so, navigate to the board page
   const submitForm = async () => {
     if (boardId.value.length !== 8) {
       errorMessage.value = 'This board does not exist.'
@@ -129,7 +132,7 @@
             </div>
           </div>
         </div>
-        <div class="pt-4 pb-8 sm:grid sm:grid-cols-2">
+        <div class="py-4 sm:grid sm:grid-cols-2">
           <div class="sm:order-1 sm:pr-2">
             <h2 class="text-xl sm:text-3xl font-bold">Easily share your board with your team.</h2>
             <p class="py-2">Each board has a unique board code, along with a QR code and a shareable link, so your team members can easily open your board in their web browsers.</p>
@@ -147,6 +150,19 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="pt-4 pb-8">
+          <h2 class="text-xl sm:text-3xl text-center font-bold">Ready to get started?</h2>
+          <div class="pt-4 text-center">
+            <UButton 
+              type="button"
+              icon="i-heroicons-plus-16-solid"
+              :class="BUTTON_SOLID_CLASS"
+              @click="() => {showCreate = true}"
+            >
+              Create New Board
+            </UButton>
           </div>
         </div>
       </StdContainer>

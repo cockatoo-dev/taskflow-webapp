@@ -1,3 +1,4 @@
+<!-- Chart and stats display component, used on the board page -->
 <script setup lang="ts">
   import { Doughnut } from 'vue-chartjs';
   import { Chart as ChartJS, Tooltip, ArcElement } from 'chart.js';
@@ -10,6 +11,7 @@
   const isDark = useDark()
   const isMotionSafe = useMotionSafe()
 
+  // Chart colours
   // https://tailwindcss.com/docs/colors
   const RED_400 = '#f87171'
   const RED_600 = '#dc2626'
@@ -25,6 +27,7 @@
     Tooltip
   );
 
+  // Chart data for vue-chartjs
   const statsChartData = computed(() => {
     return {
       datasets: [{
@@ -45,6 +48,7 @@
     }
   })
 
+  // Chart options for vue-chartjs
   const chartOptions = computed(() => {
     return {
       responsive: true,
