@@ -1,5 +1,7 @@
-import { useDB } from "~/server/db/db"
+import { useDB } from "~~/server/db/db"
 
+// GET /api/account/boards
+// Returns a list of all boards which are owned by the user.
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
   

@@ -3,6 +3,8 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-03-27',
   devtools: { enabled: true },
 
+  future: {compatibilityVersion: 4},
+
   nitro: {
     preset: "cloudflare-pages"
   },
@@ -16,6 +18,8 @@ export default defineNuxtConfig({
     "nuxt-auth-utils",
     "nuxt-security"
   ],
+
+  css: ['~/assets/style.css'],
   
   fonts: {
     families: [

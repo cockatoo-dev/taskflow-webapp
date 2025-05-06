@@ -1,10 +1,12 @@
 import { z } from "zod"
-import { useDB } from "~/server/db/db"
+import { useDB } from "~~/server/db/db"
 
 const bodySchema = z.object({
   boardId: z.string()
 })
 
+// POST /api/board/delete
+// Deletes a board.
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
   
@@ -22,7 +24,7 @@ export default defineEventHandler(async (e) => {
     })
   } else if (boardInfo[0].ownerId !== userId) {
     throw createError({
-      statusCode: 400,
+      statusCode: 403,
       message: "Cannot delete a board which you do not own."
     })
   }

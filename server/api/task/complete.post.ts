@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { useDB } from "~/server/db/db"
+import { useDB } from "~~/server/db/db"
 
 const bodySchema = z.object({
   boardId: z.string(),
@@ -7,6 +7,8 @@ const bodySchema = z.object({
   value: z.boolean()
 })
 
+// POST /api/task/complete
+// Marks a task as completed or not completed
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
   
@@ -15,10 +17,10 @@ export default defineEventHandler(async (e) => {
   const bodyData = checkParseResult(bodyParse)
 
   const db = useDB(e)
-  const boardInfo = await getBoardInfo(db,  bodyData.boardId, userId)
+  const boardInfo = await getBoardInfo(db, bodyData.boardId, userId)
   if (!canSetComplete(boardInfo.isOwner, boardInfo.publicPerms)) {
     throw createError({
-      statusCode: 400,
+      statusCode: 403,
       message: "You do not have permission to mark tasks as completed on this board."
     })
   }

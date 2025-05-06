@@ -1,10 +1,12 @@
 import { z } from "zod"
-import { useDB } from "~/server/db/db"
+import { useDB } from "~~/server/db/db"
 
 const querySchema = z.object({
   boardId: z.string()
 })
 
+// GET /api/board/info
+// Returns information about a board.
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
   

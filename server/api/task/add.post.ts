@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { useDB } from "~/server/db/db"
+import { useDB } from "~~/server/db/db"
 
 const bodySchema = z.object({
   boardId: z.string(),
@@ -7,9 +7,11 @@ const bodySchema = z.object({
   description: z.string()
 })
 
+// POST /api/task/add
+// Adds a task to a board
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
-  
+
   const userId = await getUserId(e)
   const bodyParse = await readValidatedBody(e, (b) => bodySchema.safeParse(b))
   const bodyData = checkParseResult(bodyParse)
@@ -37,11 +39,11 @@ export default defineEventHandler(async (e) => {
   const boardInfo = await getBoardInfo(db, bodyData.boardId, userId)
   if (!canEdit(boardInfo.isOwner, boardInfo.publicPerms)) {
     throw createError({
-      statusCode: 400,
+      statusCode: 403,
       message: "You do not have permission to add tasks to this board."
     })
   }
-  const boardTasks = await db.getBoardTasks(bodyData.boardId)
+  const boardTasks = await db.getBoardTasksInfo(bodyData.boardId)
   if (boardTasks.length >= 50) {
     throw createError({
       statusCode: 400,
@@ -50,5 +52,6 @@ export default defineEventHandler(async (e) => {
   }
 
   await db.addTask(bodyData.boardId, taskId, bodyData.title, bodyData.description)
+
   return { taskId }
 })

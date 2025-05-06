@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { useDB } from "~/server/db/db"
+import { useDB } from "~~/server/db/db"
 
 const bodySchema = z.object({
   boardId: z.string(),
@@ -8,6 +8,8 @@ const bodySchema = z.object({
   description: z.string()
 })
 
+// POST /api/task/edit
+// Edits a task on a board
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
 
@@ -38,7 +40,7 @@ export default defineEventHandler(async (e) => {
   const boardInfo = await getBoardInfo(db, bodyData.boardId, userId)
   if (!canEdit(boardInfo.isOwner, boardInfo.publicPerms)) {
     throw createError({
-      statusCode: 400,
+      statusCode: 403,
       message: "You do not have permission to edit tasks on this board."
     })
   }

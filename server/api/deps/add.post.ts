@@ -1,8 +1,9 @@
 import { z } from "zod"
-import { useDB } from "~/server/db/db"
+import { useDB } from "~~/server/db/db"
 
 type DepsData = { source: string, dest: string }[]
 
+// Filter dependency data to only include dependencies for the given source.
 const getDepsNew = (data: DepsData, source: string) => {
   const deps = []
   for (const d of data) {
@@ -13,6 +14,7 @@ const getDepsNew = (data: DepsData, source: string) => {
   return deps;
 }
 
+// Recursive DFS logic for checking if a new dependency would create a cycle.
 const checkCycleNew = (data: DepsData, checked: string[], newSource: string, newDest: string) => {
   const deps = getDepsNew(data, newDest)
   for (const item of deps) {
@@ -29,6 +31,7 @@ const checkCycleNew = (data: DepsData, checked: string[], newSource: string, new
   return false
 }
 
+// Check if adding a dependency from newSource to newDest would create a cycle.
 const checkCycle = (data: DepsData, newSource: string, newDest: string) => {
   return checkCycleNew(data, [], newSource, newDest)
 }
@@ -39,6 +42,8 @@ const bodySchema = z.object({
   dest: z.string()
 })
 
+// POST /api/deps/add
+// Adds a dependency between two tasks on a board.
 export default defineEventHandler(async (e) => {  
   checkAPIEnabled()
   
@@ -61,6 +66,14 @@ export default defineEventHandler(async (e) => {
     })
   }
 
+  const depsExists = await db.isDepsExist(bodyData.source, bodyData.dest)
+  if (depsExists) {
+    throw createError({
+      statusCode: 400,
+      message: "Dependency already exists."
+    })
+  }
+ 
   const tasksInfo = await db.getTaskPair(bodyData.boardId, bodyData.source, bodyData.dest)
   if (tasksInfo.length < 2) {
     throw createError({
@@ -78,7 +91,7 @@ export default defineEventHandler(async (e) => {
     newNum = tasksInfo[0].numDeps + 1
   }
   
-  const depsList = await db.getDeps()
+  const depsList = await db.getDeps(boardInfo.boardId)
 
   if (checkCycle(depsList, bodyData.source, bodyData.dest)) {
     throw createError({

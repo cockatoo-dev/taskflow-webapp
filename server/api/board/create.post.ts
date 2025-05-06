@@ -1,11 +1,13 @@
 import { z } from "zod"
-import { useDB } from "~/server/db/db"
+import { useDB } from "~~/server/db/db"
 
 const bodySchema = z.object({
   title: z.string(),
   publicPerms: z.number()
 })
 
+// POST /api/board/create
+// Creates a new board
 export default defineEventHandler(async (e) => {
   checkAPIEnabled()
   
