@@ -11,7 +11,7 @@ const bodySchema = z.object({
 // POST /api/task/edit
 // Edits a task on a board
 export default defineEventHandler(async (e) => {
-  checkAPIEnabled()
+  await checkAPIWriteEnabled(e)
 
   const userId = await getUserId(e)
   
@@ -41,11 +41,12 @@ export default defineEventHandler(async (e) => {
   if (!canEdit(boardInfo.isOwner, boardInfo.publicPerms)) {
     throw createError({
       statusCode: 403,
-      message: "You do not have permission to edit tasks on this board."
+      statusMessage: "You do not have permission to edit tasks on this board."
     })
   }
 
   await checkTaskExists(db, bodyData.boardId, bodyData.taskId)
 
   await db.editTask(bodyData.taskId, bodyData.title, bodyData.description)
+  setResponseStatus(e, 204)
 })

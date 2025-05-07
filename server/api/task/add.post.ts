@@ -10,7 +10,7 @@ const bodySchema = z.object({
 // POST /api/task/add
 // Adds a task to a board
 export default defineEventHandler(async (e) => {
-  checkAPIEnabled()
+  await checkAPIWriteEnabled(e)
 
   const userId = await getUserId(e)
   const bodyParse = await readValidatedBody(e, (b) => bodySchema.safeParse(b))
@@ -19,17 +19,17 @@ export default defineEventHandler(async (e) => {
   if (bodyData.title == '') {
     throw createError({
       statusCode: 400,
-      message: "Please enter a task title."
+      statusMessage: "Please enter a task title."
     })
   } else if (bodyData.title.length > 50) {
     throw createError({
       statusCode: 400,
-      message: "Task title is too long (maximum 50 characters)."
+      statusMessage: "Task title is too long (maximum 50 characters)."
     })
   } else if (bodyData.description.length > 2500) {
     throw createError({
       statusCode: 400,
-      message: "Task description is too long (maximum 2500 characters)."
+      statusMessage: "Task description is too long (maximum 2500 characters)."
     })
   }
   
@@ -40,14 +40,14 @@ export default defineEventHandler(async (e) => {
   if (!canEdit(boardInfo.isOwner, boardInfo.publicPerms)) {
     throw createError({
       statusCode: 403,
-      message: "You do not have permission to add tasks to this board."
+      statusMessage: "You do not have permission to add tasks to this board."
     })
   }
   const boardTasks = await db.getBoardTasksInfo(bodyData.boardId)
   if (boardTasks.length >= 50) {
     throw createError({
       statusCode: 400,
-      message: "You've reached the maximum number of tasks for this board. Consider deleting an existing task before creating a new task."
+      statusMessage: "You've reached the maximum number of tasks for this board. Consider deleting an existing task before creating a new task."
     })
   }
 

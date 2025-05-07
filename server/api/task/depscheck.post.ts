@@ -12,7 +12,7 @@ const bodySchema = z.object({
 // This route is called automatically by the client when 
 // it detects an error in the number of dependencies for a task.
 export default defineEventHandler(async (e) => {
-  checkAPIEnabled()
+  await checkAPIWriteEnabled(e)
   
   const bodyParse = await readValidatedBody(e, (b) => bodySchema.safeParse(b))
   const bodyData = checkParseResult(bodyParse)

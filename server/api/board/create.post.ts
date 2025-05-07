@@ -9,20 +9,20 @@ const bodySchema = z.object({
 // POST /api/board/create
 // Creates a new board
 export default defineEventHandler(async (e) => {
-  checkAPIEnabled()
+  await checkAPIWriteEnabled(e)
   
   const userId = await requireUserId(e)
   const bodyParse = await readValidatedBody(e, (b) => bodySchema.safeParse(b))
   const bodyData = checkParseResult(bodyParse)
   if (bodyData.title === "") {
     throw createError({
-      status: 400,
-      message: 'Board Name is required.'
+      statusCode: 400,
+      statusMessage: 'Board Name is required.'
     })
   } else if (bodyData.title.length > 50) {
     throw createError({
-      status: 400,
-      message: 'Board Name is too long (maximum 50 characters).'
+      statusCode: 400,
+      statusMessage: 'Board Name is too long (maximum 50 characters).'
     })
   } else if (
     bodyData.publicPerms !== 0 &&
@@ -30,8 +30,8 @@ export default defineEventHandler(async (e) => {
     bodyData.publicPerms !== 2
   ) {
     throw createError({
-      status: 400,
-      message: 'Invalid Public Permissions setting.'
+      statusCode: 400,
+      statusMessage: 'Invalid Public Permissions setting.'
     })
   }
 
@@ -41,8 +41,8 @@ export default defineEventHandler(async (e) => {
   const userBoards = await db.getUserBoards(userId)
   if (userBoards.length >= 5) {
     throw createError({
-      status: 400,
-      message: "You've reached the maximum number of boards for your account. Consider deleting an existing board before you create a new one."
+      statusCode: 400,
+      statusMessage: "You've reached the maximum number of boards for your account. Consider deleting an existing board before you create a new one."
     })
   }
   await db.addBoard(boardId, userId, bodyData.title, bodyData.publicPerms)

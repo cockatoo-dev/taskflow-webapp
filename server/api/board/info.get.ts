@@ -8,7 +8,7 @@ const querySchema = z.object({
 // GET /api/board/info
 // Returns information about a board.
 export default defineEventHandler(async (e) => {
-  checkAPIEnabled()
+  await checkAPIReadEnabled(e)
   
   const userId = await getUserId(e)
   const queryParse = await getValidatedQuery(e, (q) => querySchema.safeParse(q))

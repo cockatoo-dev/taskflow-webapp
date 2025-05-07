@@ -2,15 +2,40 @@ import type { z } from "zod";
 import type { db } from "../db/db";
 import type { H3Event } from "h3"
 
-// Quick way to manually enable or disable the API.
-// May be used during manual testing.
-// This is not used in production.
-export const checkAPIEnabled = () => {
-  return
-  // throw createError({
-  //   statusCode: 400,
-  //   statusMessage: 'The API is temporarily disabled. Please try again later.'
-  // })
+// Check if the API is enabled for read operations.
+export const checkAPIReadEnabled = async (e: H3Event) => {
+  const config = await e.context.cloudflare.env.CF_KV.get("pages_api")
+  if (!config) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: "API configuration is not set up correctly."
+    })
+  } else if (!config.includes("read")) {
+    throw createError({
+      statusCode: 503,
+      statusMessage: "The API is temporarily disabled. Please try again later."
+    })
+  } else {
+    return
+  }
+}
+
+// Check if the API is enabled for write operations.
+export const checkAPIWriteEnabled = async (e: H3Event) => {
+  const kvVal = await e.context.cloudflare.env.CF_KV.get("pages_api")
+  if (!kvVal) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: "API configuration is not set up correctly."
+    })
+  } else if (!kvVal.includes("write")) {
+    throw createError({
+      statusCode: 503,
+      statusMessage: "The API is temporarily disabled. Please try again later."
+    })
+  } else {
+    return
+  }
 }
 
 // Check the result of a zod parse. 
@@ -70,8 +95,8 @@ export const getBoardInfo = async (db: db, boardId: string, userId: string | nul
   const dbData = await db.getBoard(boardId)
   if (dbData.length === 0) {
     throw createError({
-      status: 400,
-      message: 'Invalid board ID.'
+      statusCode: 400,
+      statusMessage: 'Invalid board ID.'
     })
   } else {
     return {

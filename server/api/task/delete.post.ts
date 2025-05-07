@@ -9,6 +9,8 @@ const bodySchema = z.object({
 // POST /api/task/delete
 // Deletes a task from a board
 export default defineEventHandler(async (e) => {
+  await checkAPIWriteEnabled(e)
+  
   const userId = await getUserId(e)
   const bodyParse = await readValidatedBody(e, (b) => bodySchema.safeParse(b))
   const bodyData = checkParseResult(bodyParse)
@@ -19,11 +21,12 @@ export default defineEventHandler(async (e) => {
   if (!canEdit(boardInfo.isOwner, boardInfo.publicPerms)) {
     throw createError({
       statusCode: 403,
-      message: "You do not have permission to delete tasks on this board."
+      statusMessage: "You do not have permission to delete tasks on this board."
     })
   }
 
   await checkTaskExists(db, bodyData.boardId, bodyData.taskId)
 
   await db.deleteTask(bodyData.taskId)
+  setResponseStatus(e, 204)
 })

@@ -45,7 +45,7 @@ const bodySchema = z.object({
 // POST /api/deps/add
 // Adds a dependency between two tasks on a board.
 export default defineEventHandler(async (e) => {  
-  checkAPIEnabled()
+  await checkAPIWriteEnabled(e)
   
   const userId = await getUserId(e)
   const bodyParse = await readValidatedBody(e, (b) => bodySchema.safeParse(b))
@@ -53,7 +53,7 @@ export default defineEventHandler(async (e) => {
   if (bodyData.source === bodyData.dest) {
     throw createError({
       statusCode: 400,
-      message: "Cannot create a dependency with the same task."
+      statusMessage: "Cannot create a dependency with the same task."
     })
   }
 
@@ -62,7 +62,7 @@ export default defineEventHandler(async (e) => {
   if (!canEdit(boardInfo.isOwner, boardInfo.publicPerms)) {
     throw createError({
       statusCode: 403,
-      message: "You do not have permission to edit tasks on this board."
+      statusMessage: "You do not have permission to edit tasks on this board."
     })
   }
 
@@ -70,7 +70,7 @@ export default defineEventHandler(async (e) => {
   if (depsExists) {
     throw createError({
       statusCode: 400,
-      message: "Dependency already exists."
+      statusMessage: "Dependency already exists."
     })
   }
  
@@ -78,7 +78,7 @@ export default defineEventHandler(async (e) => {
   if (tasksInfo.length < 2) {
     throw createError({
       statusCode: 400,
-      message: "One or more task IDs are invalid."
+      statusMessage: "One or more task IDs are invalid."
     })
   }
 
@@ -101,4 +101,5 @@ export default defineEventHandler(async (e) => {
   }
 
   await db.addDeps(bodyData.source, bodyData.dest, newNum)
+  setResponseStatus(e, 204)
 })

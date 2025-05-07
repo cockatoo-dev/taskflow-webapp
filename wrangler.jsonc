@@ -15,6 +15,12 @@
       "database_name": "taskflow",
       "database_id": "e9cd83e5-040d-4a89-8f0d-7fbf5d54acd8"
     }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "CF_KV",
+      "id": "8de3464dfddc4d92b4cc8d3eabe103b0"
+    }
   ]
   // "vars": {
   //   "MY_VAR": "my-variable"

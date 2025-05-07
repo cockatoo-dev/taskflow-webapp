@@ -37,10 +37,11 @@
       if (e instanceof FetchError) {
         if (e.statusCode === 400 && e.data.message === 'Invalid board ID.') {
           errorMessage.value = 'This board does not exist.'
-        } else if (e.statusCode === 400) {
+        } else if (e.statusCode === 400 || e.statusCode === 503) {
           errorMessage.value = e.data.message
         }
       }
+      joinLoading.value = false
     }
   }
 </script>

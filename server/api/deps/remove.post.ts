@@ -10,7 +10,7 @@ const bodySchema = z.object({
 // POST /api/deps/remove
 // Removes a dependency between two tasks.
 export default defineEventHandler(async (e) => {
-  checkAPIEnabled()
+  await checkAPIWriteEnabled(e)
   
   const userId = await getUserId(e)
   const bodyParse = await readValidatedBody(e, (b) => bodySchema.safeParse(b))
@@ -21,7 +21,7 @@ export default defineEventHandler(async (e) => {
   if (!canEdit(boardInfo.isOwner, boardInfo.publicPerms)) {
     throw createError({
       statusCode: 403,
-      message: "You do not have permission to edit tasks on this board."
+      statusMessage: "You do not have permission to edit tasks on this board."
     })
   }
 
@@ -29,7 +29,7 @@ export default defineEventHandler(async (e) => {
   if (!depsExists) {
     throw createError({
       statusCode: 400,
-      message: "Dependency does not exist."
+      statusMessage: "Dependency does not exist."
     })
   }
   
@@ -44,4 +44,5 @@ export default defineEventHandler(async (e) => {
   }
 
   await db.removeDeps(bodyData.source, bodyData.dest, newNum)
+  setResponseStatus(e, 204)
 })

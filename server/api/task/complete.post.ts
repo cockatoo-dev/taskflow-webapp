@@ -10,7 +10,7 @@ const bodySchema = z.object({
 // POST /api/task/complete
 // Marks a task as completed or not completed
 export default defineEventHandler(async (e) => {
-  checkAPIEnabled()
+  await checkAPIWriteEnabled(e)
   
   const userId = await getUserId(e)
   const bodyParse = await readValidatedBody(e, (b) => bodySchema.safeParse(b))
@@ -21,11 +21,12 @@ export default defineEventHandler(async (e) => {
   if (!canSetComplete(boardInfo.isOwner, boardInfo.publicPerms)) {
     throw createError({
       statusCode: 403,
-      message: "You do not have permission to mark tasks as completed on this board."
+      statusMessage: "You do not have permission to mark tasks as completed on this board."
     })
   }
 
   await checkTaskExists(db, bodyData.boardId, bodyData.taskId)
 
   await db.setTaskComplete(bodyData.taskId, bodyData.value)
+  setResponseStatus(e, 204)
 })

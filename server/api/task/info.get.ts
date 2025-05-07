@@ -11,7 +11,7 @@ const querySchema = z.object({
 // This includes the task itself, the board it is on, 
 // and the dependencies of the task.
 export default defineEventHandler(async (e) => {
-  checkAPIEnabled()
+  await checkAPIReadEnabled(e)
   
   const userId = await getUserId(e)
 
