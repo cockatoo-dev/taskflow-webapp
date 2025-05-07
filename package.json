@@ -31,7 +31,6 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20241205.0",
     "drizzle-kit": "^0.30.3",
     "nitro-cloudflare-dev": "^0.2.1",
     "wrangler": "^4.2.0"
