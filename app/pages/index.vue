@@ -153,7 +153,7 @@
             </div>
           </div>
         </div>
-        <div class="pt-4 pb-8">
+        <div class="py-8">
           <h2 class="text-xl sm:text-3xl text-center font-bold">Ready to get started?</h2>
           <div class="pt-4 text-center">
             <UButton 
