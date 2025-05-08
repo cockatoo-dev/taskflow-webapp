@@ -17,7 +17,7 @@
     :description
   >
     <template #content>
-      <div class="text-slate-800 dark:text-slate-200">
+      <div class="text-slate-800 dark:text-slate-200 overflow-y-auto">
         <slot />
       </div>
     </template>

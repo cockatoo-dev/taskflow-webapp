@@ -15,7 +15,7 @@
     class="w-11/12 sm:max-w-full lg:w-[960px]"
   >
     <template #content>
-      <div class="text-slate-800 dark:text-slate-200">
+      <div class="text-slate-800 dark:text-slate-200 overflow-y-auto">
         <slot />
       </div>
     </template>

@@ -17,7 +17,7 @@ export const BUTTON_UI_OBJECT = {
 
 export const BUTTON_SOLID_CLASS = 'text-base font-bold text-slate-100 dark:text-slate-900'
 export const BUTTON_GHOST_CLASS = 'text-base font-normal'
-export const GITHUB_BUTTON_CLASS = 'bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-slate-200 text-slate-100 dark:text-slate-900'
+export const GITHUB_BUTTON_CLASS = 'bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-slate-200 text-slate-100 dark:text-slate-900 text-base font-bold'
 
 export const GITHUB_BUTTON_UI_OBJECT = {
   color: {black: {solid: 'bg-black hover:bg-slate-900 dark:bg-white dark:hover:bg-slate-100 text-slate-200 dark:text-slate-800 text-base font-bold'}}

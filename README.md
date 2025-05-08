@@ -4,16 +4,14 @@
 
 **Task tracking for keeping your team coordinated.**
 
-Taskflow is a web app for keeping track of tasks, helping you to keep your team coordinated and reach your goals.
+This is the older repository used for the original website deployment to Cloudflare Pages. 
+A new repository has been created for the migration to Cloudflare Workers, 
+which can be found [here](https://github.com/cockatoo-dev/taskflow).
 
-## Open the web app online!
+The website deployment on Cloudflare Pages remains online, and can be found at 
+[https://taskflow-webapp.pages.dev/](https://taskflow-webapp.pages.dev/).
+Both this website deployment and the website deployment on Cloudflare Workers use the same 
+database, and all your existing boards and tasks will appear on the new website deployment.
+Users are encouraged to begin using the website deployment on Cloudflare Workers, which can be found at 
+[https://taskflow.cockatoo-dev.workers.dev](https://taskflow.cockatoo-dev.workers.dev). 
 
-**[https://taskflow-webapp.pages.dev/](https://taskflow-webapp.pages.dev/)**
-
-## Libraries and frameworks used
-
-Taskflow is made using Vue 3, Nuxt 3, Nuxt UI v2, Tailwind CSS v3, Chart.js (via vue-chartjs) and Drizzle ORM.
-
-## Branch information
-
-This is the development branch for testing small changes and fixes after the web app is released.
