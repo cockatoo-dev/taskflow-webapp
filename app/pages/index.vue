@@ -79,7 +79,6 @@
                   icon="heroicons:arrow-right-16-solid"
                   :class="BUTTON_SOLID_CLASS"
                   :loading="joinLoading"
-                  loading-icon="heroicons:arrow-path-16-solid"
                 >
                   <span>
                     <span class="inline sm:hidden">Open</span>
