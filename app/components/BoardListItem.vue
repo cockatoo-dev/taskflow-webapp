@@ -33,19 +33,19 @@
               :items="[
                 [{
                   label: 'Open Board',
-                  icon: 'i-heroicons-arrow-right-16-solid',
+                  icon: 'heroicons:arrow-right-16-solid',
                   color: 'primary',
                   to:`/board/${boardId}`
                 }],
                 [{
                   label: 'Board Settings',
-                  icon: 'i-heroicons-wrench-16-solid',
+                  icon: 'heroicons:wrench-16-solid',
                   color: 'primary',
                   onSelect: () => {showSettings = true}
                 }],
                 [{
                   label: 'Delete Board',
-                  icon: 'i-heroicons-trash-16-solid',
+                  icon: 'heroicons:trash-16-solid',
                   color: 'error',
                   onSelect: props.deleteHandler
                 }]
@@ -55,7 +55,7 @@
             >
               <UButton 
                 type="button"
-                icon="i-heroicons-ellipsis-vertical-16-solid"
+                icon="heroicons:ellipsis-vertical-16-solid"
                 variant="ghost"
                 :class="BUTTON_GHOST_CLASS"
               >
@@ -66,7 +66,7 @@
           <div class="hidden sm:flex lg:hidden gap-2">
             <div>
               <UButton 
-                icon="i-heroicons-arrow-right-16-solid"
+                icon="heroicons:arrow-right-16-solid"
                 :class="BUTTON_SOLID_CLASS"
                 :to="`/board/${boardId}`"
               >
@@ -78,13 +78,13 @@
                 :items="[
                   [{
                     label: 'Board Settings',
-                    icon: 'i-heroicons-wrench-16-solid',
+                    icon: 'heroicons:wrench-16-solid',
                     color: 'primary',
                     onSelect: () => {showSettings = true}
                   }],
                   [{
                     label: 'Delete Board',
-                    icon: 'i-heroicons-trash-16-solid',
+                    icon: 'heroicons:trash-16-solid',
                     color: 'error',
                     onSelect: props.deleteHandler
                   }]
@@ -94,7 +94,7 @@
               >
                 <UButton 
                   type="button"
-                  icon="i-heroicons-ellipsis-vertical-16-solid"
+                  icon="heroicons:ellipsis-vertical-16-solid"
                   variant="ghost"
                   :class="BUTTON_GHOST_CLASS"
                 >
@@ -106,7 +106,7 @@
           <div class="hidden lg:flex gap-2">
             <div>
               <UButton 
-                icon="i-heroicons-arrow-right-16-solid"
+                icon="heroicons:arrow-right-16-solid"
                 :class="BUTTON_SOLID_CLASS"
                 :to="`/board/${boardId}`"
               >
@@ -116,7 +116,7 @@
             <div>
               <UButton 
                 type="button"
-                icon="i-heroicons-wrench-16-solid"
+                icon="heroicons:wrench-16-solid"
                 variant="ghost"
                 :class="BUTTON_GHOST_CLASS"
                 @click="() => {showSettings = true}"
@@ -127,7 +127,7 @@
             <div>
               <UButton 
                 type="button"
-                icon="i-heroicons-trash-16-solid"
+                icon="heroicons:trash-16-solid"
                 variant="ghost"
                 color="error"
                 :class="BUTTON_GHOST_CLASS"

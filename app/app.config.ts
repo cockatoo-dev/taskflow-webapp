@@ -2,6 +2,7 @@ export default defineAppConfig({
   ui: {
     colors: {
       primary: 'teal',
+      secondary: 'yellow',
       gray: 'slate'
     },
     toast: {
@@ -11,7 +12,7 @@ export default defineAppConfig({
       }
     },
     icons: {
-      loading: 'i-heroicons-arrow-path-16-solid',
+      loading: 'heroicons:arrow-path-16-solid',
     }
     // button: {
     //   variants: {

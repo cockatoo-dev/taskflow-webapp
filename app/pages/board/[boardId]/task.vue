@@ -281,7 +281,7 @@
             <UButton 
               v-if="!data.task?.isComplete"
               color="success"
-              icon="i-heroicons-check-circle-16-solid"
+              icon="heroicons:check-circle-16-solid"
               :class="BUTTON_SOLID_CLASS"
               @click="() => setComplete(true)"
             >
@@ -289,7 +289,8 @@
             </UButton>
             <UButton 
               v-else
-              icon="i-heroicons-exclamation-circle-16-solid"
+              color="secondary"
+              icon="heroicons:exclamation-circle-16-solid"
               :class="BUTTON_SOLID_CLASS"
               @click="() => setComplete(false)"
             >
@@ -324,7 +325,7 @@
                     <div class="pl-1">
                       <UButton 
                         color="error"
-                        icon="i-heroicons-minus-16-solid"
+                        icon="heroicons:minus-16-solid"
                         label="Remove"
                         variant="ghost"
                         :class="BUTTON_GHOST_CLASS"
@@ -351,7 +352,7 @@
                 v-model="addDepsSearch"
                 autocomplete="off"
                 variant="outline"
-                icon="i-heroicons-magnifying-glass-16-solid"
+                icon="heroicons:magnifying-glass-16-solid"
                 placeholder="Search for a task title..."
                 class="w-full"
                 :ui="TEXT_INPUT_UI"
@@ -373,9 +374,9 @@
                     <div class="pl-1">
                       <UButton 
                         color="success"
-                        icon="i-heroicons-plus-16-solid"
+                        icon="heroicons:plus-16-solid"
                         :loading="addDepsDisable"
-                        loading-icon="i-heroicons-arrow-path-16-solid"
+                        loading-icon="heroicons:arrow-path-16-solid"
                         variant="ghost"
                         :class="BUTTON_GHOST_CLASS"
                         @click="() => addDeps(item.id)"
@@ -427,7 +428,7 @@
             <h3 class="py-2 text-lg font-bold">Task Options</h3>
             <div class="block sm:hidden pt-1 text-center">
               <UButton 
-                icon="i-heroicons-pencil-square-16-solid"
+                icon="heroicons:pencil-square-16-solid"
                 variant="ghost"
                 :class="BUTTON_GHOST_CLASS"
                 @click="() => {showEdit = true}"
@@ -438,7 +439,7 @@
             <div class="block sm:hidden pt-1 text-center">
               <UButton 
                 color="error"
-                icon="i-heroicons-trash-16-solid"
+                icon="heroicons:trash-16-solid"
                 label="Delete Task"
                 variant="ghost"
                 :class="BUTTON_GHOST_CLASS"
@@ -450,7 +451,7 @@
             <div class="hidden sm:flex gap-4 justify-center pt-2">
               <div>
                 <UButton 
-                  icon="i-heroicons-pencil-square-16-solid"
+                  icon="heroicons:pencil-square-16-solid"
                   variant="ghost"
                   :class="BUTTON_GHOST_CLASS"
                   @click="() => {showEdit = true}"
@@ -461,7 +462,7 @@
               <div>
                 <UButton 
                   color="error"
-                  icon="i-heroicons-trash-16-solid"
+                  icon="heroicons:trash-16-solid"
                   variant="ghost"
                   :class="BUTTON_GHOST_CLASS"
                   @click="() => {showDelete = true}"
@@ -478,7 +479,7 @@
       <h1 class="pb-2 text-xl text-center font-bold">This task does not exist.</h1>
       <div class="text-center">
         <UButton 
-          icon="i-heroicons-arrow-left-16-solid"
+          icon="heroicons:arrow-left-16-solid"
           :class="BUTTON_SOLID_CLASS"
           :to="`/board/${route.params.boardId}`"
         >

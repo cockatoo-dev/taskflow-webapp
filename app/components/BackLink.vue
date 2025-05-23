@@ -18,7 +18,7 @@
   <UButton
     :to="link"
     variant="ghost"
-    icon="i-heroicons-arrow-left-16-solid"
+    icon="heroicons:arrow-left-16-solid"
     :class="BUTTON_GHOST_CLASS"
   >
     Back

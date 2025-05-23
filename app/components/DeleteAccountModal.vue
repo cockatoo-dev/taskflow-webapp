@@ -48,11 +48,10 @@
       <div class="flex gap-2 sm:gap-4 pt-2">
         <div>
           <UButton 
-            icon="i-heroicons-trash-16-solid"
+            icon="heroicons:trash-16-solid"
             color="error"
             :class="BUTTON_SOLID_CLASS"
             :loading="deleteLoading"
-            loading-icon="i-heroicons-arrow-path-16-solid"
             @click="deleteAccount"
           >
             Delete Board
@@ -60,8 +59,8 @@
         </div>
         <div>
           <UButton 
-            icon="i-heroicons-x-mark-16-solid"
-            label="Cancel"
+            icon="heroicons:x-mark-16-solid"
+            color="neutral"
             variant="ghost"
             :class="BUTTON_GHOST_CLASS"
             @click="() => {isVisible = false}"

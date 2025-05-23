@@ -28,7 +28,7 @@
             v-if="loggedIn"
             type="button"
             to="/account"
-            icon="i-heroicons-user-16-solid"
+            icon="heroicons:user-16-solid"
             truncate
             :class="NAVBAR_BUTTON_CLASS"
           >
@@ -37,7 +37,7 @@
           <UButton 
             v-else
             type="button"
-            icon="i-heroicons-arrow-right-end-on-rectangle-16-solid"
+            icon="heroicons:arrow-right-end-on-rectangle-16-solid"
             truncate
             :class="NAVBAR_BUTTON_CLASS"
             @click="() => {showLogin = true}"

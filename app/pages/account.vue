@@ -96,7 +96,7 @@
         <div class="pt-2 text-center">
           <UButton 
             type="button"
-            icon="i-heroicons-plus-16-solid"
+            icon="heroicons:plus-16-solid"
             variant="ghost"
             :class="BUTTON_GHOST_CLASS"
             @click="() => {showCreate = true}"
@@ -108,7 +108,7 @@
         <div class="block sm:hidden pt-1 text-center">
           <UButton 
             type="button"
-            icon="i-heroicons-arrow-right-start-on-rectangle-16-solid"
+            icon="heroicons:arrow-right-start-on-rectangle-16-solid"
             variant="ghost"
             :class="BUTTON_GHOST_CLASS"
             @click="() => logout(clear)"
@@ -120,7 +120,7 @@
           <UButton 
             type="button"
             color="error"
-            icon="i-heroicons-trash-16-solid"
+            icon="heroicons:trash-16-solid"
             variant="ghost"
             :class="BUTTON_SOLID_CLASS"
             @click="() => {showDeleteAccount = true}"
@@ -132,7 +132,7 @@
           <div>
             <UButton 
               type="button"
-              icon="i-heroicons-arrow-right-start-on-rectangle-16-solid"
+              icon="heroicons:arrow-right-start-on-rectangle-16-solid"
               variant="ghost"
               :class="BUTTON_GHOST_CLASS"
               @click="() => {logout(clear)}"
@@ -144,7 +144,7 @@
             <UButton 
               type="button"
               color="error"
-              icon="i-heroicons-trash-16-solid"
+              icon="heroicons:trash-16-solid"
               variant="ghost"
               :class="BUTTON_GHOST_CLASS"
               @click="() => {showDeleteAccount = true}"
@@ -160,7 +160,7 @@
       <div class="text-center">
         <UButton 
           type="button"
-          icon="i-heroicons-home-16-solid"
+          icon="heroicons:home-16-solid"
           :class="BUTTON_SOLID_CLASS"
           to="/"
         >

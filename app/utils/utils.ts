@@ -11,7 +11,7 @@ export const BUTTON_UI_OBJECT = {
     ghost: 'hover:bg-{color}-100 dark:hover:bg-{color}-900 focus-visible:outline-{color}-500 dark:focus-visible:outline-{color}-500 text-{color}-600 dark:text-{color}-400 text-base font-normal'
   },
   default: {
-    loadingIcon: 'i-heroicons-arrow-path-16-solid'
+    loadingIcon: 'heroicons:arrow-path-16-solid'
   }
 }
 

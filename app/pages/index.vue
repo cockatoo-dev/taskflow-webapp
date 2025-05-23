@@ -76,10 +76,10 @@
               <div>
                 <UButton
                   type="submit"
-                  icon="i-heroicons-arrow-right-16-solid"
+                  icon="heroicons:arrow-right-16-solid"
                   :class="BUTTON_SOLID_CLASS"
                   :loading="joinLoading"
-                  loading-icon="i-heroicons-arrow-path-16-solid"
+                  loading-icon="heroicons:arrow-path-16-solid"
                 >
                   <span>
                     <span class="inline sm:hidden">Open</span>
@@ -95,7 +95,7 @@
             <div class="text-center">
               <UButton 
                 type="button"
-                icon="i-heroicons-plus-16-solid"
+                icon="heroicons:plus-16-solid"
                 variant="ghost"
                 :class="BUTTON_GHOST_CLASS"
                 @click="() => {showCreate = true}"
@@ -158,7 +158,7 @@
           <div class="pt-4 text-center">
             <UButton 
               type="button"
-              icon="i-heroicons-plus-16-solid"
+              icon="heroicons:plus-16-solid"
               :class="BUTTON_SOLID_CLASS"
               @click="() => {showCreate = true}"
             >

@@ -22,7 +22,7 @@
     >
       <div class="flex gap-2 leading-5">
         <div>
-          <UIcon name="i-heroicons-check-circle-16-solid" class="h-5 w-5" />
+          <UIcon name="heroicons:check-circle-16-solid" class="h-5 w-5" />
         </div>
         <div class="text-sm font-bold tracking-wider">COMPLETED</div>
       </div>
@@ -44,7 +44,7 @@
     >
       <div class="flex gap-2 leading-5">
         <div>
-          <UIcon name="i-heroicons-play-circle-16-solid" class="h-5 w-5" />
+          <UIcon name="heroicons:play-circle-16-solid" class="h-5 w-5" />
         </div>
         <div class="text-sm font-bold tracking-wider">READY</div>
       </div>
@@ -67,7 +67,7 @@
       <div class="flex gap-2 leading-5">
         <div>
           <UIcon
-            name="i-heroicons-clock-16-solid"
+            name="heroicons:clock-16-solid"
             class="h-5 w-5"
           />
         </div>

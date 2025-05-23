@@ -16,7 +16,7 @@
       <div class="flex gap-2">
         <div>
           <UIcon
-            name="i-heroicons-check-circle-16-solid"
+            name="heroicons:check-circle-16-solid"
             class="h-5 w-5"
           />
         </div>
@@ -34,7 +34,7 @@
       <div class="flex gap-2">
         <div>
           <UIcon
-            name="i-heroicons-play-circle-16-solid"
+            name="heroicons:play-circle-16-solid"
             class="h-5 w-5"
           />
         </div>
@@ -52,7 +52,7 @@
       <div class="flex gap-2">
         <div>
           <UIcon
-            name="i-heroicons-clock-16-solid"
+            name="heroicons:clock-16-solid"
             class="h-5 w-5"
           />
         </div>

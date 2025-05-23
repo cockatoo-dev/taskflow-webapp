@@ -142,13 +142,13 @@
                 :items="[
                   [{
                     label: 'Board Settings',
-                    icon: 'i-heroicons-wrench-16-solid',
+                    icon: 'heroicons:wrench-16-solid',
                     color: 'primary',
                     onSelect: () => {showBoardSettings = true}
                   }],
                   [{
                     label: 'Invite to Board',
-                    icon: 'i-heroicons-user-plus-16-solid',
+                    icon: 'heroicons:user-plus-16-solid',
                     color: 'primary',
                     onSelect: () => {showBoardInvite = true}
                   }]
@@ -158,7 +158,7 @@
               >
                 <UButton 
                   type="button"
-                  icon="i-heroicons-ellipsis-vertical-16-solid"
+                  icon="heroicons:ellipsis-vertical-16-solid"
                   variant="ghost"
                   :class="BUTTON_GHOST_CLASS"
                 >
@@ -169,7 +169,7 @@
             <div class="hidden lg:flex gap-1">
               <UButton 
                 type="button"
-                icon="i-heroicons-wrench-16-solid"
+                icon="heroicons:wrench-16-solid"
                 variant="ghost"
                 :class="BUTTON_GHOST_CLASS"
                 @click="() => {showBoardSettings = true}"
@@ -179,7 +179,7 @@
               <UButton 
                 type="button"
                 label="Invite to Board"
-                icon="i-heroicons-user-plus-16-solid"
+                icon="heroicons:user-plus-16-solid"
                 variant="ghost"
                 :class="BUTTON_GHOST_CLASS"
                 @click="() => {showBoardInvite = true}"
@@ -191,7 +191,7 @@
           <div v-else>
             <UButton 
               type="button"
-              icon="i-heroicons-user-plus-16-solid"
+              icon="heroicons:user-plus-16-solid"
               variant="ghost"
               :class="BUTTON_GHOST_CLASS"
               @click="() => {showBoardInvite = true}"
@@ -208,7 +208,7 @@
           <h2 class="pl-2 pt-0.5 leading-8 text-2xl">Current Tasks</h2>
           <UButton 
             type="button"
-            icon="i-heroicons-plus-16-solid"
+            icon="heroicons:plus-16-solid"
             :class="BUTTON_SOLID_CLASS"
             @click="() => {showAddTask = true}"
           >
@@ -226,7 +226,7 @@
             v-model="searchValue"
             autocomplete="off"
             variant="outline"
-            icon="i-heroicons-magnifying-glass-16-solid"
+            icon="heroicons:magnifying-glass-16-solid"
             placeholder="Search for a task..."
             class="w-full"
             :ui="TEXT_INPUT_UI"

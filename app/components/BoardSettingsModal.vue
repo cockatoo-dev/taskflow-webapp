@@ -82,9 +82,8 @@
           <div>
             <UButton 
               type="submit"
-              icon="i-heroicons-check-16-solid"
+              icon="heroicons:check-16-solid"
               :loading="disableSubmit"
-              loading-icon="i-heroicons-arrow-path-16-solid"
               :class="BUTTON_SOLID_CLASS"
             >
               Save Changes
@@ -93,9 +92,9 @@
           <div>
             <UButton 
               type="button"
-              color="error"
+              color="neutral"
               variant="ghost"
-              icon="i-heroicons-x-mark-16-solid"
+              icon="heroicons:x-mark-16-solid"
               :class="BUTTON_GHOST_CLASS"
               @click="() => {isVisible = false}"
             >

@@ -20,7 +20,7 @@
         <div class="block pt-2 text-center">
           <UButton 
             label="Back to Homepage"
-            icon="i-heroicons-home-16-solid"
+            icon="heroicons:home-16-solid"
             :class="BUTTON_SOLID_CLASS"
             to="/"
           >

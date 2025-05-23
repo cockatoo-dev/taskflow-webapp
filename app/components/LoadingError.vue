@@ -11,7 +11,7 @@
     <div class="text-center">
       <UButton 
         type="button"
-        icon="i-heroicons-arrow-uturn-right-16-solid"
+        icon="heroicons:arrow-uturn-right-16-solid"
         :class="BUTTON_SOLID_CLASS"
         @click="refresh"
       >

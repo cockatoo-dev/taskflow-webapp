@@ -11,9 +11,9 @@
   >
     <div class="px-2 pt-2 text-right">
       <UButton 
-        color="error"
+        color="neutral"
         variant="ghost"
-        icon="i-heroicons-x-mark-16-solid"
+        icon="heroicons:x-mark-16-solid"
         :class="BUTTON_GHOST_CLASS"
         @click="() => {isVisible = false}"
       >
@@ -25,7 +25,7 @@
       <div class="py-2 text-center">
         <UButton
           to="/api/account/login/github"
-          icon="i-simple-icons-github"
+          icon="simple-icons:github"
           :class="GITHUB_BUTTON_CLASS"
           external
         >

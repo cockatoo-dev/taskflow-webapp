@@ -20,9 +20,9 @@
   >
     <div class="p-2 text-right">
       <UButton 
-        color="error"
+        color="neutral"
         variant="ghost"
-        icon="i-heroicons-x-mark-16-solid"
+        icon="heroicons:x-mark-16-solid"
         :class="BUTTON_GHOST_CLASS"
         @click="() => {isVisible = false}"
       >
@@ -61,7 +61,7 @@
       <div v-if="clipboard.isSupported" class="pt-1">
         <UButton 
           variant="ghost"
-          :icon="clipboard.copied.value ? 'i-heroicons-clipboard-document-check-16-solid' :'i-heroicons-clipboard-document-16-solid'"
+          :icon="clipboard.copied.value ? 'heroicons:clipboard-document-check-16-solid' :'heroicons:clipboard-document-16-solid'"
           :class="BUTTON_GHOST_CLASS"
           @click="copyLink"
         >
