@@ -66,10 +66,7 @@
     >
       <div class="flex gap-2 leading-5">
         <div>
-          <UIcon
-            name="heroicons:clock-16-solid"
-            class="h-5 w-5"
-          />
+          <UIcon name="heroicons:clock-16-solid" class="h-5 w-5" />
         </div>
         <div class="text-sm font-bold tracking-wider">NOT READY</div>
       </div>

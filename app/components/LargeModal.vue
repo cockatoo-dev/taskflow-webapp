@@ -12,6 +12,8 @@
   <UModal
     v-model:open="isVisible"
     :transition="isMotionSafe"
+    :title
+    :description
     class="w-11/12 sm:max-w-full lg:w-[960px]"
   >
     <template #content>

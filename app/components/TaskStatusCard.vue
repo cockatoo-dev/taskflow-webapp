@@ -15,10 +15,7 @@
     >
       <div class="flex gap-2">
         <div>
-          <UIcon
-            name="heroicons:check-circle-16-solid"
-            class="h-5 w-5"
-          />
+          <UIcon name="heroicons:check-circle-16-solid" class="h-5 w-5" />
         </div>
         <div class="text-sm font-bold tracking-wider">
           COMPLETED
@@ -33,10 +30,7 @@
     >
       <div class="flex gap-2">
         <div>
-          <UIcon
-            name="heroicons:play-circle-16-solid"
-            class="h-5 w-5"
-          />
+          <UIcon name="heroicons:play-circle-16-solid" class="h-5 w-5" />
         </div>
         <div class="text-sm font-bold tracking-wider">
           READY
@@ -51,10 +45,7 @@
     >
       <div class="flex gap-2">
         <div>
-          <UIcon
-            name="heroicons:clock-16-solid"
-            class="h-5 w-5"
-          />
+          <UIcon name="heroicons:clock-16-solid" class="h-5 w-5" />
         </div>
         <div class="text-sm font-bold tracking-wider">
           NOT READY
