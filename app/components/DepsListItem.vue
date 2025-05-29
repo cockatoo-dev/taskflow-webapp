@@ -17,10 +17,7 @@
     >
       <div class="flex gap-2">
         <div class="h-8 pl-1 py-1.5">
-          <UIcon
-            name="heroicons:check-circle-16-solid"
-            class="h-5 w-5"
-          />
+          <UIcon name="heroicons:check-circle-16-solid" class="h-5 w-5" />
         </div>
         <div class="py-0.5">{{ props.title }}</div>
       </div>
@@ -32,10 +29,7 @@
     >
       <div class="flex gap-2">
         <div class="h-8 pl-1 py-1.5">
-          <UIcon
-            name="heroicons:play-circle-16-solid"
-            class="h-5 w-5"
-          />
+          <UIcon name="heroicons:play-circle-16-solid" class="h-5 w-5" />
         </div>
         <div class="py-0.5 line-clamp-1 overflow-ellipsis">{{ props.title }}</div>
       </div>
@@ -47,10 +41,7 @@
     >
       <div class="flex gap-2">
         <div class="h-8 pl-1 py-1.5">
-          <UIcon
-            name="heroicons:clock-16-solid"
-            class="h-5 w-5"
-          />
+          <UIcon name="heroicons:clock-16-solid" class="h-5 w-5" />
         </div>
         <div class="py-0.5">{{ props.title }}</div>
       </div>
