@@ -7,7 +7,7 @@
   <SmallModal 
     v-model="isVisible"
     title="Log in to Taskflow"
-    description="Log in to Taskflow with your Github account."
+    description="Log in to Taskflow with your GitHub account."
   >
     <div class="px-2 pt-2 text-right">
       <UButton 
@@ -21,7 +21,7 @@
       </UButton>
     </div>
     <div class="px-4 pb-4">
-      <div class="text-xl text-center font-bold">Log in to Taskflow with your Github account.</div>
+      <div class="text-xl text-center font-bold">Log in to Taskflow with your GitHub account.</div>
       <div class="py-2 text-center">
         <UButton
           to="/api/account/login/github"
@@ -29,11 +29,11 @@
           :class="GITHUB_BUTTON_CLASS"
           external
         >
-          Log in with Github
+          Log in with GitHub
         </UButton>
       </div>
       <div class="text-xs">
-        When you log in with Github, you agree for a cookie to be saved to your web browser to store your login information for Taskflow. 
+        When you log in with GitHub, you agree for a cookie to be saved to your web browser to store your login information for Taskflow. 
         Only your Github user ID and username is collected by Taskflow, which is used to associate your Github account with the boards you create.
       </div>
     </div>

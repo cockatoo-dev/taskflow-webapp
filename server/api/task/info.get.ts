@@ -24,8 +24,8 @@ export default defineEventHandler(async (e) => {
   const dbTaskData = await db.getTask(queryData.boardId, queryData.taskId)
   if (dbTaskData.length < 1) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Invalid task ID"
+      status: 400,
+      message: "Invalid task ID"
     })
   }
   

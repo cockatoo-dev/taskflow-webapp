@@ -52,8 +52,8 @@ export default defineEventHandler(async (e) => {
   const bodyData = checkParseResult(bodyParse)
   if (bodyData.source === bodyData.dest) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Cannot create a dependency with the same task."
+      status: 400,
+      message: "Cannot create a dependency with the same task."
     })
   }
 
@@ -61,24 +61,24 @@ export default defineEventHandler(async (e) => {
   const boardInfo = await getBoardInfo(db, bodyData.boardId, userId)
   if (!canEdit(boardInfo.isOwner, boardInfo.publicPerms)) {
     throw createError({
-      statusCode: 403,
-      statusMessage: "You do not have permission to edit tasks on this board."
+      status: 403,
+      message: "You do not have permission to edit tasks on this board."
     })
   }
 
   const depsExists = await db.isDepsExist(bodyData.source, bodyData.dest)
   if (depsExists) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Dependency already exists."
+      status: 400,
+      message: "Dependency already exists."
     })
   }
  
   const tasksInfo = await db.getTaskPair(bodyData.boardId, bodyData.source, bodyData.dest)
   if (tasksInfo.length < 2) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "One or more task IDs are invalid."
+      status: 400,
+      message: "One or more task IDs are invalid."
     })
   }
 
@@ -95,8 +95,8 @@ export default defineEventHandler(async (e) => {
 
   if (checkCycle(depsList, bodyData.source, bodyData.dest)) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Cannot create a circular dependency."
+      status: 400,
+      message: "Cannot create a circular dependency."
     })
   }
 

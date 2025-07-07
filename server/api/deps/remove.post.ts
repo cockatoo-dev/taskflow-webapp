@@ -20,16 +20,16 @@ export default defineEventHandler(async (e) => {
   const boardInfo = await getBoardInfo(db, bodyData.boardId, userId)
   if (!canEdit(boardInfo.isOwner, boardInfo.publicPerms)) {
     throw createError({
-      statusCode: 403,
-      statusMessage: "You do not have permission to edit tasks on this board."
+      status: 403,
+      message: "You do not have permission to edit tasks on this board."
     })
   }
 
   const depsExists = await db.isDepsExist(bodyData.source, bodyData.dest)
   if (!depsExists) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Dependency does not exist."
+      status: 400,
+      message: "Dependency does not exist."
     })
   }
   

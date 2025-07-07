@@ -6,7 +6,7 @@ export default defineEventHandler((e) => {
       await setUserSession(e, {
         user: {
           userId: `github:${user.id}`,
-          userName: `${user.login} (Github)`
+          userName: `${user.login} (GitHub)`
         }
       })
       sendRedirect(e, "/")

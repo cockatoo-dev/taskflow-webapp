@@ -7,13 +7,13 @@ export const checkAPIReadEnabled = async (e: H3Event) => {
   const config = await e.context.cloudflare.env.CF_KV.get("pages_api")
   if (!config) {
     throw createError({
-      statusCode: 500,
-      statusMessage: "API configuration is not set up correctly."
+      status: 500,
+      message: "API configuration is not set up correctly."
     })
   } else if (!config.includes("read")) {
     throw createError({
-      statusCode: 503,
-      statusMessage: "The API is temporarily disabled. Please try again later."
+      status: 503,
+      message: "The API is temporarily disabled. Please try again later."
     })
   } else {
     return
@@ -25,13 +25,13 @@ export const checkAPIWriteEnabled = async (e: H3Event) => {
   const kvVal = await e.context.cloudflare.env.CF_KV.get("pages_api")
   if (!kvVal) {
     throw createError({
-      statusCode: 500,
-      statusMessage: "API configuration is not set up correctly."
+      status: 500,
+      message: "API configuration is not set up correctly."
     })
   } else if (!kvVal.includes("write")) {
     throw createError({
-      statusCode: 503,
-      statusMessage: "The API is temporarily disabled. Please try again later."
+      status: 503,
+      message: "The API is temporarily disabled. Please try again later."
     })
   } else {
     return
@@ -46,8 +46,8 @@ export const checkAPIWriteEnabled = async (e: H3Event) => {
 export const checkParseResult = <T>(b: z.SafeParseReturnType<T, T>) => {
   if (!b.success) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Invalid request format"
+      status: 400,
+      message: "Invalid request format"
     })
   } else {
     return b.data
@@ -58,8 +58,8 @@ export const checkParseResult = <T>(b: z.SafeParseReturnType<T, T>) => {
 export const checkTaskExists = async (db: db, boardId: string, taskId: string) => {
   if (!(await db.isTaskExists(boardId, taskId))) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Invalid task ID"
+      status: 400,
+      message: "Invalid task ID"
     })
   }
 }
@@ -95,8 +95,8 @@ export const getBoardInfo = async (db: db, boardId: string, userId: string | nul
   const dbData = await db.getBoard(boardId)
   if (dbData.length === 0) {
     throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid board ID.'
+      status: 400,
+      message: 'Invalid board ID.'
     })
   } else {
     return {

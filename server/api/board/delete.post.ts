@@ -19,13 +19,13 @@ export default defineEventHandler(async (e) => {
   const boardInfo = await db.getBoard(bodyData.boardId)
   if (boardInfo.length === 0) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Invalid board ID."
+      status: 400,
+      message: "Invalid board ID."
     })
   } else if (boardInfo[0].ownerId !== userId) {
     throw createError({
-      statusCode: 403,
-      statusMessage: "Cannot delete a board which you do not own."
+      status: 403,
+      message: "Cannot delete a board which you do not own."
     })
   }
   await db.deleteBoard(bodyData.boardId, userId)

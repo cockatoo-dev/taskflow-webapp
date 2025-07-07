@@ -20,8 +20,8 @@ export default defineEventHandler(async (e) => {
   const boardInfo = await getBoardInfo(db, bodyData.boardId, userId)
   if (!canSetComplete(boardInfo.isOwner, boardInfo.publicPerms)) {
     throw createError({
-      statusCode: 403,
-      statusMessage: "You do not have permission to mark tasks as completed on this board."
+      status: 403,
+      message: "You do not have permission to mark tasks as completed on this board."
     })
   }
 

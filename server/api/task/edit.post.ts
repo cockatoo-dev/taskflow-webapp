@@ -20,18 +20,18 @@ export default defineEventHandler(async (e) => {
 
   if (bodyData.title == '') {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Please enter a task title."
+      status: 400,
+      message: "Please enter a task title."
     })
   } else if (bodyData.title.length > 50) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Task title is too long (maximum 50 characters)."
+      status: 400,
+      message: "Task title is too long (maximum 50 characters)."
     })
   } else if (bodyData.description.length > 2500) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Task description is too long (maximum 2500 characters)."
+      status: 400,
+      message: "Task description is too long (maximum 2500 characters)."
     })
   }
 
@@ -40,8 +40,8 @@ export default defineEventHandler(async (e) => {
   const boardInfo = await getBoardInfo(db, bodyData.boardId, userId)
   if (!canEdit(boardInfo.isOwner, boardInfo.publicPerms)) {
     throw createError({
-      statusCode: 403,
-      statusMessage: "You do not have permission to edit tasks on this board."
+      status: 403,
+      message: "You do not have permission to edit tasks on this board."
     })
   }
 

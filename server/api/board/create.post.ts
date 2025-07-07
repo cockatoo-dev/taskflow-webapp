@@ -16,13 +16,13 @@ export default defineEventHandler(async (e) => {
   const bodyData = checkParseResult(bodyParse)
   if (bodyData.title === "") {
     throw createError({
-      statusCode: 400,
-      statusMessage: 'Board Name is required.'
+      status: 400,
+      message: 'Board Name is required.'
     })
   } else if (bodyData.title.length > 50) {
     throw createError({
-      statusCode: 400,
-      statusMessage: 'Board Name is too long (maximum 50 characters).'
+      status: 400,
+      message: 'Board Name is too long (maximum 50 characters).'
     })
   } else if (
     bodyData.publicPerms !== 0 &&
@@ -30,8 +30,8 @@ export default defineEventHandler(async (e) => {
     bodyData.publicPerms !== 2
   ) {
     throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid Public Permissions setting.'
+      status: 400,
+      message: 'Invalid Public Permissions setting.'
     })
   }
 
@@ -41,8 +41,8 @@ export default defineEventHandler(async (e) => {
   const userBoards = await db.getUserBoards(userId)
   if (userBoards.length >= 5) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "You've reached the maximum number of boards for your account. Consider deleting an existing board before you create a new one."
+      status: 400,
+      message: "You've reached the maximum number of boards for your account. Consider deleting an existing board before you create a new one."
     })
   }
   await db.addBoard(boardId, userId, bodyData.title, bodyData.publicPerms)
