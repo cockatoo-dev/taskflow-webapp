@@ -177,7 +177,7 @@
               href='https://github.com/cockatoo-dev/taskflow-webapp'
               target="_blank"
             >
-              Github page.
+              GitHub page.
             </NuxtLink>
             Got a suggestion? Head over to the 
             <NuxtLink 
