@@ -23,7 +23,7 @@ export default defineNuxtConfig({
   
   fonts: {
     families: [
-      {name: 'Open Sans', provider: 'google', weights: [400, 700], styles: ['normal', 'italic']},
+      {name: 'Open Sans', provider: 'google', weights: [400, 500, 600, 700], styles: ['normal', 'italic']},
       {name: 'Apple Color Emoji', provider: 'none'},
       {name: 'Segoe UI Emoji', provider: 'none'},
       {name: 'Segoe UI Symbol', provider: 'none'},

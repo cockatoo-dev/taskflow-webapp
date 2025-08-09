@@ -1,6 +1,6 @@
 <!-- Navbar displayed on all pages -->
 <script setup lang="ts">
-  const NAVBAR_BUTTON_CLASS = 'bg-teal-500 dark:bg-teal-500 hover:bg-teal-400 dark:hover:bg-teal-600 text-base font-bold text-slate-100 dark:text-slate-900'
+  const NAVBAR_BUTTON_CLASS = 'bg-teal-500 dark:bg-teal-500 hover:bg-teal-400 dark:hover:bg-teal-600 active:bg-teal-400 dark:active:bg-teal-600 text-base font-bold text-slate-100 dark:text-slate-900 focus-visible:outline-slate-100 dark:focus-visible:outline-slate-900'
   const showLogin = ref(false)
 </script>
 
@@ -10,7 +10,7 @@
     <nav class=" bg-teal-500 h-12 w-full grid grid-cols-[auto_1fr]">
       <NuxtLink 
         to="/" 
-        class="flex focus-visible:outline-1 focus-visible:outline-slate-900 dark:focus-visible:outline-slate-100" 
+        class="flex focus-visible:outline-2 focus-visible:outline-slate-900 dark:focus-visible:outline-slate-100" 
         aria-label="Link to homepage"
       >
         <div class="p-2">
