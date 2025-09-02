@@ -1,16 +1,10 @@
 <!-- Navbar displayed on all pages -->
-<script setup lang="ts">
-  const NAVBAR_BUTTON_CLASS = 'bg-teal-500 dark:bg-teal-500 hover:bg-teal-400 dark:hover:bg-teal-600 active:bg-teal-400 dark:active:bg-teal-600 text-base font-bold text-slate-100 dark:text-slate-900 focus-visible:outline-slate-100 dark:focus-visible:outline-slate-900'
-  const showLogin = ref(false)
-</script>
-
 <template>
   <div>
-    <LoginModal v-model="showLogin" />
     <nav class=" bg-teal-500 h-12 w-full grid grid-cols-[auto_1fr]">
       <NuxtLink 
         to="/" 
-        class="flex focus-visible:outline-2 focus-visible:outline-slate-900 dark:focus-visible:outline-slate-100" 
+        class="flex focus-visible:outline-2 focus-visible:outline-slate-100 dark:focus-visible:outline-slate-900" 
         aria-label="Link to homepage"
       >
         <div class="p-2">
@@ -23,28 +17,7 @@
         </div>
       </NuxtLink>
       <div class="text-right py-1.5 pr-1">
-        <AuthState v-slot="{ loggedIn }">
-          <UButton 
-            v-if="loggedIn"
-            type="button"
-            to="/account"
-            icon="heroicons:user-16-solid"
-            truncate
-            :class="NAVBAR_BUTTON_CLASS"
-          >
-            My Account
-          </UButton>
-          <UButton 
-            v-else
-            type="button"
-            icon="heroicons:arrow-right-end-on-rectangle-16-solid"
-            truncate
-            :class="NAVBAR_BUTTON_CLASS"
-            @click="() => {showLogin = true}"
-          >
-            Log In
-          </UButton> 
-        </AuthState>
+        <NavBarLogin />
       </div>
     </nav>
   </div>

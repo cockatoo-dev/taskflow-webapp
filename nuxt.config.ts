@@ -39,6 +39,7 @@ export default defineNuxtConfig({
     methodsToProtect: ['POST', 'PATCH', 'PUT', 'DELETE']
   },
   routeRules: {
+    '/': {prerender: true},
     '/api/_auth/session': {csurf: false}
   }
 })
