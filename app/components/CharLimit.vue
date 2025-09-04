@@ -9,12 +9,12 @@
 
 <template>
   <div 
-    class="motion-safe:transition-opacity duration-300 text-xs text-right"
-    :class="str.length >= showLength ? 'opacity-100' : 'opacity-0'"
+    class="motion-safe:transition text-xs text-right"
+    :class="str.length >= showLength ? 'visible opacity-100' : 'invisible opacity-0'"
   >
     <span 
-      class="motion-safe:transition-colors duration-300"
-      :class="str.length > limit ? 'text-red-600 dark:text-red-400' : ''"
+      class="motion-safe:transition-colors"
+      :class="str.length > limit ? 'text-red-600 dark:text-red-400' : 'text-slate-800 dark:text-slate-200'"
     >
       {{ str.length }}/{{ limit }}
     </span>

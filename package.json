@@ -33,6 +33,6 @@
   "devDependencies": {
     "drizzle-kit": "^0.30.3",
     "nitro-cloudflare-dev": "^0.2.1",
-    "wrangler": "^4.2.0"
+    "wrangler": "^4.33.2"
   }
 }
